@@ -23,6 +23,7 @@ export PATH=${PATH}:~/Development/tools/android-sdk-linux/platform-tools
 export PATH=${PATH}:~/.composer/vendor/bin
 
 alias stn='st -n'
+alias fs='/opt/fromscratch/FromScratch'
 
 local user='%{$fg[magenta]%}%n@%{$fg[magenta]%}%m%{$reset_color%}'
 local pwd='%{$fg[blue]%}%~%{$reset_color%}'
@@ -34,3 +35,5 @@ bindkey "^[[7~" beginning-of-line
 bindkey "^[[8~" end-of-line
 
 . /etc/infinality-settings.sh
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
