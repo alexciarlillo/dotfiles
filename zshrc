@@ -1,4 +1,4 @@
-source "$HOME/.antigen/antigen.zsh"
+source "$HOME/.dotfiles/antigen/antigen.zsh"
 
 export DISABLE_AUTO_TITLE="true"
 
