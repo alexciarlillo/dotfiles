@@ -1,0 +1,290 @@
+;=====================================================
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/jaagr/polybar
+;
+;   The README contains alot of information
+;
+;=====================================================
+
+[colors]
+background = ${xrdb:background:#282828}
+foreground = ${xrdb:foreground:#ebdbb2}
+black = ${xrdb:color0:#282828}
+dark-gray = {$xrdb:color8:#928374}
+dark-red = ${xrdb:color1:#cc241d}
+red = ${xrdb:color9:#fb4934}
+dark-green = ${xrdb:color2:#98971a}
+green = ${xrdb:color10:#b8bb26}
+dark-yellow = ${xrdb:color3:#d79921}
+yellow = ${xrdb:color11:#fabd2f}
+dark-blue = ${xrdb:color4:#458588}
+blue = ${xrdb:color12:#83a598}
+dark-magenta = ${xrdb:color5:#b16286}
+magenta = ${xrdb:color13:#d3869b}
+dark-cyan = ${xrdb:color6:#689d6a}
+cyan = ${xrdb:color14:#8ec07c}
+light-gray = ${xrdb:color7:#a89984}
+white = ${xrdb:color15:#ebdbb2}
+primary = ${xrdb:color10}
+secondary = ${xrdb:color11}
+alert = ${xrdb:color1}
+background-alt = #4e4e4e
+foreground-alt = #4e4e4e
+
+[bar/top]
+monitor = ${env:MONITOR:eDP-1}
+width = 100%
+height = 25
+radius = 0
+fixed-center = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 1
+line-color = ${colors.white}
+
+border-left-size = 5
+border-right-size = 5
+border-top-size = 5
+border-bottom-size = 0
+border-color = #00ffffff
+
+padding-left = 0
+padding-right = 0
+
+module-margin-left = 0
+module-margin-right = 0
+
+font-0 = "Hack:size=10;2"
+font-1 = "FontAwesome:size=10;2"
+font-2 = "Hack:size=20;3"
+
+modules-left = i3 xwindow
+modules-center = date
+modules-right = volume memory cpu wlan eth battery0 battery1 powermenu
+
+tray-position = right
+tray-padding = 0
+
+[module/xwindow]
+type = internal/xwindow
+format-foreground = ${colors.background}
+format-background = ${colors.foreground}
+format-suffix = %{T3}%{T-}
+label =  %title% 
+label-padding = 1
+label-maxlen = 30
+label-foreground = ${colors.background}
+label-background = ${colors.foreground}
+
+[module/i3]
+type = internal/i3
+format = <label-state><label-mode>%{F#a89984 B#ebdbb2}%{T3}%{T-}%{F#ebdbb2 B#282828}
+index-sort = true
+wrapping-scroll = false
+
+; Only show workspaces on the same output as the bar
+pin-workspaces = true
+
+label-mode-padding = 1
+label-mode-foreground = ${colors.black}
+label-mode-background = ${colors.light-gray}
+
+; focused = Active workspace on focused monitor
+label-focused = %index%%{F#b16286 B#a89984}%{T3}%{T-}%{F#b16286 B#a89984}
+label-focused-background = ${colors.dark-magenta}
+label-focused-foreground = ${colors.white}
+label-focused-padding = 1
+
+; unfocused = Inactive workspace on any monitor
+label-unfocused = %index%
+label-unfocused-padding = 1
+label-unfocused-background = ${colors.light-gray}
+label-unfocused-foreground = ${colors.black}
+
+; visible = Active workspace on unfocused monitor
+label-visible = %index%%{F#b16286 B#a89984}%{T3}%{T-}%{F#b16286 B#a89984}
+label-visible-background = ${colors.dark-magenta}
+label-visible-foreground = ${colors.light-gray}
+label-visible-padding = 1
+
+; urgent = Workspace with urgency hint set
+label-urgent = %index%
+label-urgent-background = ${colors.dark-red}
+label-urgent-padding = 1
+
+[module/eth]
+type = internal/network
+interface = enp0s31f6
+interval = 3.0
+
+format-connected-underline = #55aa55
+format-connected-prefix = " "
+format-connected-prefix-foreground = ${colors.foreground-alt}
+label-connected = %local_ip%
+
+[module/date]
+type = internal/date
+interval = 5
+
+date = " %Y-%m-%d"
+date-alt = " %Y-%m-%d"
+
+time = %H:%M
+time-alt = %H:%M:%S
+
+format-prefix = 
+format-prefix-foreground = ${colors.foreground}
+
+label = %date% %time%
+
+[module/volume]
+type = internal/volume
+
+format-volume-padding = 0
+format-volume-background = ${colors.cyan}
+format-volume-foreground = ${colors.black}
+format-volume-prefix = %{F#8ec07c B#282828}%{T3}%{T-}%{F#282828 B#8ec07c}
+format-volume = <label-volume> <bar-volume>
+label-volume = "  "
+
+format-muted-padding = 0
+format-muted-prefix = %{F#8ec07c B#282828}%{T3}%{T-}%{F#282828 B#8ec07c}
+format-muted = <label-muted>
+label-muted = "  muted "
+label-muted-background = ${colors.cyan}
+label-muted-foreground = ${colors.dark-red}
+
+bar-volume-width = 8
+bar-volume-gradient = false
+bar-volume-indicator = 
+bar-volume-indicator-font = 2
+bar-volume-fill = ─
+bar-volume-fill-font = 2
+bar-volume-empty = ─
+bar-volume-empty-font = 2
+bar-volume-empty-foreground = ${colors.white}
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = %{F#b8bb26 B#8ec07c}%{T3}%{T-}%{F#282828 B#b8bb26} 
+format-prefix-foreground = ${colors.black}
+format-prefix-background = ${colors.green}
+label-foreground = ${colors.black}
+label-background = ${colors.green}
+label =  %percentage_used%%
+label-padding = 0
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.black}
+format-prefix-background = ${colors.green}
+label-foreground = ${colors.black}
+label-background = ${colors.green}
+label = %percentage%%
+label-padding = 1
+
+[module/wlan]
+type = internal/network
+interface = wlp4s0
+interval = 3.0
+
+format-connected-prefix = %{F#83a598 B#b8bb26}%{T3}%{T-}%{F#282828 B#83a598} 
+format-connected = <label-connected>
+format-connected-padding = 0
+format-connected-foreground = ${colors.black}
+format-connected-background = ${colors.blue}
+label-connected = " %essid% "
+
+format-disconnected-prefix = %{F#83a598 B#b8bb26}%{T3}%{T-}%{F#282828 B#83a598} 
+format-disconnected-padding = 0
+format-disconnected-foreground = ${colors.black}
+format-disconnected-background = ${colors.blue}
+format-disconnected = <label-disconnected>
+label-disconnected = " %ifname% "
+
+[module/battery0]
+type = internal/battery
+battery = BAT0
+adapter = AC
+full-at = 99
+
+format-charging-padding = 0
+format-charging-prefix= %{F#fabd2f B#83a598}%{T3}%{T-}%{F#282828 B#fabd2f} 
+format-charging = " B0:<label-charging>"
+format-charging-background = ${colors.yellow}
+format-charging-foreground = ${colors.black}
+
+format-discharging-padding = 0
+format-discharging-prefix = %{F#fabd2f B#83a598}%{T3}%{T-}%{F#282828 B#fabd2f} 
+format-discharging = " B0:<label-discharging>"
+format-discharging-background = ${colors.yellow}
+format-discharging-foreground = ${colors.black}
+
+format-full-padding = 0
+format-full-prefix= %{F#fabd2f B#83a598}%{T3}%{T-}%{F#282828 B#fabd2f} 
+format-full = " B0:<label-full>"
+format-full-background = ${colors.yellow}
+format-full-foreground = ${colors.black}
+
+[module/battery1]
+type = internal/battery
+battery = BAT1
+adapter = AC
+full-at = 99
+
+format-charging-padding = 1
+format-charging-prefix= "B1:"
+format-charging = <label-charging>
+format-charging-background = ${colors.yellow}
+format-charging-foreground = ${colors.black}
+
+format-discharging-padding = 1
+format-discharging-prefix= "B1:"
+format-discharging = <label-discharging>
+format-discharging-background = ${colors.yellow}
+format-discharging-foreground = ${colors.black}
+
+format-full-padding = 1
+format-full-prefix = "B1:"
+format-full = <label-full>
+format-full-background = ${colors.yellow}
+format-full-foreground = ${colors.black}
+
+[module/powermenu]
+type = custom/menu
+
+label-open = "%{F#cc241d B#fabd2f}%{T3}%{T-}%{F#282828 B#cc241d} "
+label-open-foreground = ${colors.black}
+label-open-background = ${colors.dark-red}
+label-close = "%{F#cc241d B#fabd2f}%{T3}%{T-}%{F#282828 B#cc241d} "
+label-close-foreground = ${colors.black}
+label-close-background = ${colors.dark-red}
+label-separator = |
+label-separator-foreground = ${colors.black}
+label-separator-background = ${colors.dark-red}
+
+menu-0-0 = reboot
+menu-0-0-exec = i3-nagbar -t warning -m 'Do you really want to reboot?' -b 'Yes' 'sudo reboot'
+menu-0-0-foreground = ${colors.black}
+menu-0-0-background = ${colors.dark-red}
+menu-0-1 = power off
+menu-0-1-exec = i3-nagbar -t warning -m 'Do you really want to shutdown?' -b 'Yes' 'sudo poweroff'
+menu-0-1-foreground = ${colors.black}
+menu-0-1-background = ${colors.dark-red}
+menu-0-2 = "logout "
+menu-0-2-exec = i3-nagbar -t warning -m 'Do you really want to logout?' -b 'Yes' 'i3-msg exit'
+menu-0-2-foreground = ${colors.black}
+menu-0-2-background = ${colors.dark-red}
+
+[settings]
+screenchange-reload = true
+
+[global/wm]
+margin-top = 0
+margin-bottom = 0
