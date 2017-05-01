@@ -45,9 +45,9 @@ foreground = ${colors.foreground}
 line-size = 1
 line-color = ${colors.white}
 
-border-left-size = 5
-border-right-size = 5
-border-top-size = 5
+border-left-size = 10
+border-right-size = 10
+border-top-size = 10
 border-bottom-size = 0
 border-color = #00ffffff
 
@@ -59,7 +59,7 @@ module-margin-right = 0
 
 font-0 = "Hack:size=10;2"
 font-1 = "FontAwesome:size=10;2"
-font-2 = "Hack:size=20;3"
+font-2 = "Hack:size=18;4"
 
 modules-left = i3 xwindow
 modules-center = date
@@ -70,8 +70,8 @@ tray-padding = 0
 
 [module/xwindow]
 type = internal/xwindow
-format-foreground = ${colors.background}
-format-background = ${colors.foreground}
+format-foreground = ${colors.foreground}
+format-background = ${colors.background}
 format-suffix = %{T3}%{T-}
 label =  %title% 
 label-padding = 1
