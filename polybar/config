@@ -66,14 +66,15 @@ modules-center = date
 modules-right = volume memory cpu wlan eth battery0 battery1 powermenu
 
 tray-position = right
-tray-padding = 0
+tray-padding = 2
+tray-background = ${colors.light-gray}
 
 [module/xwindow]
 type = internal/xwindow
 format-foreground = ${colors.foreground}
 format-background = ${colors.background}
 format-suffix = %{T3}%{T-}
-label =  %title% 
+label = %title% 
 label-padding = 1
 label-maxlen = 30
 label-foreground = ${colors.background}
@@ -88,30 +89,36 @@ wrapping-scroll = false
 ; Only show workspaces on the same output as the bar
 pin-workspaces = true
 
-label-mode-padding = 1
-label-mode-foreground = ${colors.black}
+ws-icon-0 = 1;
+ws-icon-1 = 2;
+ws-icon-2 = 3;
+ws-icon-3 = 4;
+ws-icon-default =  
+
+label-mode-padding = 2
+label-mode-foreground = ${colors.dark-red}
 label-mode-background = ${colors.light-gray}
 
 ; focused = Active workspace on focused monitor
-label-focused = %index%%{F#b16286 B#a89984}%{T3}%{T-}%{F#b16286 B#a89984}
+label-focused = %icon%
 label-focused-background = ${colors.dark-magenta}
 label-focused-foreground = ${colors.white}
 label-focused-padding = 1
 
 ; unfocused = Inactive workspace on any monitor
-label-unfocused = %index%
+label-unfocused = %icon%
 label-unfocused-padding = 1
 label-unfocused-background = ${colors.light-gray}
 label-unfocused-foreground = ${colors.black}
 
 ; visible = Active workspace on unfocused monitor
-label-visible = %index%%{F#b16286 B#a89984}%{T3}%{T-}%{F#b16286 B#a89984}
+label-visible = %icon%
 label-visible-background = ${colors.dark-magenta}
 label-visible-foreground = ${colors.light-gray}
 label-visible-padding = 1
 
 ; urgent = Workspace with urgency hint set
-label-urgent = %index%
+label-urgent = %icon%
 label-urgent-background = ${colors.dark-red}
 label-urgent-padding = 1
 
@@ -130,10 +137,10 @@ type = internal/date
 interval = 5
 
 date = " %Y-%m-%d"
-date-alt = " %Y-%m-%d"
+date-alt = " %A, %B %-d %Y"
 
 time = %H:%M
-time-alt = %H:%M:%S
+time-alt = %l:%M %p
 
 format-prefix = 
 format-prefix-foreground = ${colors.foreground}
@@ -259,10 +266,10 @@ format-full-foreground = ${colors.black}
 [module/powermenu]
 type = custom/menu
 
-label-open = "%{F#cc241d B#fabd2f}%{T3}%{T-}%{F#282828 B#cc241d} "
+label-open = "%{F#cc241d B#fabd2f}%{T3}%{T-}%{F#282828 B#cc241d}  %{F#a89984 B#cc241d}%{T3}%{T-}%{F#282828 B#cc241d}"
 label-open-foreground = ${colors.black}
 label-open-background = ${colors.dark-red}
-label-close = "%{F#cc241d B#fabd2f}%{T3}%{T-}%{F#282828 B#cc241d} "
+label-close = "%{F#cc241d B#fabd2f}%{T3}%{T-}%{F#282828 B#cc241d}  "
 label-close-foreground = ${colors.black}
 label-close-background = ${colors.dark-red}
 label-separator = |
