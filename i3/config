@@ -20,7 +20,7 @@ for_window [class="^.*"] border pixel 0
 
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 #exec_always --no-startup-id feh --bg-fill --randomize $HOME/.config/feh/*
-exec_always --no-startup-id hsetroot -solid "#fbf1c7"
+exec_always --no-startup-id hsetroot -solid "#076678"
 exec --no-startup-id xfsettingsd --sm-client-disable
 exec --no-startup-id xfce4-power-manager --sm-client-disable
 exec --no-startup-id xfce4-volumed

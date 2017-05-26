@@ -145,6 +145,7 @@ format-prefix = 
 format-prefix-foreground = ${colors.foreground}
 
 label = %date% %time%
+label-foreground = ${colors.foreground}
 
 [module/volume]
 type = internal/volume
