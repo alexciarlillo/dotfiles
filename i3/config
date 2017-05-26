@@ -19,7 +19,8 @@ font pango:monospace 8
 for_window [class="^.*"] border pixel 0
 
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-exec_always --no-startup-id feh --bg-fill --randomize $HOME/.config/feh/*
+#exec_always --no-startup-id feh --bg-fill --randomize $HOME/.config/feh/*
+exec_always --no-startup-id hsetroot -solid "#fbf1c7"
 exec --no-startup-id xfsettingsd --sm-client-disable
 exec --no-startup-id xfce4-power-manager --sm-client-disable
 exec --no-startup-id xfce4-volumed
@@ -113,10 +114,10 @@ bindsym $mod+Shift+8 move container to workspace 8
 bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
 
-bindsym $mod+Shift+Left move container to output left
-bindsym $mod+Shift+Right move container to output right
-bindsym $mod+Shift+Up move container to output up
-bindsym $mod+Shift+Down move container to output down
+bindsym $mod+Shift+Left move workspace to output left
+bindsym $mod+Shift+Right move workspace to output right
+bindsym $mod+Shift+Up move workspace to output up
+bindsym $mod+Shift+Down move workspace to output down
 
 # reload the configuration file
 bindsym $mod+Shift+c reload

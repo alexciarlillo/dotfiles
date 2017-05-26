@@ -39,7 +39,7 @@ export EDITOR="vim"
 export GIT_SSH=/usr/bin/ssh
 
 # add composer bins to path
-export PATH="$PATH:$HOME/.composer/vendor/bin"
+export PATH="$PATH:$HOME/.config/composer/vendor/bin"
 # add rvm bins to path
 export PATH="$PATH:$HOME/.rvm/bin"
 # add yarn bins to path

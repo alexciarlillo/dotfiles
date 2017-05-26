@@ -60,6 +60,7 @@ module-margin-right = 0
 font-0 = "Hack:size=10;2"
 font-1 = "FontAwesome:size=10;2"
 font-2 = "Hack:size=18;4"
+font-3 = "FontAwesome:size=18;3"
 
 modules-left = i3 xwindow
 modules-center = date
@@ -71,18 +72,16 @@ tray-background = ${colors.light-gray}
 
 [module/xwindow]
 type = internal/xwindow
-format-foreground = ${colors.foreground}
-format-background = ${colors.background}
-format-suffix = %{T3}%{T-}
-label = %title% 
-label-padding = 1
-label-maxlen = 30
+format-suffix =    %{F#b16286 B#282828}%{T3}%{T-}%{F#ebdbb2 B#282828}
+label = %{F#a89984 B#b16286}%{T3}%{T-}%{F#282828} %title%  
+label-padding = 0
+label-maxlen = 90
 label-foreground = ${colors.background}
-label-background = ${colors.foreground}
+label-background = #b16286
 
 [module/i3]
 type = internal/i3
-format = <label-state><label-mode>%{F#a89984 B#ebdbb2}%{T3}%{T-}%{F#ebdbb2 B#282828}
+format = <label-state><label-mode>
 index-sort = true
 wrapping-scroll = false
 
@@ -103,11 +102,11 @@ label-mode-background = ${colors.light-gray}
 label-focused = %icon%
 label-focused-background = ${colors.dark-magenta}
 label-focused-foreground = ${colors.white}
-label-focused-padding = 1
+label-focused-padding = 2
 
 ; unfocused = Inactive workspace on any monitor
 label-unfocused = %icon%
-label-unfocused-padding = 1
+label-unfocused-padding = 2
 label-unfocused-background = ${colors.light-gray}
 label-unfocused-foreground = ${colors.black}
 
@@ -115,12 +114,12 @@ label-unfocused-foreground = ${colors.black}
 label-visible = %icon%
 label-visible-background = ${colors.dark-magenta}
 label-visible-foreground = ${colors.light-gray}
-label-visible-padding = 1
+label-visible-padding = 2
 
 ; urgent = Workspace with urgency hint set
 label-urgent = %icon%
 label-urgent-background = ${colors.dark-red}
-label-urgent-padding = 1
+label-urgent-padding = 2
 
 [module/eth]
 type = internal/network
@@ -288,6 +287,10 @@ menu-0-2 = "logout "
 menu-0-2-exec = i3-nagbar -t warning -m 'Do you really want to logout?' -b 'Yes' 'i3-msg exit'
 menu-0-2-foreground = ${colors.black}
 menu-0-2-background = ${colors.dark-red}
+menu-0-3 = "sleep "
+menu-0-3-exec = i3-nagbar -t warning -m 'Do you really want to sleep?' -b 'Yes' 'sudo pm-suspend'
+menu-0-3-foreground = ${colors.black}
+menu-0-3-background = ${colors.dark-red}
 
 [settings]
 screenchange-reload = true
