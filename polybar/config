@@ -267,7 +267,7 @@ format-full-foreground = ${colors.black}
 [module/powermenu]
 type = custom/menu
 
-label-open = "%{F#cc241d B#fabd2f}%{T3}%{T-}%{F#282828 B#cc241d}  %{F#a89984 B#cc241d}%{T3}%{T-}%{F#282828 B#cc241d}"
+label-open = "%{F#cc241d B#fabd2f}%{T3}%{T-}%{F#282828 B#cc241d}   %{F#a89984 B#cc241d}%{T3}%{T-}%{F#282828 B#cc241d}"
 label-open-foreground = ${colors.black}
 label-open-background = ${colors.dark-red}
 label-close = "%{F#cc241d B#fabd2f}%{T3}%{T-}%{F#282828 B#cc241d}  "
