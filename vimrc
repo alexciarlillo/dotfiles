@@ -4,7 +4,7 @@ filetype off
 
 " get rid of annoying 'Flying Vim' title and system beep
 set titleold=~
-set visualbell       
+set noeb vb t_vb=
 
 autocmd BufEnter * let &titlestring = $HOSTNAME . ":" . expand("%:p:~")
 
