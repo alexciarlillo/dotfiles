@@ -42,7 +42,7 @@ fixed-center = true
 background = ${colors.background}
 foreground = ${colors.foreground}
 
-line-size = 1
+line-size = 3
 line-color = ${colors.white}
 
 border-left-size = 0
@@ -100,20 +100,21 @@ label-mode-background = ${colors.light-gray}
 
 ; focused = Active workspace on focused monitor
 label-focused = %icon%
-label-focused-background = ${colors.dark-magenta}
-label-focused-foreground = ${colors.white}
+label-focused-background = ${colors.light-gray}
+label-focused-underline = ${colors.dark-magenta}
+label-focused-foreground = ${colors.black}
 label-focused-padding = 2
 
 ; unfocused = Inactive workspace on any monitor
 label-unfocused = %icon%
 label-unfocused-padding = 2
 label-unfocused-background = ${colors.light-gray}
-label-unfocused-foreground = ${colors.black}
+label-unfocused-foreground = ${colors.white}
 
 ; visible = Active workspace on unfocused monitor
 label-visible = %icon%
-label-visible-background = ${colors.dark-magenta}
-label-visible-foreground = ${colors.light-gray}
+label-visible-background = ${colors.light-gray}
+label-visible-foreground = ${colors.black}
 label-visible-padding = 2
 
 ; urgent = Workspace with urgency hint set
