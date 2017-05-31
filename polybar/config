@@ -202,17 +202,17 @@ type = internal/network
 interface = wlp4s0
 interval = 3.0
 
-format-connected-prefix = %{F#83a598 B#b8bb26}%{T3}%{T-}%{F#282828 B#83a598} 
+format-connected-prefix = %{F#458588 B#b8bb26}%{T3}%{T-}%{F#282828 B#458588} 
 format-connected = <label-connected>
 format-connected-padding = 0
 format-connected-foreground = ${colors.black}
-format-connected-background = ${colors.blue}
+format-connected-background = ${colors.dark-blue}
 label-connected = " %essid% "
 
-format-disconnected-prefix = %{F#83a598 B#b8bb26}%{T3}%{T-}%{F#282828 B#83a598} 
+format-disconnected-prefix = %{F#83a598 B#b8bb26}%{T3}%{T-}%{F#282828 B#458588} 
 format-disconnected-padding = 0
 format-disconnected-foreground = ${colors.black}
-format-disconnected-background = ${colors.blue}
+format-disconnected-background = ${colors.dark-blue}
 format-disconnected = <label-disconnected>
 label-disconnected = " %ifname% "
 
@@ -223,13 +223,13 @@ adapter = AC
 full-at = 99
 
 format-charging-padding = 0
-format-charging-prefix= %{F#fabd2f B#83a598}%{T3}%{T-}%{F#282828 B#fabd2f} 
+format-charging-prefix= %{F#fabd2f B#458588}%{T3}%{T-}%{F#282828 B#fabd2f} 
 format-charging = " B0:<label-charging>"
 format-charging-background = ${colors.yellow}
 format-charging-foreground = ${colors.black}
 
 format-discharging-padding = 0
-format-discharging-prefix = %{F#fabd2f B#83a598}%{T3}%{T-}%{F#282828 B#fabd2f} 
+format-discharging-prefix = %{F#fabd2f B#458588}%{T3}%{T-}%{F#282828 B#fabd2f} 
 format-discharging = " B0:<label-discharging>"
 format-discharging-background = ${colors.yellow}
 format-discharging-foreground = ${colors.black}
