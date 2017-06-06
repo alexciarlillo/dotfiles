@@ -42,7 +42,7 @@ fixed-center = true
 background = ${colors.background}
 foreground = ${colors.foreground}
 
-line-size = 3
+line-size = 4
 line-color = ${colors.white}
 
 border-left-size = 0
@@ -94,7 +94,7 @@ ws-icon-2 = 3;
 ws-icon-3 = 4;
 ws-icon-default =  
 
-label-mode-padding = 2
+label-mode-padding = 1
 label-mode-foreground = ${colors.dark-red}
 label-mode-background = ${colors.light-gray}
 
@@ -103,11 +103,11 @@ label-focused = %icon%
 label-focused-background = ${colors.light-gray}
 label-focused-underline = ${colors.dark-magenta}
 label-focused-foreground = ${colors.black}
-label-focused-padding = 2
+label-focused-padding = 1
 
 ; unfocused = Inactive workspace on any monitor
 label-unfocused = %icon%
-label-unfocused-padding = 2
+label-unfocused-padding = 1
 label-unfocused-background = ${colors.light-gray}
 label-unfocused-foreground = ${colors.white}
 
@@ -115,12 +115,12 @@ label-unfocused-foreground = ${colors.white}
 label-visible = %icon%
 label-visible-background = ${colors.light-gray}
 label-visible-foreground = ${colors.black}
-label-visible-padding = 2
+label-visible-padding = 1
 
 ; urgent = Workspace with urgency hint set
 label-urgent = %icon%
 label-urgent-background = ${colors.dark-red}
-label-urgent-padding = 2
+label-urgent-padding = 1
 
 [module/eth]
 type = internal/network
