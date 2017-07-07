@@ -43,6 +43,38 @@ Xft.dpi: 96
 *color7:  #a89984
 *color15: #ebdbb2
 
+! 256 color resources
+*.color24:  #076678
+*.color66:  #427b58
+*.color88:  #9d0006
+*.color96:  #8f3f71
+*.color100: #79740e
+*.color108: #8ec07c
+*.color109: #83a598
+*.color130: #af3a03
+*.color136: #b57614
+*.color142: #b8bb26
+*.color167: #fb4934
+*.color175: #d3869b
+*.color208: #fe8019
+*.color214: #fabd2f
+*.color223: #ebdbb2
+*.color228: #f4e8ba
+*.color229: #fdf4c1
+*.color230: #ffffc8
+*.color234: #1d2021
+*.color235: #282828
+*.color236: #32302f
+*.color237: #3c3836
+*.color239: #504945
+*.color241: #665c54
+*.color243: #7c6f64
+*.color244: #928374
+*.color245: #928374
+*.color246: #a89984
+*.color248: #bdae93
+*.color250: #d5c4a1
+
 !-------------------------------------------------------------------------------
 ! Rofi color theme
 !
@@ -66,4 +98,4 @@ rofi.color-window: #32302f, #a89984, #a89984
 rofi.color-normal: #32302f, #ebdbb2, #3c3836, #665c54, #fbf1c7
 rofi.color-active: #d79921, #32302f, #d79921, #fabd2f, #32302f
 rofi.color-urgent: #cc241d, #32302f, #cc241d, #fb4934, #32302f
-rofi.font: Hack 10
+rofi.font: Hack 11

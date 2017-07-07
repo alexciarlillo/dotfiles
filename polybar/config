@@ -11,7 +11,7 @@
 background = ${xrdb:background:#282828}
 foreground = ${xrdb:foreground:#ebdbb2}
 black = ${xrdb:color0:#282828}
-dark-gray = {$xrdb:color8:#928374}
+dark-gray = ${xrdb:color8:#928374}
 dark-red = ${xrdb:color1:#cc241d}
 red = ${xrdb:color9:#fb4934}
 dark-green = ${xrdb:color2:#98971a}
@@ -43,7 +43,7 @@ background = ${colors.background}
 foreground = ${colors.foreground}
 
 line-size = 4
-line-color = ${colors.white}
+line-color = ${colors.foreground}
 
 border-left-size = 0
 border-right-size = 0
@@ -57,7 +57,7 @@ padding-right = 0
 module-margin-left = 0
 module-margin-right = 0
 
-font-0 = "Hack:size=10;2"
+font-0 = "Source Code Pro for Powerline:size=10;2"
 font-1 = "FontAwesome:size=10;2"
 font-2 = "Hack:size=18;4"
 font-3 = "FontAwesome:size=18;3"
@@ -68,16 +68,15 @@ modules-right = volume memory cpu wlan eth battery0 battery1 powermenu
 
 tray-position = right
 tray-padding = 2
-tray-background = ${colors.light-gray}
+tray-background = ${colors.background}
 
 [module/xwindow]
 type = internal/xwindow
-format-suffix =    %{F#b16286 B#282828}%{T3}%{T-}%{F#ebdbb2 B#282828}
-label = %{F#a89984 B#b16286}%{T3}%{T-}%{F#282828} %title%  
-label-padding = 0
+label = %title%
+label-padding = 2
 label-maxlen = 90
-label-foreground = ${colors.background}
-label-background = #b16286
+label-foreground = ${colors.dark-yellow}
+label-background = ${colors.background}
 
 [module/i3]
 type = internal/i3
@@ -92,7 +91,7 @@ ws-icon-0 = 1;
 ws-icon-1 = 2;
 ws-icon-2 = 3;
 ws-icon-3 = 4;
-ws-icon-default =  
+ws-icon-default = 
 
 label-mode-padding = 1
 label-mode-foreground = ${colors.dark-red}
@@ -100,26 +99,25 @@ label-mode-background = ${colors.light-gray}
 
 ; focused = Active workspace on focused monitor
 label-focused = %icon%
-label-focused-background = ${colors.light-gray}
-label-focused-underline = ${colors.dark-magenta}
-label-focused-foreground = ${colors.black}
+label-focused-background = ${colors.background}
+label-focused-foreground = ${colors.foreground}
 label-focused-padding = 1
 
 ; unfocused = Inactive workspace on any monitor
 label-unfocused = %icon%
 label-unfocused-padding = 1
-label-unfocused-background = ${colors.light-gray}
-label-unfocused-foreground = ${colors.white}
+label-unfocused-background = ${colors.background}
+label-unfocused-foreground = ${colors.dark-gray}
 
 ; visible = Active workspace on unfocused monitor
 label-visible = %icon%
-label-visible-background = ${colors.light-gray}
-label-visible-foreground = ${colors.black}
+label-visible-background = ${colors.background}
+label-visible-foreground = ${colors.foreground}
 label-visible-padding = 1
 
 ; urgent = Workspace with urgency hint set
 label-urgent = %icon%
-label-urgent-background = ${colors.dark-red}
+label-urgent-foreground = ${colors.dark-red}
 label-urgent-padding = 1
 
 [module/eth]
@@ -152,48 +150,34 @@ label-foreground = ${colors.foreground}
 type = internal/volume
 
 format-volume-padding = 0
-format-volume-background = ${colors.cyan}
-format-volume-foreground = ${colors.black}
-format-volume-prefix = %{F#8ec07c B#282828}%{T3}%{T-}%{F#282828 B#8ec07c}
+format-volume-foreground = ${colors.cyan}
 format-volume = <label-volume> <bar-volume>
-label-volume = "  "
+label-volume = "  %percentage%"
 
 format-muted-padding = 0
-format-muted-prefix = %{F#8ec07c B#282828}%{T3}%{T-}%{F#282828 B#8ec07c}
 format-muted = <label-muted>
-label-muted = "  muted "
-label-muted-background = ${colors.cyan}
+label-muted = "  "
 label-muted-foreground = ${colors.dark-red}
-
-bar-volume-width = 8
-bar-volume-gradient = false
-bar-volume-indicator = 
-bar-volume-indicator-font = 2
-bar-volume-fill = ─
-bar-volume-fill-font = 2
-bar-volume-empty = ─
-bar-volume-empty-font = 2
-bar-volume-empty-foreground = ${colors.white}
 
 [module/memory]
 type = internal/memory
 interval = 2
-format-prefix = %{F#b8bb26 B#8ec07c}%{T3}%{T-}%{F#282828 B#b8bb26} 
-format-prefix-foreground = ${colors.black}
-format-prefix-background = ${colors.green}
-label-foreground = ${colors.black}
-label-background = ${colors.green}
-label =  %percentage_used%%
-label-padding = 0
+format-prefix = 
+format-prefix-foreground = ${colors.cyan}
+format-prefix-background = ${colors.background}
+label-foreground = ${colors.foreground}
+label-background = ${colors.background}
+label = %percentage_used%%
+label-padding = 1
 
 [module/cpu]
 type = internal/cpu
 interval = 2
-format-prefix = " "
-format-prefix-foreground = ${colors.black}
-format-prefix-background = ${colors.green}
-label-foreground = ${colors.black}
-label-background = ${colors.green}
+format-prefix = 
+format-prefix-foreground = ${colors.cyan}
+format-prefix-background = ${colors.background}
+label-foreground = ${colors.foreground}
+label-background = ${colors.background}
 label = %percentage%%
 label-padding = 1
 
@@ -202,19 +186,21 @@ type = internal/network
 interface = wlp4s0
 interval = 3.0
 
-format-connected-prefix = %{F#458588 B#b8bb26}%{T3}%{T-}%{F#282828 B#458588} 
+format-connected-prefix = 
+format-connected-prefix-foreground = ${colors.blue}
 format-connected = <label-connected>
 format-connected-padding = 0
-format-connected-foreground = ${colors.black}
-format-connected-background = ${colors.dark-blue}
-label-connected = " %essid% "
+format-connected-foreground = ${colors.foreground}
+format-connected-background = ${colors.background}
+label-connected = " %essid% "
 
-format-disconnected-prefix = %{F#83a598 B#b8bb26}%{T3}%{T-}%{F#282828 B#458588} 
+format-disconnected-prefix = 
+format-disconnected-prefix-foreground = ${colors.dark-red}
 format-disconnected-padding = 0
-format-disconnected-foreground = ${colors.black}
-format-disconnected-background = ${colors.dark-blue}
+format-disconnected-foreground = ${colors.blue}
+format-disconnected-background = ${colors.background}
 format-disconnected = <label-disconnected>
-label-disconnected = " %ifname% "
+label-disconnected = " %ifname% "
 
 [module/battery0]
 type = internal/battery
@@ -222,23 +208,17 @@ battery = BAT0
 adapter = AC
 full-at = 99
 
-format-charging-padding = 0
-format-charging-prefix= %{F#fabd2f B#458588}%{T3}%{T-}%{F#282828 B#fabd2f} 
-format-charging = " B0:<label-charging>"
-format-charging-background = ${colors.yellow}
-format-charging-foreground = ${colors.black}
+format-charging-prefix = " "
+format-charging-prefix-foreground = ${colors.yellow}
+format-charging = " B0:<label-charging> "
 
-format-discharging-padding = 0
-format-discharging-prefix = %{F#fabd2f B#458588}%{T3}%{T-}%{F#282828 B#fabd2f} 
-format-discharging = " B0:<label-discharging>"
-format-discharging-background = ${colors.yellow}
-format-discharging-foreground = ${colors.black}
+format-discharging-prefix = " "
+format-discharging-prefix-foreground = ${colors.yellow}
+format-discharging = " B0:<label-discharging> "
 
-format-full-padding = 0
-format-full-prefix= %{F#fabd2f B#83a598}%{T3}%{T-}%{F#282828 B#fabd2f} 
-format-full = " B0:<label-full>"
-format-full-background = ${colors.yellow}
-format-full-foreground = ${colors.black}
+format-full-prefix = " "
+format-full-prefix-foreground = ${colors.yellow}
+format-full = " B0:<label-full> "
 
 [module/battery1]
 type = internal/battery
@@ -246,53 +226,39 @@ battery = BAT1
 adapter = AC
 full-at = 99
 
-format-charging-padding = 1
-format-charging-prefix= "B1:"
-format-charging = <label-charging>
-format-charging-background = ${colors.yellow}
-format-charging-foreground = ${colors.black}
-
-format-discharging-padding = 1
-format-discharging-prefix= "B1:"
-format-discharging = <label-discharging>
-format-discharging-background = ${colors.yellow}
-format-discharging-foreground = ${colors.black}
-
-format-full-padding = 1
-format-full-prefix = "B1:"
-format-full = <label-full>
-format-full-background = ${colors.yellow}
-format-full-foreground = ${colors.black}
+format-charging = " B1:<label-charging>"
+format-discharging = " B1:<label-discharging>"
+format-full = " B1:<label-full>"
 
 [module/powermenu]
 type = custom/menu
 
-label-open = "%{F#cc241d B#fabd2f}%{T3}%{T-}%{F#282828 B#cc241d}   %{F#a89984 B#cc241d}%{T3}%{T-}%{F#282828 B#cc241d}"
-label-open-foreground = ${colors.black}
-label-open-background = ${colors.dark-red}
-label-close = "%{F#cc241d B#fabd2f}%{T3}%{T-}%{F#282828 B#cc241d}  "
-label-close-foreground = ${colors.black}
-label-close-background = ${colors.dark-red}
+label-open = "  "
+label-open-foreground = ${colors.dark-red}
+label-open-background = ${colors.background}
+label-close = "  "
+label-close-foreground = ${colors.dark-red}
+label-close-background = ${colors.background}
 label-separator = |
-label-separator-foreground = ${colors.black}
-label-separator-background = ${colors.dark-red}
+label-separator-foreground = ${colors.foreground}
+label-separator-background = ${colors.background}
 
 menu-0-0 = reboot
 menu-0-0-exec = i3-nagbar -t warning -m 'Do you really want to reboot?' -b 'Yes' 'sudo reboot'
-menu-0-0-foreground = ${colors.black}
-menu-0-0-background = ${colors.dark-red}
+menu-0-0-foreground = ${colors.dark-yellow}
+menu-0-0-background = ${colors.background}
 menu-0-1 = power off
 menu-0-1-exec = i3-nagbar -t warning -m 'Do you really want to shutdown?' -b 'Yes' 'sudo poweroff'
-menu-0-1-foreground = ${colors.black}
-menu-0-1-background = ${colors.dark-red}
+menu-0-1-foreground = ${colors.dark-red}
+menu-0-1-background = ${colors.background}
 menu-0-2 = "logout "
 menu-0-2-exec = i3-nagbar -t warning -m 'Do you really want to logout?' -b 'Yes' 'i3-msg exit'
-menu-0-2-foreground = ${colors.black}
-menu-0-2-background = ${colors.dark-red}
+menu-0-2-foreground = ${colors.dark-blue}
+menu-0-2-background = ${colors.background}
 menu-0-3 = "sleep "
 menu-0-3-exec = i3-nagbar -t warning -m 'Do you really want to sleep?' -b 'Yes' 'sudo pm-suspend'
-menu-0-3-foreground = ${colors.black}
-menu-0-3-background = ${colors.dark-red}
+menu-0-3-foreground = ${colors.dark-cyan}
+menu-0-3-background = ${colors.background}
 
 [settings]
 screenchange-reload = true

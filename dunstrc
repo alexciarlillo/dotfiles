@@ -1,5 +1,5 @@
 [global]
-font = Hack 11
+font = Source Code Pro for Powerline 11
 
 # Allow a small subset of html markup:
 #   <b>bold</b>
@@ -70,7 +70,7 @@ hide_duplicates_count = yes
 # The width can be negative.  In this case the actual width is the
 # screen width minus the width defined in within the geometry option.
 #geometry = "250x50-40+40"
-geometry = "300x50-10+45"
+geometry = "300x50-15+40"
 
 # Shrink window if it's smaller than the width.  Will be ignored if
 # width is 0.
@@ -157,7 +157,7 @@ icon_folders = /usr/share/icons/Paper/16x16/mimetypes/:/usr/share/icons/Paper/48
 
 [frame]
 width = 3
-color = "#458588"
+color = "#d79921"
 
 [shortcuts]
 
@@ -183,23 +183,18 @@ context = ctrl+shift+period
 [urgency_low]
 # IMPORTANT: colors have to be defined in quotation marks.
 # Otherwise the "#" and following would be interpreted as a comment.
-frame_color = "#458588"
 foreground = "#458588"
 background = "#282828"
 timeout = 4
 
 [urgency_normal]
-frame_color = "#458588"
-foreground = "#458588"
+foreground = "#d79921"
 background = "#282828"
-#background = "#2B313C"
 timeout = 6
 
 [urgency_critical]
-frame_color = "cc241d"
 foreground = "#cc241d"
 background = "#282828"
-#background = "#2B313C"
 timeout = 8
 
 
