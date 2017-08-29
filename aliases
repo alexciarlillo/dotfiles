@@ -11,4 +11,4 @@ alias wip="git add . && git commit -m 'wip'"
 alias gs="git status"
 
 # VMs
-alias homestead="cd ~/development/envrionments/homestead"
+alias homestead="cd ~/development/environments/homestead"
