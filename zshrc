@@ -61,3 +61,7 @@ export NVM_DIR="/home/ciarlill/.nvm"
 # load RVM
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
 
+if [ -f ~/.aliases ]; then
+    . ~/.aliases
+fi
+
