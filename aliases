@@ -1,11 +1,20 @@
 # php
+
+t() {
+  if [ -f vendor/bin/phpunit ]; then
+    vendor/bin/phpunit "$@"
+  else
+    phpunit "$@"
+  fi
+}
+
 alias art="php artisan"
 alias t="phpunit"
 alias tf="phpunit --filter"
 alias migrate="php artisan migrate"
 
 # git
-alias nag="git reset --hard && git clean -df"
+alias nah="git reset --hard && git clean -df"
 alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias wip="git add . && git commit -m 'wip'"
 alias gs="git status"
