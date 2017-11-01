@@ -158,7 +158,7 @@ bindsym $mod+r mode "resize"
 for_window [class="(?i)virtualbox"] floating enable border normal
 
 assign [class="Google-chrome"] 1
-assign [title="Google Hangouts"] 3
-assign [class="Pidgin"] 3
-assign [class="Atom"] 4
-assign [class="Sublime_text"] 4
+assign [title="Google Hangouts"] 4
+assign [class="Pidgin"] 4
+assign [class="Atom"] 3
+assign [class="Sublime_text"] 3
