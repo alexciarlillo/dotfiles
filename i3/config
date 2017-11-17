@@ -25,7 +25,7 @@ exec_always --no-startup-id hsetroot -solid "#83a598"
 exec --no-startup-id xfsettingsd --sm-client-disable
 exec --no-startup-id xfce4-power-manager --sm-client-disable
 exec --no-startup-id xfce4-volumed
-exec --no-startup-id compton --config $HOME/.config/compton.conf
+#exec --no-startup-id compton --config $HOME/.config/compton.conf
 exec --no-startup-id dunst -config $HOME/.config/dunstrc
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
@@ -102,6 +102,16 @@ bindsym $mod+7 workspace 7
 bindsym $mod+8 workspace 8
 bindsym $mod+9 workspace 9
 bindsym $mod+0 workspace 10
+bindcode $mod+87 workspace 1
+bindcode $mod+88 workspace 2
+bindcode $mod+89 workspace 3
+bindcode $mod+83 workspace 4
+bindcode $mod+84 workspace 5
+bindcode $mod+85 workspace 6
+bindcode $mod+79 workspace 7
+bindcode $mod+80 workspace 8
+bindcode $mod+81 workspace 9
+bindcode $mod+90 workspace 10
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace 1
@@ -114,6 +124,18 @@ bindsym $mod+Shift+7 move container to workspace 7
 bindsym $mod+Shift+8 move container to workspace 8
 bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
+bindcode $mod+Shift+87 move container to workspace 1
+bindcode $mod+Shift+88 move container to workspace 2
+bindcode $mod+Shift+89 move container to workspace 3
+bindcode $mod+Shift+83 move container to workspace 4
+bindcode $mod+Shift+84 move container to workspace 5
+bindcode $mod+Shift+85 move container to workspace 6
+bindcode $mod+Shift+79 move container to workspace 7
+bindcode $mod+Shift+80 move container to workspace 8
+bindcode $mod+Shift+81 move container to workspace 9
+bindcode $mod+Shift+90 move container to workspace 10
+
+
 
 bindsym $mod+Shift+Left move workspace to output left
 bindsym $mod+Shift+Right move workspace to output right
@@ -159,6 +181,7 @@ for_window [class="(?i)virtualbox"] floating enable border normal
 
 assign [class="Google-chrome"] 1
 assign [title="Google Hangouts"] 4
-assign [class="Pidgin"] 4
-assign [class="Atom"] 3
-assign [class="Sublime_text"] 3
+assign [class="HipChat"] 4
+assign [class="zoom"] 7
+assign [class="Atom"] 6
+assign [class="Sublime_text"] 6
