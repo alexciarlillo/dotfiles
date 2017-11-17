@@ -3,3 +3,5 @@
 	email = alex.ciarlillo@gmail.com
 [push]
 	default = current
+[mergetool]
+	keepBackup = false
