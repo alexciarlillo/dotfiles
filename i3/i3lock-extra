@@ -58,8 +58,21 @@ image_prepare() {
 	fi
 	
 	if [[ "$overlay_image" ]]; then
-		convert -gravity center -composite -matte "$image_file" "$overlay_image" "$cfg_tmpdir/lockbg.png"
-		image_file="$cfg_tmpdir/lockbg.png"
+                
+                xrandr | egrep '[[:space:]]connected [[:digit:]]' | while read -r line ; do
+                    GEO=`echo $line | cut -f3 -d' '`
+                    WIDTH=`echo $GEO | cut -f1 -d'x'`
+                    HEIGHT=`echo $GEO | cut -f2 -d'x' | cut -f1 -d'+'`
+                    PLUSX=`echo $GEO | cut -f2 -d'x' | cut -f2 -d'+'`
+                    PLUSY=`echo $GEO | cut -f2 -d'x' | cut -f3 -d'+'`
+
+                    X=$(( (WIDTH / 2) + PLUSX - 64 ))
+                    Y=$(( (HEIGHT / 2) + PLUSY - 64 ))
+		    
+                    convert -geometry +$X+$Y -composite -matte "$image_file" "$overlay_image" "$cfg_tmpdir/lockbg.png"
+                done
+	
+                image_file="$cfg_tmpdir/lockbg.png"
 	fi
 }
 
