@@ -5,3 +5,5 @@
 	default = current
 [mergetool]
 	keepBackup = false
+[core]
+	excludesfile = /home/ciarlill/.dotfiles/.gitignore_global
