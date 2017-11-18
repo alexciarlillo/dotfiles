@@ -37,6 +37,7 @@ antigen apply
 export TERM=xterm-256color
 export EDITOR="vim"
 export GIT_SSH=/usr/bin/ssh
+export XDEBUG_CONFIG="idekey=VSCODE"
 
 # add composer bins to path
 export PATH="$PATH:$HOME/.config/composer/vendor/bin"
