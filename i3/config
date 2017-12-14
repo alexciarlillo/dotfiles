@@ -22,7 +22,7 @@ for_window [class="^.*"] border pixel 0
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id feh --bg-fill $HOME/.config/feh/current
 #exec_always --no-startup-id hsetroot -solid "#83a598"
-exec --no-startup-id $HOME/.config/i3/better-lock -U $HOME/.config/feh/current
+exec --no-startup-id $HOME/.config/i3/better-lock -u $HOME/.config/feh/current
 exec --no-startup-id xfsettingsd --sm-client-disable
 exec --no-startup-id xfce4-power-manager --sm-client-disable
 exec --no-startup-id xfce4-volumed
