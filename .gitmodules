@@ -3,4 +3,4 @@
 	url = https://github.com/zsh-users/antigen.git
 [submodule "homepage"]
 	path = homepage
-	url = git@github.com:alexciarlillo/Homepage.git
+	url = https://github.com/alexciarlillo/Homepage.git
