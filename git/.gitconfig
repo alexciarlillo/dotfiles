@@ -6,4 +6,4 @@
 [mergetool]
 	keepBackup = false
 [core]
-	excludesfile = /home/ciarlill/.dotfiles/.gitignore_global
+	excludesfile = /home/ciarlill/.gitignore_global
