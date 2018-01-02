@@ -190,9 +190,19 @@ for_window [class="(?i)virtualbox"] floating enable border normal
 
 assign [class="Google-chrome"] 1
 assign [class="Firefox"] 1
+
+assign [class="zoom"] 2
+
 assign [title="Google Hangouts"] 4
 assign [class="HipChat"] 4
-assign [class="zoom"] 7
-assign [class="Atom"] 6
+
+assign [class="Mysql-workbench-bin"] 5
+
 assign [class="Sublime_text"] 6
 assign [class="Code"] 6
+
+assign [class="Thunderbird"] 7
+
+assign [class="Postman"] 8
+
+assign [class="Thunar"] 9
