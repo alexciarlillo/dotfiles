@@ -34,6 +34,7 @@ BULLETTRAIN_PROMPT_ORDER=(
 
 antigen apply
 
+export TERMINAL=kitty
 export TERM=xterm-256color
 export EDITOR="vim"
 export GIT_SSH=/usr/bin/ssh
