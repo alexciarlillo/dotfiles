@@ -1,6 +1,4 @@
 [submodule "antigen"]
 	path = antigen
 	url = https://github.com/zsh-users/antigen.git
-[submodule "homepage"]
-	path = homepage
-	url = https://github.com/alexciarlillo/Homepage.git
+
