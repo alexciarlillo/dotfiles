@@ -8,9 +8,9 @@
 ;=====================================================
 
 [colors]
-background = ${xrdb:background:#282828}
+background = ${xrdb:background:#1d2021}
 foreground = ${xrdb:foreground:#ebdbb2}
-black = ${xrdb:color0:#282828}
+black = ${xrdb:color0:#1d2021}
 dark-gray = ${xrdb:color8:#928374}
 dark-red = ${xrdb:color1:#cc241d}
 red = ${xrdb:color9:#fb4934}
