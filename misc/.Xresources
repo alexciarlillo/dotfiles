@@ -15,11 +15,11 @@ Xft.dpi: 96
 ! -----------------------------------------------------------------------------
 
 ! hard contrast: *background: #1d2021
-*background: #282828
+*background: #1d2021
 ! soft contrast: *background: #32302f
 *foreground: #ebdbb2
 ! Black + DarkGrey
-*color0:  #282828
+*color0:  #1d2021
 *color8:  #928374
 ! DarkRed + Red
 *color1:  #cc241d
@@ -95,7 +95,7 @@ rofi.color-enabled: true
 rofi.color-window: #32302f, #a89984, #a89984
 
 !                  bg       fg       bg-alt   hl-bg    hl-fg
-rofi.color-normal: #32302f, #ebdbb2, #3c3836, #665c54, #fbf1c7
+rofi.color-normal: #1d2021, #ebdbb2, #3c3836, #665c54, #fbf1c7
 rofi.color-active: #d79921, #32302f, #d79921, #fabd2f, #32302f
 rofi.color-urgent: #cc241d, #32302f, #cc241d, #fb4934, #32302f
 rofi.font: Hack 11
