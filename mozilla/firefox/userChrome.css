@@ -12,9 +12,9 @@
   --identity-orange-color: #d79921;
 }
 
-/* #TabsToolbar {
+#TabsToolbar {
     visibility: collapse !important;
-} */
+}
 
 /* Remove white flash on tab load */
 .browserContainer {
