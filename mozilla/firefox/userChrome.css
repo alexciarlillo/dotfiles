@@ -1,15 +1,15 @@
 @namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
 
 :root:-moz-lwtheme-brighttext {
-  --chrome-background-color: #3c3836 !important;
-  --chrome-color: #ebdbb2 !important;
-  --chrome-secondary-background-color: #1d2021 !important;
-  --toolbox-border-bottom-color: #282828 !important;
-  --url-and-searchbar-border-color: #282828 !important;
-  --focus-ring-box-shadow: #1d2021 !important;
-  --url-and-searchbar-background-color: #282828 !important;
-  --identity-blue-color: #458588;
-  --identity-orange-color: #d79921;
+  --chrome-background-color: #2f343f !important;
+  --chrome-color: #d8dee8 !important;
+  --chrome-secondary-background-color: #2f343f !important;
+  --toolbox-border-bottom-color: #4b5262 !important;
+  --url-and-searchbar-border-color: #4b5262 !important;
+  --focus-ring-box-shadow: #2f343f !important;
+  --url-and-searchbar-background-color: #4b5262 !important;
+  --identity-blue-color: #81a1c1;
+  --identity-orange-color: #ebcb8b;
 }
 
 #TabsToolbar {
@@ -18,12 +18,12 @@
 
 /* Remove white flash on tab load */
 .browserContainer {
-  background-color: #1d2021 !important;
+  background-color: #2f343f !important;
 }
 
 /* Address bar focus styles */
 #urlbar[focused="true"], .searchbar-textbox[focused="true"] {
-  border-color: #444444 !important;
+  border-color: #d8dee8 !important;
 }
 
 /* Remove top border of selected tab */

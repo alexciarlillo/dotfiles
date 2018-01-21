@@ -8,24 +8,24 @@
 ;=====================================================
 
 [colors]
-background = ${xrdb:background:#1d2021}
-foreground = ${xrdb:foreground:#ebdbb2}
-black = ${xrdb:color0:#1d2021}
-dark-gray = ${xrdb:color8:#928374}
-dark-red = ${xrdb:color1:#cc241d}
-red = ${xrdb:color9:#fb4934}
-dark-green = ${xrdb:color2:#98971a}
-green = ${xrdb:color10:#b8bb26}
-dark-yellow = ${xrdb:color3:#d79921}
-yellow = ${xrdb:color11:#fabd2f}
-dark-blue = ${xrdb:color4:#458588}
-blue = ${xrdb:color12:#83a598}
-dark-magenta = ${xrdb:color5:#b16286}
-magenta = ${xrdb:color13:#d3869b}
-dark-cyan = ${xrdb:color6:#689d6a}
-cyan = ${xrdb:color14:#8ec07c}
-light-gray = ${xrdb:color7:#a89984}
-white = ${xrdb:color15:#ebdbb2}
+background = ${xrdb:background}
+foreground = ${xrdb:foreground}
+black = ${xrdb:color0}
+dark-gray = ${xrdb:color8}
+dark-red = ${xrdb:color1}
+red = ${xrdb:color9}
+dark-green = ${xrdb:color2}
+green = ${xrdb:color10}
+dark-yellow = ${xrdb:color3}
+yellow = ${xrdb:color11}
+dark-blue = ${xrdb:color4}
+blue = ${xrdb:color12}
+dark-magenta = ${xrdb:color5}
+magenta = ${xrdb:color13}
+dark-cyan = ${xrdb:color6}
+cyan = ${xrdb:color14}
+light-gray = ${xrdb:color7}
+white = ${xrdb:color15}
 primary = ${xrdb:color10}
 secondary = ${xrdb:color11}
 alert = ${xrdb:color1}
