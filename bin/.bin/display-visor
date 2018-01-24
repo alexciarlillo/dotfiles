@@ -1,0 +1,116 @@
+#!/bin/bash
+
+# Shamelessly taken from https://github.com/beanaroo/display-visor
+# Simplified and modified for my specific setup
+
+lidswitch=LID
+lidstatus=$(cat /proc/acpi/button/lid/$lidswitch/state 2>/dev/null | awk '{print $NF}')
+
+## Error Handling
+handle_err ()
+{
+    # Test for running Xorg server
+    if [ -z "$(ps -C Xorg --no-headers)" ]; then
+        echo "$prefix No Xorg server found. Exiting..."
+        exit 1
+    fi
+
+    
+    # Test for valid laptop lid status.
+    if [ -z "$lidstatus" ]; then
+        echo "$prefix Laptop lid switch $lidswitch not found. Exiting..."
+        exit 1
+    fi
+}
+
+## Declare Output Devices
+declare_outputs ()
+{
+    devices=$(find /sys/class/drm/*/status)
+    while read l ; do
+        dir=$(dirname $l)
+        status=$(cat $l)
+        dev=$(echo $dir | cut -d\- -f 2-)
+
+        if [ $(expr match  $dev "HDMI") != "0" ]; then
+            dev=HDMI${dev#HDMI-?-}
+        else
+            dev=$(echo $dev | tr -d '-')
+        fi
+
+        if [ "connected" == "$status" ]; then
+            if [ -z "$wsinfo" ]; then
+                echo "$prefix $dev connected"
+            fi
+            declare -gA $dev="yes"
+        fi
+    done <<< "$devices"
+}
+
+## Configure monitors for closed lid
+config_closed_lid ()
+{
+    echo "$prefix Laptop lid is closed"
+    if [ -n "$DP3" -a -n "$DP4" ]; then # working from home
+        echo "$prefix SETTING: DP3 (Primary) - DP4 (Right)"
+        xrandr --output eDP1 --off DP2-1 \
+               --output DP2-1 --auto --primary \
+               --output DP2-2 --auto --right-of DP2-1
+    elif [ -n "$HDMI2" ]; then # hooked up to a TV
+        echo "$prefix SETTING: HDMI2 (Primary)"
+        xrandr --output eDP1 --off \
+               --output HDMI2 --auto --primary
+    else # panic
+        echo "$prefix No external monitors are plugged in"
+        xrandr --output eDP1 --auto --primary
+    fi
+}
+
+## Configure monitors for open lid
+config_open_lid ()
+{
+    echo "$prefix Laptop lid is open"
+    if [ -n "$DP3" -a -n "$DP4" ]; then
+        echo "$prefix SETTING: eDP1 (Left) - DP2-1 (Primary) - DP2-2 (Right)"
+        xrandr --output DP2-1 --auto --primary \
+               --output eDP1 --auto --below DP2-1 --noprimary \
+               --output DP2-2 --auto --right-of DP2-1 --noprimary
+    elif [ -n "$HDMI2" ]; then
+        echo "$prefix SETTING: eDP1 (Primary) - HDMI2 (Right)"
+        xrandr --output eDP1 --auto --primary \
+               --output HDMI2 --auto --right-of eDP1 --noprimary
+    else
+        echo "$prefix No external monitors are plugged in"
+        xrandr --output eDP1 --auto --primary
+    fi
+}
+
+restart_i3()
+{
+    # Test for running instance of i3
+    if [ -n "$(ps -C i3 --no-headers)" ]; then
+        echo "$prefix restarting i3"
+        i3-msg restart
+    fi
+}
+
+
+## Do the thing
+configure_displays()
+{
+    handle_err
+
+    declare_outputs
+
+    if [ -z "$lidstatus" -o "$lidstatus" == "closed" ]; then
+        config_closed_lid
+    elif [ "$lidstatus" == "open" ]; then
+        config_open_lid
+    fi
+
+    sleep 1
+    restart_i3
+    sleep 1 
+}
+
+configure_displays

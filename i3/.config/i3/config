@@ -21,13 +21,29 @@ for_window [class="^.*"] border pixel 0
 
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id feh --bg-fill $HOME/.config/feh/current
-#exec_always --no-startup-id hsetroot -solid "#83a598"
+
 exec --no-startup-id $HOME/.config/i3/better-lock -u $HOME/.config/feh/current
 exec --no-startup-id xfsettingsd --sm-client-disable
 exec --no-startup-id xfce4-power-manager --sm-client-disable
 exec --no-startup-id xfce4-volumed
-#exec --no-startup-id compton --config $HOME/.config/compton.conf
 exec --no-startup-id dunst -config $HOME/.config/dunstrc
+#exec --no-startup-id compton --config $HOME/.config/compton.conf
+#exec_always --no-startup-id hsetroot -solid "#83a598"
+
+# Bind the workspaces for left workspace
+workspace 1 output left
+workspace 4 output left
+workspace 7 output left
+
+# Bind the workspaces for center workspace
+workspace 2 output primary
+workspace 5 output primary
+workspace 8 output primary
+
+# Bind the workspaces for right workspace
+workspace 3 output right
+workspace 6 output right
+workspace 9 output right
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -52,7 +68,12 @@ bindsym $mod+Shift+q kill
 # lock screen
 bindsym $mod+x exec --no-startup-id $HOME/.config/i3/better-lock --lock dim
 
+# rofi launcher
 bindsym $mod+d exec --no-startup-id rofi -show run
+
+# setup monitors
+bindsym XF86Display exec --no-startup-id $HOME/.bin/display-visor
+bindsym $mod+F7 exec --no-startup-id $HOME/.bin/display-visor
 
 # change focus
 bindsym $mod+h focus left
@@ -90,7 +111,7 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
 # focus the child container
-#bindsym $mod+d focus child
+bindsym $mod+c focus child
 
 # switch to workspace
 bindsym $mod+1 workspace 1
@@ -136,8 +157,6 @@ bindcode $mod+Shift+80 move container to workspace 8
 bindcode $mod+Shift+81 move container to workspace 9
 bindcode $mod+Shift+90 move container to workspace 10
 
-
-
 bindsym $mod+Shift+Left move workspace to output left
 bindsym $mod+Shift+Right move workspace to output right
 bindsym $mod+Shift+Up move workspace to output up
@@ -176,10 +195,10 @@ mode "resize" {
         bindsym Escape mode "default"
 }
 
-client.focused          #282828 #d79921 #282828 #2e9ef4   #285577
-client.focused_inactive #282828 #282828 #d79921 #484e50   #5f676a
-client.unfocused        #282828 #665c54 #ebdbb2 #292d2e   #222222
-client.urgent           #282828 #cc241d #fbf1c7 #900000   #900000
+client.focused          #2f343f #ebcb8b #2f343f #000000   #0c0c0c
+client.focused_inactive #2f343f #d8dee8 #2f343f #000000   #0c0c0c 
+client.unfocused        #2f343f #4b5262 #d8dee8 #000000   #0c0c0c
+client.urgent           #2f343f #bf616a #2f343f #900000   #900000
 client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
 
 client.background       #ffffff
