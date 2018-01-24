@@ -22,13 +22,11 @@ for_window [class="^.*"] border pixel 0
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id feh --bg-fill $HOME/.config/feh/current
 
-exec --no-startup-id $HOME/.config/i3/better-lock -u $HOME/.config/feh/current
 exec --no-startup-id xfsettingsd --sm-client-disable
 exec --no-startup-id xfce4-power-manager --sm-client-disable
 exec --no-startup-id xfce4-volumed
 exec --no-startup-id dunst -config $HOME/.config/dunstrc
 #exec --no-startup-id compton --config $HOME/.config/compton.conf
-#exec_always --no-startup-id hsetroot -solid "#83a598"
 
 # Bind the workspaces for left workspace
 workspace 1 output left
@@ -66,7 +64,7 @@ bindsym $mod+Return exec kitty
 bindsym $mod+Shift+q kill
 
 # lock screen
-bindsym $mod+x exec --no-startup-id $HOME/.config/i3/better-lock --lock dim
+bindsym $mod+x exec --no-startup-id $HOME/.config/i3/my-lock
 
 # rofi launcher
 bindsym $mod+d exec --no-startup-id rofi -show run

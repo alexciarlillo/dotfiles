@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+
+# Thanks to:  https://github.com/pavanjadhaw/betterlockscreen
+# And: https://github.com/edlanglois/i3lock-extra
+
+cfg_tmpdir="/run/user/$UID/i3lock-extra"
+cfg_pixelize_scale='5'
+
+# ratio for rectangle to be drawn for time background on lockscreen
+rectangles=" "
+SR=$(xrandr --query | grep ' connected' | grep -o '[0-9][0-9]*x[0-9][0-9]*[^ ]*')
+for RES in $SR; do
+  SRA=(${RES//[x+]/ })
+  CX=$((${SRA[2]} + 25))
+  CY=$((${SRA[1]} - 30))
+  rectangles+="rectangle $CX,$CY $((CX+300)),$((CY-80)) "
+done
+
+border=" "
+SR=$(xrandr --query | grep ' connected' | grep -o '[0-9][0-9]*x[0-9][0-9]*[^ ]*')
+for RES in $SR; do
+  SRA=(${RES//[x+]/ })
+  CX=$((${SRA[2]} + 20))
+  CY=$((${SRA[1]} - 25))
+  border+="rectangle $CX,$CY $((CX+310)),$((CY-90)) "
+done
+
+deskshot() {
+	scrot "$cfg_tmpdir/lockbg.png"
+	image_file="${cfg_tmpdir}/lockbg.png"
+}
+
+image_prepare() {
+	declare -a convert_args
+	declare scale_down scale_up
+
+	scale_down=$(( 100/cfg_pixelize_scale ))
+	scale_up=$(( ( 100/cfg_pixelize_scale ) * cfg_pixelize_scale * cfg_pixelize_scale ))
+
+	convert_args+=( -scale "$scale_down%" -scale "$scale_up%" )
+	convert_args+=( -draw "fill #b3555e fill-opacity 1 $border" )
+	convert_args+=( -draw "fill #ebcb8b fill-opacity 1 $rectangles" )
+
+	if [[ "$convert_args" ]]; then
+		convert "$image_file" "${convert_args[@]}" "$cfg_tmpdir/lockbg.png"
+		image_file="$cfg_tmpdir/lockbg.png"
+	fi
+	
+	if [[ "$overlay_image" ]]; then
+                
+                xrandr | egrep '[[:space:]]connected [[:digit:]]' | while read -r line ; do
+                    GEO=`echo $line | cut -f3 -d' '`
+                    WIDTH=`echo $GEO | cut -f1 -d'x'`
+                    HEIGHT=`echo $GEO | cut -f2 -d'x' | cut -f1 -d'+'`
+                    PLUSX=`echo $GEO | cut -f2 -d'x' | cut -f2 -d'+'`
+                    PLUSY=`echo $GEO | cut -f2 -d'x' | cut -f3 -d'+'`
+
+                    X=$(( (WIDTH / 2) + PLUSX - 64 ))
+                    Y=$(( (HEIGHT / 2) + PLUSY - 64 ))
+		    
+                    convert -geometry +$X+$Y -composite -matte "$image_file" "$overlay_image" "$cfg_tmpdir/lockbg.png"
+                done
+	
+                image_file="$cfg_tmpdir/lockbg.png"
+	fi
+}
+
+lock()
+{
+	letterEnteredColor=a3be8cff
+	letterRemovedColor=bf616aff
+	passwordCorrect=93ae7cff
+	passwordIncorrect=b3555eff
+	background=d1d5dcff
+	foreground=434a5aff
+	i3lock \
+		-t -i "$image_file" \
+		--timepos="x-90:h-ch+30" \
+		--datepos="tx+24:ty+25" \
+		--clock --datestr "Type password to unlock..." \
+		--insidecolor=$background --ringcolor=$foreground --line-uses-inside \
+		--keyhlcolor=$letterEnteredColor --bshlcolor=$letterRemovedColor --separatorcolor=$background \
+		--insidevercolor=$passwordCorrect --insidewrongcolor=$passwordIncorrect \
+		--ringvercolor=$foreground --ringwrongcolor=$foreground --indpos="x+280:h-70" \
+		--radius=20 --ring-width=4 --veriftext="" --wrongtext="" \
+		--textcolor="$foreground" --timecolor="$foreground" --datecolor="$foreground" \
+		--force-clock \
+		--indicator
+}
+
+umask 0077 # All files and dirs created should only be accessible by the user.
+
+if ! [[ -d "$cfg_tmpdir" ]]; then
+	mkdir -p "$cfg_tmpdir" || {
+		return 1
+	}
+fi
+
+deskshot
+
+image_prepare
+
+lock
