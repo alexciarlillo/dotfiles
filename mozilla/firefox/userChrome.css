@@ -16,6 +16,10 @@
     visibility: collapse !important;
 }
 
+#PersonalToolbar {
+    visibility: collapse !important;
+}
+
 /* Hide (i) in URL bar */
 #identity-icon {
 	width: 0 !important;

@@ -1,20 +1,9 @@
-:root {
-  --tabbar-bg: #2f343f;
-  --tab-surface: #2f343f;
-  --tab-text: #d1d5dc;
-  --tab-surface-active: #4b5262;
-  --tab-surface-active-hover: #d1d5dc;
-  --tab-active-text: #d1d5dc;
-  --tab-border: #2f343f;
-  --tab-surface-hover: #4b5262;
-  --tab-active-marker: none;
-}
-
 /* Hide border on tab bar, force its state to 'scroll', adjust margin-left for width of scrollbar. */
 #tabbar {
-	border: 0;
-	overflow-y: scroll !important;
-	margin-left: -18px !important;
+	border-right: 1px solid #1d1d1d;
+	box-shadow: none !important;
+	background-color: #2f343f;
+	margin-top: 0px !important;
 }
 
 /* Hide .twisty and adjust margins so favicons have 7px on left. */
@@ -73,4 +62,45 @@
 
 .tab.muted {
     opacity: 0.5;
+}
+
+.tab {
+	background-color: transparent;
+	border-color: #2f343f;
+	box-shadow: none !important;
+}
+.tab .label {
+	color: #d1d5dc !important;
+}
+.tab:hover {
+	background-color: #4b5262 !important;
+}
+.tab:hover .label {
+	color: #d1d5dc !important;
+}
+
+
+.tab.active {
+	background-color: #4b5262;
+}
+.tab.active .label {
+	font-weight: bold;
+	color: #d1d5dc !important;
+}
+.tab.active:hover {
+	background-color: #4b5262 !important;
+}
+
+[data-max-tree-level]:root:not(.initializing):not(:hover) .tab[data-level][data-level]:not(.collapsed-completely) {
+    margin-left: 0px !important;
+}
+
+.tab.pinned {
+	bottom: auto !important;
+	left: 0 !important;
+	right: auto !important;
+	top: 0 !important;
+	max-width: 100% !important;
+	height: var(--tab-height);
+	border-bottom: 1px solid #d1d5dc !important;
 }
