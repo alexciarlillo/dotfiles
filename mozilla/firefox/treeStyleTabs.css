@@ -70,3 +70,7 @@
 	z-index: -1;
 	opacity: 0;
 }
+
+.tab.muted {
+    opacity: 0.5;
+}
