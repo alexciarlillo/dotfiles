@@ -1,47 +1,20 @@
 :root {
-  --tabbar-bg: #282828;
-  --tab-surface: #3c3836;
-  --tab-text: #ebdbb2;
-  --tab-surface-active: #a89984;
-  --tab-surface-active-hover: #d5c4a1;
-  --tab-active-text: #282828;
+  --tabbar-bg: #2f343f;
+  --tab-surface: #2f343f;
+  --tab-text: #d1d5dc;
+  --tab-surface-active: #4b5262;
+  --tab-surface-active-hover: #d1d5dc;
+  --tab-active-text: #d1d5dc;
   --tab-border: #282828;
-  --tab-surface-hover: #504945;
-  --identity-blue-color: #458588;
-  --identity-orange-color: #d79921;
+  --tab-surface-hover: #4b5262;
+  --tab-active-marker: none;
 }
 
-.tab.active:hover {
-  background: #928374;
-}
-
-.newtab-button-box .newtab-button {
-  height: var(--tab-height);
-}
-
-.contextual-identities-selector option {
-  font-size: 14px;
-  padding: .2em;
-}
-
-.contextual-identities-selector option[value="firefox-container-1"] {
-  background-color: var(--identity-blue-color) !important;
-}
-
-.tab.contextual-identity-firefox-container-1 .contextual-identity-marker {
-    background-color: var(--identity-blue-color) !important;
-}
-
-.contextual-identities-selector option[value="firefox-container-2"] {
-  background-color: var(--identity-orange-color) !important;
-}
-
-.tab.contextual-identity-firefox-container-2 .contextual-identity-marker {
-    background-color: var(--identity-orange-color) !important;
-}
-
-.left:root .tab:not(.faviconized) .contextual-identity-marker {
-    width: calc(var(--favicon-size) / 2);
+/* Hide border on tab bar, force its state to 'scroll', adjust margin-left for width of scrollbar. */
+#tabbar {
+	border: 0;
+	overflow-y: scroll !important;
+	margin-left: -18px !important;
 }
 
 /* Hide .twisty and adjust margins so favicons have 7px on left. */
@@ -66,7 +39,34 @@
 }
 
 /* Hide 'new tab' button. */
+
 .newtab-button {
     display: none;
 }
 
+@keyframes pulse {
+	0% {
+		width: 0px;
+		height: 0px;
+		opacity: 1;
+	}
+	100% {
+		width: 350px;
+		height: 350px;
+		opacity: 0;
+		top: calc(50% - 175px);
+		left: calc(50% - 175px);
+	}
+}
+
+.tab.sound-playing .favicon::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	border-radius: 50%;
+	background: #FFFFFF;
+	animation: pulse 2s ease-out 0s infinite;
+	z-index: -1;
+	opacity: 0;
+}
