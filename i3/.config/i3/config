@@ -10,8 +10,8 @@
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
 set $mod Mod4
-gaps inner 10
-gaps outer 5
+gaps inner 25
+#gaps outer 10
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -20,13 +20,14 @@ font pango: Source Code Pro for Powerline 12px
 for_window [class="^.*"] border pixel 0
 
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-exec_always --no-startup-id feh --bg-fill $HOME/.config/feh/current
+#exec_always --no-startup-id feh --bg-fill $HOME/.config/feh/current
+exec_always --no-startup-id hsetroot -solid "#7191b1"
 
 exec --no-startup-id xfsettingsd --sm-client-disable
 exec --no-startup-id xfce4-power-manager --sm-client-disable
 exec --no-startup-id xfce4-volumed
 exec --no-startup-id dunst -config $HOME/.config/dunstrc
-#exec --no-startup-id compton --config $HOME/.config/compton.conf
+exec --no-startup-id compton --config $HOME/.config/compton.conf
 
 # Bind the workspaces for left workspace
 workspace 1 output left
@@ -198,8 +199,6 @@ client.focused_inactive #2f343f #d8dee8 #2f343f #000000   #0c0c0c
 client.unfocused        #2f343f #4b5262 #d8dee8 #000000   #0c0c0c
 client.urgent           #2f343f #bf616a #2f343f #900000   #900000
 client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
-
-client.background       #ffffff
 
 bindsym $mod+r mode "resize"
 
