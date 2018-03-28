@@ -10,7 +10,7 @@
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
 set $mod Mod4
-gaps inner 25
+gaps inner 15
 #gaps outer 10
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -18,6 +18,8 @@ gaps inner 25
 font pango: Source Code Pro for Powerline 12px
 
 for_window [class="^.*"] border pixel 2
+
+focus_follows_mouse no
 
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 #exec_always --no-startup-id feh --bg-fill $HOME/.config/feh/current
@@ -196,9 +198,11 @@ mode "resize" {
 
 client.focused          #ebcb8b #ebcb8b #2f343f #ebcb8b   #ebcb8b
 client.focused_inactive #d8dee8 #d8dee8 #2f343f #d8dee8   #d8dee8 
-client.unfocused        #2f343f #4b5262 #d8dee8 #2f343f   #2f343f
-client.urgent           #bf616a #bf616a #2f343f #bf616a   #900000
-client.placeholder      #000000 #0c0c0c #ffffff #bf616a   #bf616a
+client.unfocused        #2f343f #2f343f #d8dee8 #2f343f   #2f343f
+client.urgent           #bf616a #bf616a #2f343f #bf616a   #bf616a
+client.placeholder      #000000 #0c0c0c #ffffff #000000   #ffffff
+
+client.background       #ffffff
 
 bindsym $mod+r mode "resize"
 
@@ -211,11 +215,13 @@ assign [class="zoom"] 2
 
 assign [title="Google Hangouts"] 4
 assign [class="HipChat"] 4
+assign [class="Slack"] 4
 
 assign [class="Mysql-workbench-bin"] 5
 
 assign [class="Sublime_text"] 6
 assign [class="Code"] 6
+assign [class="jetbrains-phpstorm"] 6
 
 assign [class="Thunderbird"] 7
 
