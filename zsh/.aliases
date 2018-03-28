@@ -13,6 +13,7 @@ alias tinx="php artisan tinx"
 alias t="phpunit"
 alias tf="phpunit --filter"
 alias migrate="php artisan migrate"
+alias mfresh="php artisan migrate:fresh --seed"
 
 # git
 alias nah="git reset --hard && git clean -df"
