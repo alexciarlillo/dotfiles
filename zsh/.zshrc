@@ -45,6 +45,8 @@ export PATH="$PATH:$HOME/.config/composer/vendor/bin"
 export PATH="$PATH:$HOME/.rvm/bin"
 # add yarn bins to path
 export PATH="$PATH:$HOME/.yarn/bin"
+# add pip packages
+export PATH="$PATH:$HOME/.local/bin"
 
 local user='%{$fg[magenta]%}%n@%{$fg[magenta]%}%m%{$reset_color%}'
 local pwd='%{$fg[blue]%}%~%{$reset_color%}'
