@@ -22,7 +22,7 @@ alias wip="git add . && git commit -m 'wip'"
 alias gs="git status"
 
 # projects
-alias sa="cd ~/development/cels/sa4"
+alias sa="cd ~/development/cels/sa"
 
 # VMs
 alias homestead="cd ~/development/environments/homestead"
