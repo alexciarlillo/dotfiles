@@ -12,26 +12,8 @@
   --identity-orange-color: #ebcb8b;
 }
 
-#TabsToolbar {
-    visibility: collapse !important;
-}
-
-#PersonalToolbar {
-    visibility: collapse !important;
-}
-
-/* Hide (i) in URL bar */
-#identity-icon {
-	width: 0 !important;
-}
-/* Adjust lock icon to be closer to edge */
-#identity-box {
-	padding-inline-start: 2px !important;
-}
-/* Center URL */
-#urlbar .urlbar-input-box {
-	text-align: center;
-	margin-bottom: 1px;
+#navigator-toolbox {
+    --tabs-border-color: #81a1c1 !important;
 }
 
 /* Address bar focus styles */
@@ -45,50 +27,38 @@
 }
 
 /* Remove top border of selected tab */
-:root:-moz-lwtheme {
-  --tab-line-color: none !important;
+#tabbrowser-tabs:-moz-lwtheme {
+  --tab-line-color: #81a1c1 !important;
 }
 
-/* Sidebar min and max width removal */
-#sidebar {
-    max-width: none !important;
-    min-width: 0px !important;
+#PersonalToolbar {
+    visibility: collapse !important;
+}
+
+/* Hide (i) in URL bar */
+#identity-icon {
+	width: 0 !important;
+}
+
+/* Adjust lock icon to be closer to edge */
+#identity-box {
+	padding-inline-start: 2px !important;
+}
+
+/* Center URL */
+#urlbar .urlbar-input-box {
+	text-align: center;
+	margin-bottom: 1px;
 }
 
 /* Hide splitter, when using Tree Style Tab. */
 #sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] + #sidebar-splitter {
     display: none !important;
 }
+
 /* Hide sidebar header, when using Tree Style Tab. */
 #sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar-header {
     visibility: collapse;
-}
-
-/* Shrink sidebar until hovered, when using Tree Style Tab. */
-/* Shrink sidebar until hovered, when using Tree Style Tab. */
-:root {
-	--thin-tab-width: 30px;
-	--wide-tab-width: 200px;
-}
-#sidebar-box:not([sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"]) {
-	min-width: var(--wide-tab-width) !important;
-	max-width: none !important;
-}
-#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] {
-	overflow: hidden !important;
-	position: relative !important;
-	transition: all 200ms !important;
-	min-width: var(--thin-tab-width) !important;
-	max-width: var(--thin-tab-width) !important;
-}
-#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"]:hover,
-#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar {
-	transition: all 200ms !important;
-	min-width: var(--wide-tab-width) !important;
-	max-width: var(--wide-tab-width) !important;
-}
-#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"]:hover {
-	margin-right: calc((var(--wide-tab-width) - var(--thin-tab-width)) * -1) !important;
 }
 
 /* Make normal density theme bit compact */
