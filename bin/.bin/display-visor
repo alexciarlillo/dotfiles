@@ -53,7 +53,7 @@ config_closed_lid ()
     echo "$prefix Laptop lid is closed"
     if [ -n "$DP3" -a -n "$DP4" ]; then # working from home
         echo "$prefix SETTING: DP3 (Primary) - DP4 (Right)"
-        xrandr --output eDP1 --off DP2-1 \
+        xrandr --output eDP1 --off \
                --output DP2-1 --auto --primary \
                --output DP2-2 --auto --right-of DP2-1
     elif [ -n "$HDMI2" ]; then # hooked up to a TV
@@ -72,16 +72,16 @@ config_open_lid ()
     echo "$prefix Laptop lid is open"
     if [ -n "$DP3" -a -n "$DP4" ]; then
         echo "$prefix SETTING: eDP1 (Left) - DP2-1 (Primary) - DP2-2 (Right)"
-        xrandr --output DP2-1 --auto --primary \
-               --output eDP1 --auto --below DP2-1 --noprimary \
-               --output DP2-2 --auto --right-of DP2-1 --noprimary
+        xrandr --output DP2-1 --auto --primary --above eDP1 \
+               --output DP2-2 --auto --noprimary --right-of DP2-1 \
+               --output eDP1 --auto --noprimary
     elif [ -n "$HDMI2" ]; then
         echo "$prefix SETTING: eDP1 (Primary) - HDMI2 (Right)"
         xrandr --output eDP1 --auto --primary \
                --output HDMI2 --auto --right-of eDP1 --noprimary
     else
         echo "$prefix No external monitors are plugged in"
-        xrandr --output eDP1 --auto --primary
+        xrandr --output eDP1 --auto --primary --output DP2-1 --off --output DP2-2 --off --output HDMI2 --off
     fi
 }
 
