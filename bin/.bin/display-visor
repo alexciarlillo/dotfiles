@@ -26,33 +26,25 @@ handle_err ()
 ## Declare Output Devices
 declare_outputs ()
 {
-    devices=$(find /sys/class/drm/*/status)
+    connected=$(xrasengan -lc)
     while read l ; do
-        dir=$(dirname $l)
-        status=$(cat $l)
-        dev=$(echo $dir | cut -d\- -f 2-)
+        dev=$(echo $l | sed "s/-/_/")
 
-        if [ $(expr match  $dev "HDMI") != "0" ]; then
-            dev=HDMI${dev#HDMI-?-}
-        else
-            dev=$(echo $dev | tr -d '-')
-        fi
-
-        if [ "connected" == "$status" ]; then
-            if [ -z "$wsinfo" ]; then
-                echo "$prefix $dev connected"
-            fi
-            declare -gA $dev="yes"
-        fi
-    done <<< "$devices"
+        echo "$dev connected"
+        declare -gA $dev="yes"
+    done <<< "$connected"
 }
 
 ## Configure monitors for closed lid
 config_closed_lid ()
 {
     echo "$prefix Laptop lid is closed"
-    if [ -n "$DP3" -a -n "$DP4" ]; then # working from home
-        echo "$prefix SETTING: DP3 (Primary) - DP4 (Right)"
+    if [ -n "$DP2_1" -a -n "$DP2_2" ]; then # working from home
+        echo "$prefix SETTING: DP2-1 (Primary) - DP2-2 (Right)"
+
+        xrasengan --force -on DP2-1
+        xrasengan --force -on DP2-2
+
         xrandr --output eDP1 --off \
                --output DP2-1 --auto --primary \
                --output DP2-2 --auto --right-of DP2-1
@@ -70,11 +62,16 @@ config_closed_lid ()
 config_open_lid ()
 {
     echo "$prefix Laptop lid is open"
-    if [ -n "$DP3" -a -n "$DP4" ]; then
+    if [ -n "$DP2_1" -a -n "$DP2_2" ]; then
         echo "$prefix SETTING: eDP1 (Left) - DP2-1 (Primary) - DP2-2 (Right)"
-        xrandr --output DP2-1 --auto --primary --above eDP1 \
-               --output DP2-2 --auto --noprimary --right-of DP2-1 \
-               --output eDP1 --auto --noprimary
+
+        # use xrasengan to force display port outputs on
+        xrasengan --force -on DP2-1
+        xrasengan --force -on DP2-2
+        
+        xrandr --output eDP1 --auto --noprimary \
+               --output DP2-1 --auto --primary --above eDP1 \
+               --output DP2-2 --auto --noprimary --right-of DP2-1
     elif [ -n "$HDMI2" ]; then
         echo "$prefix SETTING: eDP1 (Primary) - HDMI2 (Right)"
         xrandr --output eDP1 --auto --primary \
