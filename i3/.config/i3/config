@@ -22,8 +22,8 @@ for_window [class="^.*"] border pixel 2
 focus_follows_mouse no
 
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-#exec_always --no-startup-id feh --bg-fill $HOME/.config/feh/current
-exec_always --no-startup-id hsetroot -solid "#7191b1"
+exec_always --no-startup-id feh --bg-fill $HOME/.config/feh/current
+#exec_always --no-startup-id hsetroot -solid "#7191b1"
 
 exec --no-startup-id xfsettingsd --sm-client-disable
 exec --no-startup-id xfce4-power-manager --sm-client-disable
