@@ -7,3 +7,5 @@
 	keepBackup = false
 [core]
 	excludesfile = /home/ciarlill/.gitignore_global
+[alias]
+	ca = commit --amend --reuse-message=HEAD
