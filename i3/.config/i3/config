@@ -76,6 +76,10 @@ bindsym $mod+d exec --no-startup-id rofi -show run
 bindsym XF86Display exec --no-startup-id $HOME/.bin/display-visor
 bindsym $mod+F7 exec --no-startup-id $HOME/.bin/display-visor
 
+# screen cap
+# scrot & gimp - root
+bindsym Print exec scrot -e 'mv $f /tmp/ && gimp /tmp/$f'
+
 # change focus
 bindsym $mod+h focus left
 bindsym $mod+j focus down
