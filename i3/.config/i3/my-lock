@@ -12,7 +12,7 @@ SR=$(xrandr --query | grep ' connected' | grep -o '[0-9][0-9]*x[0-9][0-9]*[^ ]*'
 for RES in $SR; do
   SRA=(${RES//[x+]/ })
   CX=$((${SRA[2]} + 25))
-  CY=$((${SRA[1]} - 30))
+  CY=$((${SRA[1]} - 25))
   rectangles+="rectangle $CX,$CY $((CX+300)),$((CY-80)) "
 done
 
@@ -21,7 +21,7 @@ SR=$(xrandr --query | grep ' connected' | grep -o '[0-9][0-9]*x[0-9][0-9]*[^ ]*'
 for RES in $SR; do
   SRA=(${RES//[x+]/ })
   CX=$((${SRA[2]} + 20))
-  CY=$((${SRA[1]} - 25))
+  CY=$((${SRA[1]} - 20))
   border+="rectangle $CX,$CY $((CX+310)),$((CY-90)) "
 done
 
