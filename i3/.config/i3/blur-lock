@@ -8,7 +8,7 @@ cfg_pixelize_scale='5'
 
 # ratio for rectangle to be drawn for time background on lockscreen
 rectangles=" "
-SR=$(xrandr --query | grep ' connected' | grep -o '[0-9][0-9]*x[0-9][0-9]*[^ ]*')
+SR=$(xrandr -d :0.0 --query | grep ' connected' | grep -o '[0-9][0-9]*x[0-9][0-9]*[^ ]*')
 for RES in $SR; do
   SRA=(${RES//[x+]/ })
   CX=$((${SRA[2]} + 25))
@@ -17,7 +17,7 @@ for RES in $SR; do
 done
 
 border=" "
-SR=$(xrandr --query | grep ' connected' | grep -o '[0-9][0-9]*x[0-9][0-9]*[^ ]*')
+SR=$(xrandr -d :0.0 --query | grep ' connected' | grep -o '[0-9][0-9]*x[0-9][0-9]*[^ ]*')
 for RES in $SR; do
   SRA=(${RES//[x+]/ })
   CX=$((${SRA[2]} + 20))
@@ -48,7 +48,7 @@ image_prepare() {
 	
 	if [[ "$overlay_image" ]]; then
                 
-                xrandr | egrep '[[:space:]]connected [[:digit:]]' | while read -r line ; do
+                xrandr -d :0.0 | egrep '[[:space:]]connected [[:digit:]]' | while read -r line ; do
                     GEO=`echo $line | cut -f3 -d' '`
                     WIDTH=`echo $GEO | cut -f1 -d'x'`
                     HEIGHT=`echo $GEO | cut -f2 -d'x' | cut -f1 -d'+'`

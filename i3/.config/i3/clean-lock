@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+# Thanks to:  https://github.com/pavanjadhaw/betterlockscreen
+# And: https://github.com/edlanglois/i3lock-extra
+
+cfg_tmpdir="/run/user/$UID/i3lock-extra"
+cfg_pixelize_scale='5'
+
+# ratio for rectangle to be drawn for time background on lockscreen
+rectangles=" "
+SR=$(xrandr -d :0.0 --query | grep ' connected' | grep -o '[0-9][0-9]*x[0-9][0-9]*[^ ]*')
+for RES in $SR; do
+  SRA=(${RES//[x+]/ })
+  CX=$((${SRA[2]} + 25))
+  CY=$((${SRA[1]} - 25))
+  rectangles+="rectangle $CX,$CY $((CX+300)),$((CY-80)) "
+done
+
+border=" "
+SR=$(xrandr -d :0.0 --query | grep ' connected' | grep -o '[0-9][0-9]*x[0-9][0-9]*[^ ]*')
+for RES in $SR; do
+  SRA=(${RES//[x+]/ })
+  CX=$((${SRA[2]} + 20))
+  CY=$((${SRA[1]} - 20))
+  border+="rectangle $CX,$CY $((CX+310)),$((CY-90)) "
+done
+
+image_prepare() {
+    image_file=${HOME}/.config/feh/current
+}
+
+lock()
+{
+	letterEnteredColor=a3be8cff
+	letterRemovedColor=bf616aff
+	passwordCorrect=93ae7cff
+	passwordIncorrect=b3555eff
+	background=d1d5dcff
+	foreground=d1d5dcff
+        transparent=ffffff00
+	i3lock \
+		-t -i "$image_file" \
+		--timepos="ix-cw/2:y+60" \
+		--datepos="tx:ty+25" \
+		--clock --datestr "%A, %m %Y" \
+		--insidecolor=$transparent --ringcolor=$foreground --line-uses-inside \
+		--keyhlcolor=$letterEnteredColor --bshlcolor=$letterRemovedColor --separatorcolor=$background \
+		--insidevercolor=$passwordCorrect --insidewrongcolor=$passwordIncorrect \
+		--ringvercolor=$foreground --ringwrongcolor=$foreground --indpos="w/2:y+100" \
+		--radius=20 --ring-width=4 --veriftext="" --wrongtext="" \
+		--textcolor="$foreground" --timecolor="$foreground" --datecolor="$foreground" \
+		--force-clock \
+		--indicator
+}
+
+image_prepare
+
+lock
