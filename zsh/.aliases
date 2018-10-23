@@ -8,12 +8,12 @@ t() {
   fi
 }
 
-alias art="php artisan"
-alias tinx="php artisan tinx"
-alias t="phpunit"
-alias tf="phpunit --filter"
-alias migrate="php artisan migrate"
-alias mfresh="php artisan migrate:fresh --seed"
+alias artisan="php artisan"
+alias tinx="artisan tinx"
+alias tf="t --filter"
+alias m="artisan migrate"
+alias mf="artisan migrate:fresh"
+alias mfs="artisan migrate:fresh --seed"
 
 # git
 alias nah="git reset --hard && git clean -df"

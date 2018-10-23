@@ -54,9 +54,9 @@
   --chrome-color: #d8dee8 !important;
   --chrome-secondary-background-color: #2f343f !important;
   --toolbox-border-bottom-color: #4b5262 !important;
-  --url-and-searchbar-border-color: #4b5262 !important;
+  --lwt-toolbar-field-border-color: #4b5262 !important;
+  --lwt-toolbar-field-background-color: #4b5262 !important;
   --focus-ring-box-shadow: #2f343f !important;
-  --url-and-searchbar-background-color: #4b5262 !important;
 }
 
 #navigator-toolbox {

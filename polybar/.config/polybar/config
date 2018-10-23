@@ -64,7 +64,7 @@ font-3 = "FontAwesome:size=18;3"
 
 modules-left = i3 xwindow
 modules-center = date
-modules-right = volume memory cpu wlan eth battery0 battery1 powermenu
+modules-right = volume memory cpu wlan eth battery0 battery1
 
 tray-position = right
 tray-padding = 2
@@ -88,16 +88,10 @@ wrapping-scroll = false
 pin-workspaces = true
 
 ws-icon-0 = 1;
-ws-icon-3 = 4;
-ws-icon-6 = 7;
-
-ws-icon-1 = 2;
-ws-icon-4 = 5;
-ws-icon-7 = 8;
-
+ws-icon-1 = 2;
 ws-icon-2 = 3;
-ws-icon-5 = 6;
-ws-icon-8 = 9;
+ws-icon-3 = 4;
+ws-icon-4 = 5;
 
 ws-icon-default = 
 
@@ -234,39 +228,9 @@ battery = BAT1
 adapter = AC
 full-at = 99
 
-format-charging = " B1:<label-charging>"
-format-discharging = " B1:<label-discharging>"
-format-full = " B1:<label-full>"
-
-[module/powermenu]
-type = custom/menu
-
-label-open = "  "
-label-open-foreground = ${colors.dark-red}
-label-open-background = ${colors.background}
-label-close = "  "
-label-close-foreground = ${colors.dark-red}
-label-close-background = ${colors.background}
-label-separator = |
-label-separator-foreground = ${colors.foreground}
-label-separator-background = ${colors.background}
-
-menu-0-0 = reboot
-menu-0-0-exec = i3-nagbar -t warning -m 'Do you really want to reboot?' -b 'Yes' 'sudo reboot'
-menu-0-0-foreground = ${colors.dark-yellow}
-menu-0-0-background = ${colors.background}
-menu-0-1 = power off
-menu-0-1-exec = i3-nagbar -t warning -m 'Do you really want to shutdown?' -b 'Yes' 'sudo poweroff'
-menu-0-1-foreground = ${colors.dark-red}
-menu-0-1-background = ${colors.background}
-menu-0-2 = "logout "
-menu-0-2-exec = i3-nagbar -t warning -m 'Do you really want to logout?' -b 'Yes' 'i3-msg exit'
-menu-0-2-foreground = ${colors.dark-blue}
-menu-0-2-background = ${colors.background}
-menu-0-3 = "sleep "
-menu-0-3-exec = i3-nagbar -t warning -m 'Do you really want to sleep?' -b 'Yes' 'sudo pm-suspend'
-menu-0-3-foreground = ${colors.dark-cyan}
-menu-0-3-background = ${colors.background}
+format-charging = " B1:<label-charging>  "
+format-discharging = " B1:<label-discharging>  "
+format-full = " B1:<label-full>  "
 
 [settings]
 screenchange-reload = true

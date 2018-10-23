@@ -39,22 +39,20 @@ declare_outputs ()
 config_closed_lid ()
 {
     echo "$prefix Laptop lid is closed"
-    if [ -n "$DP2_1" -a -n "$DP2_2" ]; then # working from home
+    if [ -n "$DP2_1" ]; then # working from home
         echo "$prefix SETTING: DP2-1 (Primary) - DP2-2 (Right)"
 
-        xrasengan --force -on DP2-1
-        xrasengan --force -on DP2-2
+        # xrasengan --force -on DP2-1
 
-        xrandr --output eDP1 --off \
-               --output DP2-1 --auto --primary \
-               --output DP2-2 --auto --right-of DP2-1
+        xrandr -d :0.0 --output eDP1 --off \
+               --output DP2-1 --auto --primary 
     elif [ -n "$HDMI2" ]; then # hooked up to a TV
         echo "$prefix SETTING: HDMI2 (Primary)"
-        xrandr --output eDP1 --off \
+        xrandr -d :0.0 --output eDP1 --off \
                --output HDMI2 --auto --primary
     else # panic
         echo "$prefix No external monitors are plugged in"
-        xrandr --output eDP1 --auto --primary
+        xrandr -d :0.0 --output eDP1 --auto --primary
     fi
 }
 
@@ -62,23 +60,21 @@ config_closed_lid ()
 config_open_lid ()
 {
     echo "$prefix Laptop lid is open"
-    if [ -n "$DP2_1" -a -n "$DP2_2" ]; then
+    if [ -n "$DP2_1" ]; then
         echo "$prefix SETTING: eDP1 (Left) - DP2-1 (Primary) - DP2-2 (Right)"
 
         # use xrasengan to force display port outputs on
-        xrasengan --force -on DP2-1
-        xrasengan --force -on DP2-2
+        # xrasengan --force -on DP2-1
         
-        xrandr --output eDP1 --auto --noprimary \
-               --output DP2-1 --auto --primary --above eDP1 \
-               --output DP2-2 --auto --noprimary --right-of DP2-1
+        xrandr -d :0.0 --output eDP1 --auto --noprimary \
+               --output DP2-1 --auto --primary --above eDP1 
     elif [ -n "$HDMI2" ]; then
         echo "$prefix SETTING: eDP1 (Primary) - HDMI2 (Right)"
-        xrandr --output eDP1 --auto --primary \
+        xrandr -d :0.0 --output eDP1 --auto --primary \
                --output HDMI2 --auto --right-of eDP1 --noprimary
     else
         echo "$prefix No external monitors are plugged in"
-        xrandr --output eDP1 --auto --primary --output DP2-1 --off --output DP2-2 --off --output HDMI2 --off
+        xrandr -d :0.0 --output eDP1 --auto --primary --output DP2-1 --off --output DP2-2 --off --output HDMI2 --off
     fi
 }
 

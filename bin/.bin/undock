@@ -1,0 +1,11 @@
+#!/bin/bash
+
+sleep 2
+
+lidswitch=LID
+lidstatus=$(cat /proc/acpi/button/lid/$lidswitch/state 2>/dev/null | awk '{print $NF}')
+
+if [ -z "$lidstatus" -o "$lidstatus" == "closed" ]; then
+    $HOME/.config/i3/my-lock && sudo pm-suspend
+fi
+

@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# rofi-power
+# Use rofi to call systemctl for shutdown, reboot, etc
+
+# 2016 Oliver Kraitschy - http://okraits.de
+
+OPTIONS="Reboot system\nPower-off system\nSuspend system\nHibernate system\nExit window manager"
+
+LAUNCHER="rofi -width 30 -dmenu -i -p rofi-power:"
+USE_LOCKER="true"
+LOCKER="$HOME/.config/i3/my-lock"
+
+option=`echo -e $OPTIONS | $LAUNCHER | awk '{print $1}' | tr -d '\r\n'`
+if [ ${#option} -gt 0 ]
+then
+    case $option in
+      Exit)
+        i3-msg exit
+        ;;
+      Reboot)
+        systemctl reboot
+        ;;
+      Power-off)
+        systemctl poweroff
+        ;;
+      Suspend)
+        $($USE_LOCKER) && "$LOCKER"; sudo pm-suspend
+        ;;
+      Hibernate)
+        $($USE_LOCKER) && "$LOCKER"; systemctl hibernate
+        ;;
+      *)
+        ;;
+    esac
+fi
+
