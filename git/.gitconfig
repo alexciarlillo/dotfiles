@@ -1,11 +1,15 @@
 [user]
 	name = Alex Ciarlillo
 	email = alex.ciarlillo@gmail.com
+
 [push]
 	default = current
+
 [mergetool]
 	keepBackup = false
+
 [core]
 	excludesfile = /home/ciarlill/.gitignore_global
+
 [alias]
 	ca = commit --amend --reuse-message=HEAD

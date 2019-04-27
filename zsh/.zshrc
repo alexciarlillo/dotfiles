@@ -1,4 +1,11 @@
-source "$HOME/.dotfiles/antigen/antigen.zsh"
+case `uname` in
+    Darwin)
+        source $(brew --prefix antigen)/share/antigen/antigen.zsh
+    ;;
+    Linux)
+        source "$HOME/.dotfiles/antigen/antigen.zsh"
+    ;;
+esac
 
 export DISABLE_AUTO_TITLE="true"
 
@@ -33,36 +40,49 @@ BULLETTRAIN_PROMPT_ORDER=(
 
 antigen apply
 
-export TERMINAL=kitty
-export TERM=xterm-256color
-export EDITOR="vim"
-export GIT_SSH=/usr/bin/ssh
-export XDEBUG_CONFIG="idekey=VSCODE"
-
-# add composer bins to path
-export PATH="$PATH:$HOME/.config/composer/vendor/bin"
-# add rvm bins to path
-export PATH="$PATH:$HOME/.rvm/bin"
-# add yarn bins to path
-export PATH="$PATH:$HOME/.yarn/bin"
-# add pip packages
-export PATH="$PATH:$HOME/.local/bin"
-
-local user='%{$fg[magenta]%}%n@%{$fg[magenta]%}%m%{$reset_color%}'
-local pwd='%{$fg[blue]%}%~%{$reset_color%}'
-export PSTEST="${user} ${pwd}$ "
-
-setxkbmap -option ctrl:nocaps
-
-bindkey "^[[7~" beginning-of-line
-bindkey "^[[8~" end-of-line
-
 # load NVM
-export NVM_DIR="/home/ciarlill/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+export NVM_DIR="$HOME/.nvm"
 
-# load RVM
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
+case `uname` in
+    Darwin)
+        # OSX Specific config
+        source $(brew --prefix nvm)/nvm.sh
+    ;;
+    Linux)
+        # Linux specific config
+
+        export TERMINAL=kitty
+        export TERM=xterm-256color
+        export EDITOR="vim"
+        export GIT_SSH=/usr/bin/ssh
+
+        # add composer bins to path
+        export PATH="$PATH:$HOME/.config/composer/vendor/bin"
+        # add rvm bins to path
+        export PATH="$PATH:$HOME/.rvm/bin"
+        # add yarn bins to path
+        export PATH="$PATH:$HOME/.yarn/bin"
+        # add pip packages
+        export PATH="$PATH:$HOME/.local/bin"
+
+        local user='%{$fg[magenta]%}%n@%{$fg[magenta]%}%m%{$reset_color%}'
+        local pwd='%{$fg[blue]%}%~%{$reset_color%}'
+        export PSTEST="${user} ${pwd}$ "
+
+        setxkbmap -option ctrl:nocaps
+
+        bindkey "^[[7~" beginning-of-line
+        bindkey "^[[8~" end-of-line
+
+        
+
+        # load RVM
+        [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
+    ;;
+esac
+
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
 
 if [ -f ~/.aliases ]; then
     . ~/.aliases
