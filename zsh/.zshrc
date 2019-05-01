@@ -1,6 +1,7 @@
 case `uname` in
     Darwin)
         source $(brew --prefix antigen)/share/antigen/antigen.zsh
+        export NVM_AUTO_USE=true
     ;;
     Linux)
         source "$HOME/.dotfiles/antigen/antigen.zsh"
@@ -18,6 +19,7 @@ antigen bundle vagrant
 antigen bundle node
 antigen bundle npm
 antigen bundle sudo
+antigen bundle lukechilds/zsh-nvm
 
 BULLETTRAIN_PROMPT_CHAR=\$
 BULLETTRAIN_CONTEXT_SHOW=false
@@ -45,8 +47,10 @@ export NVM_DIR="$HOME/.nvm"
 
 case `uname` in
     Darwin)
-        # OSX Specific config
-        source $(brew --prefix nvm)/nvm.sh
+        export PATH="/usr/local/opt/postgresql@9.6/bin:$PATH"
+        # Guilded commands
+        source $HOME/code/src/github/TeamGuilded/guilded/guilded_profile.sh
+        cd $HOME
     ;;
     Linux)
         # Linux specific config
@@ -74,15 +78,15 @@ case `uname` in
         bindkey "^[[7~" beginning-of-line
         bindkey "^[[8~" end-of-line
 
-        
+
 
         # load RVM
-        [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" 
+        [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
     ;;
 esac
 
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "/usr/local/opt/nvm/etc/bash_completion" ] && . "/usr/local/opt/nvm/etc/bash_completion"  # This loads nvm bash_completion
+
+
 
 if [ -f ~/.aliases ]; then
     . ~/.aliases
