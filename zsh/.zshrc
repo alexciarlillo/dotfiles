@@ -19,6 +19,8 @@ antigen bundle vagrant
 antigen bundle node
 antigen bundle npm
 antigen bundle sudo
+
+export NVM_AUTO_USE=false
 antigen bundle lukechilds/zsh-nvm
 
 BULLETTRAIN_PROMPT_CHAR=\$
@@ -28,7 +30,7 @@ BULLETTRAIN_NVM_SHOW=false
 BULLETTRAIN_RUBY_SHOW=false
 BULLETTRAIN_DIR_BG=004
 BULLETTRAIN_DIR_FG=015
-BULLETTRAIN_GIT_BG=015
+BULLETTRAIN_GIT_BG=006
 BULLETTRAIN_GIT_FG=000
 BULLETTRAIN_TIME_BG=015
 BULLETTRAIN_TIME_FG=000
@@ -47,10 +49,16 @@ export NVM_DIR="$HOME/.nvm"
 
 case `uname` in
     Darwin)
-        export PATH="/usr/local/opt/postgresql@9.6/bin:$PATH"
+        export PATH="$PATH:/usr/local/opt/postgresql@9.6/bin"
+        export ANDROID_HOME="$HOME/Library/Android/sdk"
+        export PATH="$PATH:$ANDROID_HOME/emulator"
+        export PATH="$PATH:$ANDROID_HOME/tools"
+        export PATH="$PATH:$ANDROID_HOME/tools/bin"
+        export PATH="$PATH:$ANDROID_HOME/platform-tools"
         # Guilded commands
         source $HOME/code/src/github/TeamGuilded/guilded/guilded_profile.sh
         cd $HOME
+
     ;;
     Linux)
         # Linux specific config
