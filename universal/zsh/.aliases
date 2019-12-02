@@ -20,9 +20,3 @@ alias nah="git reset --hard && git clean -df"
 alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias wip="git add . && git commit -m 'wip'"
 alias gs="git status"
-
-# projects
-alias sa="cd ~/development/cels/sa"
-
-# VMs
-alias homestead="cd ~/development/environments/homestead"
