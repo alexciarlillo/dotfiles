@@ -4,8 +4,8 @@
 yabai -m config status_bar                   on
 yabai -m config status_bar_text_font         "Fira Code:Regular:12.0"
 yabai -m config status_bar_icon_font         "Font Awesome 5 Free:Solid:12.0"
-yabai -m config status_bar_background_color  0xff202020
-yabai -m config status_bar_foreground_color  0xffa8a8a8
+yabai -m config status_bar_background_color  0xff1A1E24
+yabai -m config status_bar_foreground_color  0xffD8DEE9
 # desktop envelope comments code-branch bug terminal database signature
 yabai -m config status_bar_space_icon_strip         
 yabai -m config status_bar_power_icon_strip   
@@ -43,5 +43,10 @@ yabai -m config bottom_padding               10
 yabai -m config left_padding                 10
 yabai -m config right_padding                10
 yabai -m config window_gap                   10
+
+# rules
+yabai -m rule --add app="^System Preferences$" manage=off border=off
+yabai -m rule --add app="^ColorSlurp$" manage=off border=off
+yabai -m rule --add app=Preview manage=off border=off
 
 echo "yabai configuration loaded.."
