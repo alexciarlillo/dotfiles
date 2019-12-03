@@ -1,14 +1,17 @@
 DOTFILES="${HOME}/.dotfiles"
-SCRIPTS="${DOTFILES}/scripts"
 
 
-osx: universal homebrew
+osx: universal-dots osx-dots homebrew
+
+osx-dots:
 	stow --restow --ignore ".DS_Store" --target="$(HOME)" --dir="$(DOTFILES)" osx
 
-linux: universal
+linux: universal-dots linux-dots
+
+linux-dots:
 	stow --restow --ignore ".DS_Store" --target="$(HOME)" --dir="$(DOTFILES)" linux
 
-universal:
+universal-dots:
 	stow --restow --ignore ".DS_Store" --target="$(HOME)" --dir="$(DOTFILES)" universal
 
 homebrew:
