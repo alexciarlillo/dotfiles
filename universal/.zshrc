@@ -30,25 +30,6 @@ antigen bundle sudo
 export NVM_AUTO_USE=false
 antigen bundle lukechilds/zsh-nvm
 
-BULLETTRAIN_PROMPT_CHAR=\$
-BULLETTRAIN_CONTEXT_SHOW=false
-BULLETTRAIN_TIME_SHOW=false
-BULLETTRAIN_NVM_SHOW=false
-BULLETTRAIN_RUBY_SHOW=false
-BULLETTRAIN_DIR_BG=004
-BULLETTRAIN_DIR_FG=015
-BULLETTRAIN_GIT_BG=006
-BULLETTRAIN_GIT_FG=000
-BULLETTRAIN_TIME_BG=015
-BULLETTRAIN_TIME_FG=000
-
-BULLETTRAIN_PROMPT_ORDER=(
-    status
-    custom
-    dir
-    git
-)
-
 antigen apply
 
 # load NVM
@@ -99,8 +80,6 @@ case `uname` in
         [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
     ;;
 esac
-
-
 
 
 if [ -f ~/.aliases ]; then
