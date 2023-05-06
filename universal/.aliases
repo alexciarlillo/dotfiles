@@ -1,20 +1,3 @@
-# php
-
-t() {
-  if [ -f vendor/bin/phpunit ]; then
-    vendor/bin/phpunit "$@"
-  else
-    phpunit "$@"
-  fi
-}
-
-alias artisan="php artisan"
-alias tinx="artisan tinx"
-alias tf="t --filter"
-alias m="artisan migrate"
-alias mf="artisan migrate:fresh"
-alias mfs="artisan migrate:fresh --seed"
-
 # git
 alias nah="git reset --hard && git clean -df"
 alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"

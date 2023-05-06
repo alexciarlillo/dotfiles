@@ -1,49 +1,27 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
 
-case `uname` in
-    Darwin)
-        source $(brew --prefix antigen)/share/antigen/antigen.zsh
-        export NVM_AUTO_USE=true
-    ;;
-    Linux)
-        source "$HOME/.dotfiles/antigen/antigen.zsh"
-    ;;
-esac
-
-export DISABLE_AUTO_TITLE="true"
-
-antigen use oh-my-zsh
-antigen theme romkatv/powerlevel10k
-
-antigen bundle git
-antigen bundle docker
-antigen bundle vagrant
-antigen bundle node
-antigen bundle npm
-antigen bundle sudo
-
-export NVM_AUTO_USE=false
-antigen bundle lukechilds/zsh-nvm
-
-antigen apply
+source ~/.zsh_plugins.sh
 
 # load NVM
 export NVM_DIR="$HOME/.nvm"
+export NVM_SYMLINK_CURRENT=true
 
 case `uname` in
     Darwin)
-        export PATH="$PATH:/usr/local/opt/postgresql@9.6/bin"
+        export NVM_AUTO_USE=true
+        export ZSH="$(antibody home)/https-COLON--SLASH--SLASH-github.com-SLASH-ohmyzsh-SLASH-ohmyzsh"
+        export PATH="$PATH:/usr/local/opt/postgresql@12.10/bin"
+        export PATH="$PATH:$HOME/.nvm/current/bin"
         export ANDROID_HOME="$HOME/Library/Android/sdk"
         export PATH="$PATH:$ANDROID_HOME/emulator"
         export PATH="$PATH:$ANDROID_HOME/tools"
         export PATH="$PATH:$ANDROID_HOME/tools/bin"
         export PATH="$PATH:$ANDROID_HOME/platform-tools"
+        export PATH="$PATH:$HOME/code/src/googlesource/depot_tools"
+        export PATH=$(brew --prefix ruby)/bin:$(brew --prefix)/lib/ruby/gems/3.1.0/bin:$PATH
+        export JAVA_HOME_11_X64=$(/usr/libexec/java_home -v 11)
+        export JAVA_HOME=$(/usr/libexec/java_home -v 11)
         # Guilded commands
+        # skip auto install oh-my-zsh
         source $HOME/code/src/github/TeamGuilded/guilded/guilded_profile.sh
         cd $HOME
 
@@ -51,13 +29,10 @@ case `uname` in
     Linux)
         # Linux specific config
 
-        export TERMINAL=kitty
         export TERM=xterm-256color
         export EDITOR="vim"
         export GIT_SSH=/usr/bin/ssh
 
-        # add composer bins to path
-        export PATH="$PATH:$HOME/.config/composer/vendor/bin"
         # add rvm bins to path
         export PATH="$PATH:$HOME/.rvm/bin"
         # add yarn bins to path
@@ -74,8 +49,6 @@ case `uname` in
         bindkey "^[[7~" beginning-of-line
         bindkey "^[[8~" end-of-line
 
-
-
         # load RVM
         [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
     ;;
@@ -86,10 +59,6 @@ if [ -f ~/.aliases ]; then
     . ~/.aliases
 fi
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# To customize prompt, run `p10k configure` or edit ~/.dotfiles/osx/.p10k.zsh.
-[[ ! -f ~/.dotfiles/osx/.p10k.zsh ]] || source ~/.dotfiles/osx/.p10k.zsh
-
 aliasNvm
+
+eval "$(starship init zsh)"

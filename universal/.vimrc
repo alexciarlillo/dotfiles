@@ -91,6 +91,8 @@ map <leader>tm :tabmove
 " Super useful when editing files in the same directory
 map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 
+imap jk <Esc>
+
 " Stupid shift key fixes
 cmap W w                        
 cmap WQ wq
