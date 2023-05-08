@@ -1,5 +1,15 @@
+[[ -r ~/.config/zsh/znap ]] ||
+    git clone --depth 1 -- https://github.com/marlonrichert/zsh-snap.git ~/.config/zsh/znap
 
-source ~/.zsh_plugins.sh
+source ~/.config/zsh/znap/znap.zsh
+# install oh-my-zsh
+znap source ohmyzsh/ohmyzsh plugins/git
+
+ZSH_AUTOSUGGEST_STRATEGY=( history )
+znap source zsh-users/zsh-autosuggestions
+
+ZSH_HIGHLIGHT_HIGHLIGHTERS=( main brackets )
+znap source zsh-users/zsh-syntax-highlighting
 
 # load NVM
 export NVM_DIR="$HOME/.nvm"
@@ -8,7 +18,6 @@ export NVM_SYMLINK_CURRENT=true
 case `uname` in
     Darwin)
         export NVM_AUTO_USE=true
-        export ZSH="$(antibody home)/https-COLON--SLASH--SLASH-github.com-SLASH-ohmyzsh-SLASH-ohmyzsh"
         export PATH="$PATH:/usr/local/opt/postgresql@12.10/bin"
         export PATH="$PATH:$HOME/.nvm/current/bin"
         export ANDROID_HOME="$HOME/Library/Android/sdk"
@@ -21,7 +30,6 @@ case `uname` in
         export JAVA_HOME_11_X64=$(/usr/libexec/java_home -v 11)
         export JAVA_HOME=$(/usr/libexec/java_home -v 11)
         # Guilded commands
-        # skip auto install oh-my-zsh
         source $HOME/code/src/github/TeamGuilded/guilded/guilded_profile.sh
         cd $HOME
 
@@ -61,4 +69,5 @@ fi
 
 aliasNvm
 
-eval "$(starship init zsh)"
+znap eval starship 'starship init zsh'
+znap prompt

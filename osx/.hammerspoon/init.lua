@@ -25,17 +25,20 @@ end
 function sortedSpaceIndexesToIds(allSpaces)
     local result = {}
     for k,v in hs.fnutils.sortByKeyValues(allSpaces, function (v1, v2) return GetTableLng(v1) > GetTableLng(v2) end) do
-    	result = hs.fnutils.concat(result, v)
+        local spaceAndScreenMap = {}
+        for i,spaceId  in ipairs(v) do
+            table.insert(spaceAndScreenMap, {spaceId = spaceId, screenId = k})
+        end
+    	result = hs.fnutils.concat(result, spaceAndScreenMap)
     end
     return result
 end
 
 local throwToSpace = function(win, spaceIdx)
-  local spacesByIndex = sortedSpaceIndexesToIds(spaces.allSpaces())
-  
-  local spaceId = spacesByIndex[spaceIdx]
 
-  spaces.moveWindowToSpace(win:id(), spaceId)
+  -- spaces.moveWindowToSpace(win:id(), spaceId)
+
+  return spacesByIndex[spaceIdx].screenId
 end
 
 
@@ -144,24 +147,27 @@ for key,mapping in ipairs(spacesMap) do
 
         if not win then return end
 
+        local spaceIdx = mapping[2]
+        local spacesByIndex = sortedSpaceIndexesToIds(spaces.allSpaces())
+        local spaceId = spacesByIndex[spaceIdx].spaceId
+        local newScreen = spacesByIndex[spaceIdx].screenId
         local oldScreen = win:screen():getUUID()
         local primaryScreen = hs.screen.primaryScreen():getUUID()
 
-        throwToSpace(win, mapping[2])
+            if (newScreen == oldScreen) then
+                -- do nothing
+            elseif (newScreen == primaryScreen) then
+                hs.grid.set(win, {x=3, y=0, w=6, h=12}, newScreen)
+            else
+                hs.grid.set(win, {x=0, y=0, w=12, h=12}, newScreen)
+            end
 
+        print(oldScreen, newScreen)
+        spaces.moveWindowToSpace(win:id(), spaceId)
         hs.eventtap.keyStroke(missionControlKey, mapping[1])
 
         hs.timer.doAfter(0.1, function()
             win:focus()
-            local newScreen = win:screen():getUUID()
-
-            if (newScreen == oldScreen) then return end
-
-            if (newScreen == primaryScreen) then
-                hs.grid.set(win, {x=3, y=0, w=6, h=12}, win:screen())
-            else
-                hs.grid.set(win, {x=0, y=0, w=12, h=12}, win:screen())
-            end
         end)
     end)
 
