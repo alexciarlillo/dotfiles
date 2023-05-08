@@ -3,6 +3,7 @@
 
 source ~/.config/zsh/znap/znap.zsh
 # install oh-my-zsh
+znap source ohmyzsh/ohmyzsh 
 znap source ohmyzsh/ohmyzsh plugins/git
 
 ZSH_AUTOSUGGEST_STRATEGY=( history )
