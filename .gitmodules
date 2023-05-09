@@ -1,1 +1,4 @@
 
+[submodule "osx/.hammerspoon/Spoons/hs_select_window.spoon"]
+	path = osx/.hammerspoon/Spoons/hs_select_window.spoon
+	url = https://github.com/dmgerman/hs_select_window.spoon.git
