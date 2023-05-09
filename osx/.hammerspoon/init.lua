@@ -7,40 +7,29 @@ hs.window.animationDuration = 0
 hs.loadSpoon("hs_select_window")
 local spaces = require('hs.spaces')
 
--- customize bindings to your preference
+-- Select windows
 local SWbindings = {
-   all_windows =  { {"alt"}, "b"},
-   app_windows =  { {"alt", "shift"}, "b"}
+   all_windows =  { {"alt"}, "z"},
 }   
 spoon.hs_select_window:bindHotkeys(SWbindings)
 
-function GetTableLng(tbl)
-  local getN = 0
-  for n in pairs(tbl) do
-    getN = getN + 1
-  end
-  return getN
-end
+-- Window focus hints
+hs.hotkey.bind({"alt", "ctrl", "shift"}, "`", hs.hints.windowHints)
 
-function sortedSpaceIndexesToIds(allSpaces)
-    local result = {}
-    for k,v in hs.fnutils.sortByKeyValues(allSpaces, function (v1, v2) return GetTableLng(v1) > GetTableLng(v2) end) do
-        local spaceAndScreenMap = {}
-        for i,spaceId  in ipairs(v) do
-            table.insert(spaceAndScreenMap, {spaceId = spaceId, screenId = k})
-        end
-    	result = hs.fnutils.concat(result, spaceAndScreenMap)
+-- Launch new iTerm window on current desktop
+hs.hotkey.bind({"alt"}, "return", function()
+    if hs.application.find("iTerm") then
+        hs.applescript.applescript([[
+            tell application "iTerm"
+                create window with default profile
+            end tell
+        ]])
+    else
+        hs.application.open("iTerm")
     end
-    return result
-end
+end)
 
-local throwToSpace = function(win, spaceIdx)
-
-  -- spaces.moveWindowToSpace(win:id(), spaceId)
-
-  return spacesByIndex[spaceIdx].screenId
-end
-
+-- Grid config
 
 hs.grid.setGrid('12x12')
 hs.grid.setMargins('4x4')
@@ -57,73 +46,84 @@ local gridset = function(x, y, w, h)
 end
 
 -- fullscreen
-hs.hotkey.bind(hyper,"8", gridset(0,0,12,12))
+hs.hotkey.bind(hyper,"k", gridset(0,0,12,12))
 
--- 1/4's
-hs.hotkey.bind(hyper,"6", gridset(0,0,3,12))
-hs.hotkey.bind(hyper,"7", gridset(3,0,3,12))
-hs.hotkey.bind(hyper,"9", gridset(6,0,3,12))
-hs.hotkey.bind(hyper,"0", gridset(9,0,3,12))
+-- top left
+hs.hotkey.bind(hyper,"u", gridset(0,0,6,6))
+-- top right
+hs.hotkey.bind(hyper,"o", gridset(6,0,6,6))
+-- bottom right
+hs.hotkey.bind(hyper,".", gridset(6,6,6,6))
+-- bottom left
+hs.hotkey.bind(hyper,"m", gridset(0,6,6,6))
 
--- 1/3's
-hs.hotkey.bind(hyper,"u", gridset(0,0,4,12))
-hs.hotkey.bind(hyper,"i", gridset(4,0,4,12))
-hs.hotkey.bind(hyper,"o", gridset(8,0,4,12))
-
--- 1/2's
+-- left half
 hs.hotkey.bind(hyper,"j", gridset(0,0,6,12))
-hs.hotkey.bind(hyper,"k", gridset(3,0,6,12))
+-- right half
 hs.hotkey.bind(hyper,"l", gridset(6,0,6,12))
+-- top half
+hs.hotkey.bind(hyper,"i", gridset(0,0,12,6))
+-- bottom half
+hs.hotkey.bind(hyper,",", gridset(0,6,12,6))
 
--- 2/3's
-hs.hotkey.bind(hyper,"m", gridset(0,0,8,12))
-hs.hotkey.bind(hyper,",", gridset(2,0,8,12))
-hs.hotkey.bind(hyper,".", gridset(4,0,8,12))
+-- horizonal 1/3's
+hs.hotkey.bind(hyper,"7", gridset(0,0,4,12))
+hs.hotkey.bind(hyper,"8", gridset(4,0,4,12))
+hs.hotkey.bind(hyper,"9", gridset(8,0,4,12))
 
--- 1/6's
-hs.hotkey.bind(shyper,"j", gridset(0,0,2,12))
-hs.hotkey.bind(shyper,"l", gridset(10,0,2,12))
+-- horizontal 2/3's
+hs.hotkey.bind(hyper,"6", gridset(0,0,8,12))
+hs.hotkey.bind(hyper,"0", gridset(4,0,8,12))
 
--- move window down
-hs.hotkey.bind(meh, "down", function()
+-- vertical 1/3's
+hs.hotkey.bind(hyper,"y", gridset(0,0,12,4))
+hs.hotkey.bind(hyper,"h", gridset(0,4,12,4))
+hs.hotkey.bind(hyper,"n", gridset(0,8,12,4))
+
+-- vertical 2/3's
+hs.hotkey.bind(hyper,"p", gridset(0,0,12,8))
+hs.hotkey.bind(hyper,"/", gridset(0,4,12,8))
+
+
+-- move window to next screen
+
+hs.hotkey.bind(meh, "tab", function()
   -- get the focused window
   local win = hs.window.focusedWindow()
   -- get the screen where the focused window is displayed, a.k.a. current screen
   local screen = win:screen()
+
   -- compute the unitRect of the focused window relative to the current screen
   -- and move the window to the next screen setting the same unitRect
   win:move(win:frame():toUnitRect(screen:frame()), screen:next(), true, 0)
-  hs.grid.set(win, {x=0, y=0, w=12, h=12}, win:screen())
+
+  -- center it
+  hs.grid.set(win, {x=1, y=1, w=10, h=10}, win:screen())
 end)
 
--- move window up
-hs.hotkey.bind(meh, "up", function()
-  -- get the focused window
-  local win = hs.window.focusedWindow()
-  -- get the screen where the focused window is displayed, a.k.a. current screen
-  local screen = win:screen()
-  -- compute the unitRect of the focused window relative to the current screen
-  -- and move the window to the next screen setting the same unitRect
-  win:move(win:frame():toUnitRect(screen:frame()), screen:next(), true, 0)
-  hs.grid.set(win, {x=3, y=0, w=6, h=12}, win:screen())
-end)
--- Window focus hints
-hs.hotkey.bind({"alt", "ctrl", "shift"}, "`", hs.hints.windowHints)
 
--- Launch new iTerm window on current desktop
-hs.hotkey.bind({"alt"}, "return", function()
-	if hs.application.find("iTerm") then
-		hs.applescript.applescript([[
-			tell application "iTerm"
-				create window with default profile
-			end tell
-		]])
-	else
-		hs.application.open("iTerm")
-	end
-end)
 
 -- throw to spaces
+
+function GetTableLng(tbl)
+  local getN = 0
+  for n in pairs(tbl) do
+    getN = getN + 1
+  end
+  return getN
+end
+
+function sortedSpaceIndexesToIds(allSpaces)
+    local result = {}
+    for k,v in hs.fnutils.sortByKeyValues(allSpaces, function (v1, v2) return GetTableLng(v1) > GetTableLng(v2) end) do
+        local spaceAndScreenMap = {}
+        for i,spaceId  in ipairs(v) do
+            table.insert(spaceAndScreenMap, {spaceId = spaceId, screenId = k})
+        end
+        result = hs.fnutils.concat(result, spaceAndScreenMap)
+    end
+    return result
+end
 
 spacesMap = {
     {'w', 1},
@@ -135,9 +135,9 @@ spacesMap = {
     {'x', 7},
     {'c', 8},
     {'v', 9},
-    {'u', 10},
-    {'i', 11},
-    {'o', 12}
+    {'t', 10},
+    {'g', 11},
+    {'b', 12}
 }
 
 for key,mapping in ipairs(spacesMap) do
@@ -154,15 +154,14 @@ for key,mapping in ipairs(spacesMap) do
         local oldScreen = win:screen():getUUID()
         local primaryScreen = hs.screen.primaryScreen():getUUID()
 
-            if (newScreen == oldScreen) then
-                -- do nothing
-            elseif (newScreen == primaryScreen) then
-                hs.grid.set(win, {x=3, y=0, w=6, h=12}, newScreen)
-            else
-                hs.grid.set(win, {x=0, y=0, w=12, h=12}, newScreen)
-            end
+        if (newScreen == oldScreen) then
+            -- do nothing
+        elseif (newScreen == primaryScreen) then
+            hs.grid.set(win, {x=3, y=0, w=6, h=12}, newScreen)
+        else
+            hs.grid.set(win, {x=0, y=0, w=12, h=12}, newScreen)
+        end
 
-        print(oldScreen, newScreen)
         spaces.moveWindowToSpace(win:id(), spaceId)
         hs.eventtap.keyStroke(missionControlKey, mapping[1])
 
