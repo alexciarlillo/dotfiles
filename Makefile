@@ -1,7 +1,7 @@
 DOTFILES="${HOME}/.dotfiles"
 
 
-osx: universal-dots osx-dots homebrew
+osx: universal-dots osx-dots
 
 osx-dots:
 	stow --restow --ignore ".DS_Store" --target="$(HOME)" --dir="$(DOTFILES)" osx

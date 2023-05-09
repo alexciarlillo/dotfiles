@@ -22,14 +22,16 @@ case `uname` in
         export PATH="$PATH:/usr/local/opt/postgresql@12.10/bin"
         export PATH="$PATH:$HOME/.nvm/current/bin"
         export ANDROID_HOME="$HOME/Library/Android/sdk"
+        export ANDROID_SDK_ROOT="$HOME/Library/Android/sdk"
         export PATH="$PATH:$ANDROID_HOME/emulator"
         export PATH="$PATH:$ANDROID_HOME/tools"
         export PATH="$PATH:$ANDROID_HOME/tools/bin"
         export PATH="$PATH:$ANDROID_HOME/platform-tools"
+        export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin"
         export PATH="$PATH:$HOME/code/src/googlesource/depot_tools"
         export PATH=$(brew --prefix ruby)/bin:$(brew --prefix)/lib/ruby/gems/3.1.0/bin:$PATH
         export JAVA_HOME_11_X64=$(/usr/libexec/java_home -v 11)
-        export JAVA_HOME=$(/usr/libexec/java_home -v 11)
+        export JAVA_HOME_17_X64=$(/usr/libexec/java_home -v 17)
         # Guilded commands
         source $HOME/code/src/github/TeamGuilded/guilded/guilded_profile.sh
         cd $HOME
