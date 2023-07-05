@@ -1,0 +1,890 @@
+{
+  "777": {
+    "prefix": "777",
+    "body": "\n$colors-text-inverse-tertiary\n",
+    "description": "[G] Snippet: Adds color variable for $colors-text-inverse-tertiary",
+    "scope": "source.scss"
+  },
+  "999": {
+    "prefix": "999",
+    "body": "\n$colors-text-tertiary\n",
+    "description": "[G] Snippet: Adds color variable for $colors-text-tertiary",
+    "scope": "source.scss"
+  },
+  "7771": {
+    "prefix": "777",
+    "body": "\n$colors-text-secondary\n",
+    "description": "[G] Snippet: Adds color variable for $colors-text-secondary",
+    "scope": "source.scss"
+  },
+  "111820": {
+    "prefix": "111820",
+    "body": "\n$color-guilded-black\n",
+    "description": "[G] Snippet: Adds color variable for $color-guilded-black",
+    "scope": "source.scss"
+  },
+  "131315": {
+    "prefix": "131315",
+    "body": "\n$color-title-bar-black\n",
+    "description": "[G] Snippet: Adds color variable for $color-title-bar-black",
+    "scope": "source.scss"
+  },
+  "161616": {
+    "prefix": "161616",
+    "body": "\n$colors-grey-3\n",
+    "description": "[G] Snippet: Adds color variable for $colors-grey-3",
+    "scope": "source.scss"
+  },
+  "171718": {
+    "prefix": "171718",
+    "body": "\n$color-glassy-background\n",
+    "description": "[G] Snippet: Adds color variable for $color-glassy-background",
+    "scope": "source.scss"
+  },
+  "212124": {
+    "prefix": "212124",
+    "body": "\n$colors-grey-8\n",
+    "description": "[G] Snippet: Adds color variable for $colors-grey-8",
+    "scope": "source.scss"
+  },
+  "222225": {
+    "prefix": "222225",
+    "body": "\n$color-background-black\n",
+    "description": "[G] Snippet: Adds color variable for $color-background-black",
+    "scope": "source.scss"
+  },
+  "262626": {
+    "prefix": "262626",
+    "body": "\n$text-secondary-color\n",
+    "description": "[G] Snippet: Adds color variable for $text-secondary-color",
+    "scope": "source.scss"
+  },
+  "404048": {
+    "prefix": "404048",
+    "body": "\n$color-editor-gray\n",
+    "description": "[G] Snippet: Adds color variable for $color-editor-gray",
+    "scope": "source.scss"
+  },
+  "484850": {
+    "prefix": "484850",
+    "body": "\n$color-dropmenu-gray\n",
+    "description": "[G] Snippet: Adds color variable for $color-dropmenu-gray",
+    "scope": "source.scss"
+  },
+  "979797": {
+    "prefix": "979797",
+    "body": "\n$color-soft-gray\n",
+    "description": "[G] Snippet: Adds color variable for $color-soft-gray",
+    "scope": "source.scss"
+  },
+  "999999": {
+    "prefix": "999999",
+    "body": "\n$text-tertiary-color\n",
+    "description": "[G] Snippet: Adds color variable for $text-tertiary-color",
+    "scope": "source.scss"
+  },
+  "ain": {
+    "prefix": "ain",
+    "body": "\n@include animate-in-v2(\n  $duration: ${1:300ms},\n  $stop: ${2:5%},\n  $delay: ${3:10ms}\n);\n",
+    "description": "",
+    "scope": "source.scss"
+  },
+  "align": {
+    "prefix": "align",
+    "body": "\nalign-content: ${1:center};\nalign-items: ${2:center};\njustify-content: ${3:center};\n",
+    "description": "[G] Snippet: Set alignment for a flex item. Usually used after `flex` snippet, if you want to align stuff.",
+    "scope": "source.scss"
+  },
+  "00ffff": {
+    "prefix": "00ffff",
+    "body": "\n$brand-color\n",
+    "description": "[G] Snippet: Adds color variable for $brand-color",
+    "scope": "source.scss"
+  },
+  "fcfcfc": {
+    "prefix": "fcfcfc",
+    "body": "\n$color-background-white\n",
+    "description": "[G] Snippet: Adds color variable for $color-background-white",
+    "scope": "source.scss"
+  },
+  "efefef": {
+    "prefix": "efefef",
+    "body": "\n$color-balloon-gray\n",
+    "description": "[G] Snippet: Adds color variable for $color-balloon-gray",
+    "scope": "source.scss"
+  },
+  "ececee": {
+    "prefix": "ececee",
+    "body": "\n$color-body-text-white\n",
+    "description": "[G] Snippet: Adds color variable for $color-body-text-white",
+    "scope": "source.scss"
+  },
+  "888c94": {
+    "prefix": "888c94",
+    "body": "\n$color-border\n",
+    "description": "[G] Snippet: Adds color variable for $color-border",
+    "scope": "source.scss"
+  },
+  "355bf8": {
+    "prefix": "355bf8",
+    "body": "\n$color-calendar-blue\n",
+    "description": "[G] Snippet: Adds color variable for $color-calendar-blue",
+    "scope": "source.scss"
+  },
+  "6cba50": {
+    "prefix": "6cba50",
+    "body": "\n$color-calendar-green\n",
+    "description": "[G] Snippet: Adds color variable for $color-calendar-green",
+    "scope": "source.scss"
+  },
+  "d89332": {
+    "prefix": "d89332",
+    "body": "\n$color-calendar-orange\n",
+    "description": "[G] Snippet: Adds color variable for $color-calendar-orange",
+    "scope": "source.scss"
+  },
+  "a250e8": {
+    "prefix": "a250e8",
+    "body": "\n$color-calendar-purple\n",
+    "description": "[G] Snippet: Adds color variable for $color-calendar-purple",
+    "scope": "source.scss"
+  },
+  "df5353": {
+    "prefix": "df5353",
+    "body": "\n$color-calendar-red\n",
+    "description": "[G] Snippet: Adds color variable for $color-calendar-red",
+    "scope": "source.scss"
+  },
+  "30a68f": {
+    "prefix": "30a68f",
+    "body": "\n$color-calendar-seagreen\n",
+    "description": "[G] Snippet: Adds color variable for $color-calendar-seagreen",
+    "scope": "source.scss"
+  },
+  "008ae1": {
+    "prefix": "008ae1",
+    "body": "\n$color-calendar-teal\n",
+    "description": "[G] Snippet: Adds color variable for $color-calendar-teal",
+    "scope": "source.scss"
+  },
+  "3b3b43": {
+    "prefix": "3b3b43",
+    "body": "\n$color-channel-gray\n",
+    "description": "[G] Snippet: Adds color variable for $color-channel-gray",
+    "scope": "source.scss"
+  },
+  "ffeca0": {
+    "prefix": "ffeca0",
+    "body": "\n$color-chat-yellow\n",
+    "description": "[G] Snippet: Adds color variable for $color-chat-yellow",
+    "scope": "source.scss"
+  },
+  "6cba501": {
+    "prefix": "6cba50",
+    "body": "\n$color-confirmation-green-desaturated\n",
+    "description": "[G] Snippet: Adds color variable for $color-confirmation-green-desaturated",
+    "scope": "source.scss"
+  },
+  "53da33": {
+    "prefix": "53da33",
+    "body": "\n$color-confirmation-green\n",
+    "description": "[G] Snippet: Adds color variable for $color-confirmation-green",
+    "scope": "source.scss"
+  },
+  "ff9f68": {
+    "prefix": "ff9f68",
+    "body": "\n$color-copper\n",
+    "description": "[G] Snippet: Adds color variable for $color-copper",
+    "scope": "source.scss"
+  },
+  "47474e": {
+    "prefix": "47474e",
+    "body": "\n$color-cta-gray\n",
+    "description": "[G] Snippet: Adds color variable for $color-cta-gray",
+    "scope": "source.scss"
+  },
+  "798bca": {
+    "prefix": "798bca",
+    "body": "\n$color-desaturated-discord\n",
+    "description": "[G] Snippet: Adds color variable for $color-desaturated-discord",
+    "scope": "source.scss"
+  },
+  "5e77a2": {
+    "prefix": "5e77a2",
+    "body": "\n$color-desaturated-facebook\n",
+    "description": "[G] Snippet: Adds color variable for $color-desaturated-facebook",
+    "scope": "source.scss"
+  },
+  "f46b78": {
+    "prefix": "f46b78",
+    "body": "\n$color-desaturated-instagram\n",
+    "description": "[G] Snippet: Adds color variable for $color-desaturated-instagram",
+    "scope": "source.scss"
+  },
+  "69a3d9": {
+    "prefix": "69a3d9",
+    "body": "\n$color-desaturated-messenger\n",
+    "description": "[G] Snippet: Adds color variable for $color-desaturated-messenger",
+    "scope": "source.scss"
+  },
+  "ea794f": {
+    "prefix": "ea794f",
+    "body": "\n$color-desaturated-reddit\n",
+    "description": "[G] Snippet: Adds color variable for $color-desaturated-reddit",
+    "scope": "source.scss"
+  },
+  "64a9d4": {
+    "prefix": "64a9d4",
+    "body": "\n$color-desaturated-twitter\n",
+    "description": "[G] Snippet: Adds color variable for $color-desaturated-twitter",
+    "scope": "source.scss"
+  },
+  "7289da": {
+    "prefix": "7289da",
+    "body": "\n$color-discord\n",
+    "description": "[G] Snippet: Adds color variable for $color-discord",
+    "scope": "source.scss"
+  },
+  "dedede": {
+    "prefix": "dedede",
+    "body": "\n$color-editor-body-text\n",
+    "description": "[G] Snippet: Adds color variable for $color-editor-body-text",
+    "scope": "source.scss"
+  },
+  "df53531": {
+    "prefix": "df5353",
+    "body": "\n$color-error-red-desaturated\n",
+    "description": "[G] Snippet: Adds color variable for $color-error-red-desaturated",
+    "scope": "source.scss"
+  },
+  "ff6b6b": {
+    "prefix": "ff6b6b",
+    "body": "\n$color-error-red\n",
+    "description": "[G] Snippet: Adds color variable for $color-error-red",
+    "scope": "source.scss"
+  },
+  "335a9e": {
+    "prefix": "335a9e",
+    "body": "\n$color-facebook\n",
+    "description": "[G] Snippet: Adds color variable for $color-facebook",
+    "scope": "source.scss"
+  },
+  "36363d": {
+    "prefix": "36363d",
+    "body": "\n$color-game-nav-black\n",
+    "description": "[G] Snippet: Adds color variable for $color-game-nav-black",
+    "scope": "source.scss"
+  },
+  "rgba(254,240,185,0.1)": {
+    "prefix": "rgba(254,240,185,0.1)",
+    "body": "\n$color-gilded-1-mask-10\n",
+    "description": "[G] Snippet: Adds color variable for $color-gilded-1-mask-10",
+    "scope": "source.scss"
+  },
+  "rgba(254,240,185,0.15)": {
+    "prefix": "rgba(254,240,185,0.15)",
+    "body": "\n$color-gilded-1-mask-15\n",
+    "description": "[G] Snippet: Adds color variable for $color-gilded-1-mask-15",
+    "scope": "source.scss"
+  },
+  "rgba(254,240,185,0.5)": {
+    "prefix": "rgba(254,240,185,0.5)",
+    "body": "\n$color-gilded-1-mask-50\n",
+    "description": "[G] Snippet: Adds color variable for $color-gilded-1-mask-50",
+    "scope": "source.scss"
+  },
+  "fef0b9": {
+    "prefix": "fef0b9",
+    "body": "\n$color-gilded-1\n",
+    "description": "[G] Snippet: Adds color variable for $color-gilded-1",
+    "scope": "source.scss"
+  },
+  "rgba(248,214,76,0.2)": {
+    "prefix": "rgba(248,214,76,0.2)",
+    "body": "\n$color-gilded-2-mask-20\n",
+    "description": "[G] Snippet: Adds color variable for $color-gilded-2-mask-20",
+    "scope": "source.scss"
+  },
+  "f8d64c": {
+    "prefix": "f8d64c",
+    "body": "\n$color-gilded-2\n",
+    "description": "[G] Snippet: Adds color variable for $color-gilded-2",
+    "scope": "source.scss"
+  },
+  "ecb200": {
+    "prefix": "ecb200",
+    "body": "\n$color-gilded-4\n",
+    "description": "[G] Snippet: Adds color variable for $color-gilded-4",
+    "scope": "source.scss"
+  },
+  "e0a900": {
+    "prefix": "e0a900",
+    "body": "\n$color-gilded-5\n",
+    "description": "[G] Snippet: Adds color variable for $color-gilded-5",
+    "scope": "source.scss"
+  },
+  "be8c00": {
+    "prefix": "be8c00",
+    "body": "\n$color-gilded-6\n",
+    "description": "[G] Snippet: Adds color variable for $color-gilded-6",
+    "scope": "source.scss"
+  },
+  "ffb400": {
+    "prefix": "ffb400",
+    "body": "\n$color-gilded-dark\n",
+    "description": "[G] Snippet: Adds color variable for $color-gilded-dark",
+    "scope": "source.scss"
+  },
+  "e4c519": {
+    "prefix": "e4c519",
+    "body": "\n$color-gilded-light\n",
+    "description": "[G] Snippet: Adds color variable for $color-gilded-light",
+    "scope": "source.scss"
+  },
+  "rgba(245,196,0,0.75)": {
+    "prefix": "rgba(245,196,0,0.75)",
+    "body": "\n$color-gilded-mask-75\n",
+    "description": "[G] Snippet: Adds color variable for $color-gilded-mask-75",
+    "scope": "source.scss"
+  },
+  "245,196,0": {
+    "prefix": "245,196,0",
+    "body": "\n$color-gilded-rgb\n",
+    "description": "[G] Snippet: Adds color variable for $color-gilded-rgb",
+    "scope": "source.scss"
+  },
+  "f5c400": {
+    "prefix": "f5c400",
+    "body": "\n$color-gilded\n",
+    "description": "[G] Snippet: Adds color variable for $color-gilded",
+    "scope": "source.scss"
+  },
+  "888c941": {
+    "prefix": "888c94",
+    "body": "\n$color-gray-2\n",
+    "description": "[G] Snippet: Adds color variable for $color-gray-2",
+    "scope": "source.scss"
+  },
+  "5b5b65": {
+    "prefix": "5b5b65",
+    "body": "\n$color-gray-4\n",
+    "description": "[G] Snippet: Adds color variable for $color-gray-4",
+    "scope": "source.scss"
+  },
+  "rgba(163,163,172,0.1)": {
+    "prefix": "rgba(163,163,172,0.1)",
+    "body": "\n$color-gray-mask-10\n",
+    "description": "[G] Snippet: Adds color variable for $color-gray-mask-10",
+    "scope": "source.scss"
+  },
+  "rgba(163,163,172,0.15)": {
+    "prefix": "rgba(163,163,172,0.15)",
+    "body": "\n$color-gray-mask-15\n",
+    "description": "[G] Snippet: Adds color variable for $color-gray-mask-15",
+    "scope": "source.scss"
+  },
+  "rgba(163,163,172,0.2)": {
+    "prefix": "rgba(163,163,172,0.2)",
+    "body": "\n$color-gray-mask-20\n",
+    "description": "[G] Snippet: Adds color variable for $color-gray-mask-20",
+    "scope": "source.scss"
+  },
+  "rgba(163,163,172,0.3)": {
+    "prefix": "rgba(163,163,172,0.3)",
+    "body": "\n$color-gray-mask-30\n",
+    "description": "[G] Snippet: Adds color variable for $color-gray-mask-30",
+    "scope": "source.scss"
+  },
+  "rgba(163,163,172,0.05)": {
+    "prefix": "rgba(163,163,172,0.05)",
+    "body": "\n$color-gray-mask-5\n",
+    "description": "[G] Snippet: Adds color variable for $color-gray-mask-5",
+    "scope": "source.scss"
+  },
+  "rgba(163,163,172,0.75)": {
+    "prefix": "rgba(163,163,172,0.75)",
+    "body": "\n$color-gray-mask-75\n",
+    "description": "[G] Snippet: Adds color variable for $color-gray-mask-75",
+    "scope": "source.scss"
+  },
+  "a3a3ac": {
+    "prefix": "a3a3ac",
+    "body": "\n$color-gray\n",
+    "description": "[G] Snippet: Adds color variable for $color-gray",
+    "scope": "source.scss"
+  },
+  "rgba(165,165,174,0.2)": {
+    "prefix": "rgba(165,165,174,0.2)",
+    "body": "\n$color-grey-13-mask-20\n",
+    "description": "[G] Snippet: Adds color variable for $color-grey-13-mask-20",
+    "scope": "source.scss"
+  },
+  "rgba(165,165,174,0.5)": {
+    "prefix": "rgba(165,165,174,0.5)",
+    "body": "\n$color-grey-13-mask-50\n",
+    "description": "[G] Snippet: Adds color variable for $color-grey-13-mask-50",
+    "scope": "source.scss"
+  },
+  "rgba(17,24,32,0.2)": {
+    "prefix": "rgba(17,24,32,0.2)",
+    "body": "\n$color-guilded-black-mask-20\n",
+    "description": "[G] Snippet: Adds color variable for $color-guilded-black-mask-20",
+    "scope": "source.scss"
+  },
+  "45454f": {
+    "prefix": "45454f",
+    "body": "\n$color-info-gray\n",
+    "description": "[G] Snippet: Adds color variable for $color-info-gray",
+    "scope": "source.scss"
+  },
+  "52525c": {
+    "prefix": "52525c",
+    "body": "\n$color-menu-gray\n",
+    "description": "[G] Snippet: Adds color variable for $color-menu-gray",
+    "scope": "source.scss"
+  },
+  "75715e": {
+    "prefix": "75715e",
+    "body": "\n$color-monokai-brown\n",
+    "description": "[G] Snippet: Adds color variable for $color-monokai-brown",
+    "scope": "source.scss"
+  },
+  "a6e22e": {
+    "prefix": "a6e22e",
+    "body": "\n$color-monokai-green\n",
+    "description": "[G] Snippet: Adds color variable for $color-monokai-green",
+    "scope": "source.scss"
+  },
+  "66d9ef": {
+    "prefix": "66d9ef",
+    "body": "\n$color-monokai-light-blue\n",
+    "description": "[G] Snippet: Adds color variable for $color-monokai-light-blue",
+    "scope": "source.scss"
+  },
+  "ae81ff": {
+    "prefix": "ae81ff",
+    "body": "\n$color-monokai-purple\n",
+    "description": "[G] Snippet: Adds color variable for $color-monokai-purple",
+    "scope": "source.scss"
+  },
+  "f92672": {
+    "prefix": "f92672",
+    "body": "\n$color-monokai-red\n",
+    "description": "[G] Snippet: Adds color variable for $color-monokai-red",
+    "scope": "source.scss"
+  },
+  "e6db74": {
+    "prefix": "e6db74",
+    "body": "\n$color-monokai-yellow\n",
+    "description": "[G] Snippet: Adds color variable for $color-monokai-yellow",
+    "scope": "source.scss"
+  },
+  "rgba(29,29,31,0.3)": {
+    "prefix": "rgba(29,29,31,0.3)",
+    "body": "\n$color-nav-black-mask-30\n",
+    "description": "[G] Snippet: Adds color variable for $color-nav-black-mask-30",
+    "scope": "source.scss"
+  },
+  "1d1d1f": {
+    "prefix": "1d1d1f",
+    "body": "\n$color-nav-black\n",
+    "description": "[G] Snippet: Adds color variable for $color-nav-black",
+    "scope": "source.scss"
+  },
+  "29ff23": {
+    "prefix": "29ff23",
+    "body": "\n$color-neon-green\n",
+    "description": "[G] Snippet: Adds color variable for $color-neon-green",
+    "scope": "source.scss"
+  },
+  "008ae11": {
+    "prefix": "008ae1",
+    "body": "\n$color-nux-blue\n",
+    "description": "[G] Snippet: Adds color variable for $color-nux-blue",
+    "scope": "source.scss"
+  },
+  "rgba(45,45,50,0.3)": {
+    "prefix": "rgba(45,45,50,0.3)",
+    "body": "\n$color-sidebar-black-mask-30\n",
+    "description": "[G] Snippet: Adds color variable for $color-sidebar-black-mask-30",
+    "scope": "source.scss"
+  },
+  "2d2d32": {
+    "prefix": "2d2d32",
+    "body": "\n$color-sidebar-black\n",
+    "description": "[G] Snippet: Adds color variable for $color-sidebar-black",
+    "scope": "source.scss"
+  },
+  "54545f": {
+    "prefix": "54545f",
+    "body": "\n$color-skeleton-gray\n",
+    "description": "[G] Snippet: Adds color variable for $color-skeleton-gray",
+    "scope": "source.scss"
+  },
+  "231f20": {
+    "prefix": "231f20",
+    "body": "\n$color-steam\n",
+    "description": "[G] Snippet: Adds color variable for $color-steam",
+    "scope": "source.scss"
+  },
+  "009cff": {
+    "prefix": "009cff",
+    "body": "\n$color-team-blue\n",
+    "description": "[G] Snippet: Adds color variable for $color-team-blue",
+    "scope": "source.scss"
+  },
+  "3e3e46": {
+    "prefix": "3e3e46",
+    "body": "\n$color-text-editor-gray\n",
+    "description": "[G] Snippet: Adds color variable for $color-text-editor-gray",
+    "scope": "source.scss"
+  },
+  "3f3838": {
+    "prefix": "3f3838",
+    "body": "\n$color-text\n",
+    "description": "[G] Snippet: Adds color variable for $color-text",
+    "scope": "source.scss"
+  },
+  "6441a4": {
+    "prefix": "6441a4",
+    "body": "\n$color-twitch\n",
+    "description": "[G] Snippet: Adds color variable for $color-twitch",
+    "scope": "source.scss"
+  },
+  "rgba(255,255,255,0.1)": {
+    "prefix": "rgba(255,255,255,0.1)",
+    "body": "\n$color-white-mask-10\n",
+    "description": "[G] Snippet: Adds color variable for $color-white-mask-10",
+    "scope": "source.scss"
+  },
+  "ffffff": {
+    "prefix": "ffffff",
+    "body": "\n$color-white\n",
+    "description": "[G] Snippet: Adds color variable for $color-white",
+    "scope": "source.scss"
+  },
+  "fcfcfc1": {
+    "prefix": "fcfcfc",
+    "body": "\n$colors-bg-light-1\n",
+    "description": "[G] Snippet: Adds color variable for $colors-bg-light-1",
+    "scope": "source.scss"
+  },
+  "rgb(200,140,97)": {
+    "prefix": "rgb(200,140,97)",
+    "body": "\n$colors-bronze\n",
+    "description": "[G] Snippet: Adds color variable for $colors-bronze",
+    "scope": "source.scss"
+  },
+  "f55e5e": {
+    "prefix": "f55e5e",
+    "body": "\n$colors-danger-1\n",
+    "description": "[G] Snippet: Adds color variable for $colors-danger-1",
+    "scope": "source.scss"
+  },
+  "ff3030": {
+    "prefix": "ff3030",
+    "body": "\n$colors-danger-2\n",
+    "description": "[G] Snippet: Adds color variable for $colors-danger-2",
+    "scope": "source.scss"
+  },
+  "ff7070": {
+    "prefix": "ff7070",
+    "body": "\n$colors-danger-3\n",
+    "description": "[G] Snippet: Adds color variable for $colors-danger-3",
+    "scope": "source.scss"
+  },
+  "rgb(238,195,75)": {
+    "prefix": "rgb(238,195,75)",
+    "body": "\n$colors-danger-idk\n",
+    "description": "[G] Snippet: Adds color variable for $colors-danger-idk",
+    "scope": "source.scss"
+  },
+  "7289da1": {
+    "prefix": "7289da",
+    "body": "\n$colors-discord\n",
+    "description": "[G] Snippet: Adds color variable for $colors-discord",
+    "scope": "source.scss"
+  },
+  "3b5998": {
+    "prefix": "3b5998",
+    "body": "\n$colors-facebook\n",
+    "description": "[G] Snippet: Adds color variable for $colors-facebook",
+    "scope": "source.scss"
+  },
+  "rgb(255,255,162)": {
+    "prefix": "rgb(255,255,162)",
+    "body": "\n$colors-gold\n",
+    "description": "[G] Snippet: Adds color variable for $colors-gold",
+    "scope": "source.scss"
+  },
+  "3ad161": {
+    "prefix": "3ad161",
+    "body": "\n$colors-green-1\n",
+    "description": "[G] Snippet: Adds color variable for $colors-green-1",
+    "scope": "source.scss"
+  },
+  "3ece3a": {
+    "prefix": "3ece3a",
+    "body": "\n$colors-green-2\n",
+    "description": "[G] Snippet: Adds color variable for $colors-green-2",
+    "scope": "source.scss"
+  },
+  "rgb(105,201,82)": {
+    "prefix": "rgb(105,201,82)",
+    "body": "\n$colors-green-light\n",
+    "description": "[G] Snippet: Adds color variable for $colors-green-light",
+    "scope": "source.scss"
+  },
+  "bdbdbd": {
+    "prefix": "bdbdbd",
+    "body": "\n$colors-grey-1\n",
+    "description": "[G] Snippet: Adds color variable for $colors-grey-1",
+    "scope": "source.scss"
+  },
+  "ebebeb": {
+    "prefix": "ebebeb",
+    "body": "\n$colors-grey-10\n",
+    "description": "[G] Snippet: Adds color variable for $colors-grey-10",
+    "scope": "source.scss"
+  },
+  "e1e2e5": {
+    "prefix": "e1e2e5",
+    "body": "\n$colors-grey-11\n",
+    "description": "[G] Snippet: Adds color variable for $colors-grey-11",
+    "scope": "source.scss"
+  },
+  "cfcfcf": {
+    "prefix": "cfcfcf",
+    "body": "\n$colors-grey-12\n",
+    "description": "[G] Snippet: Adds color variable for $colors-grey-12",
+    "scope": "source.scss"
+  },
+  "a5a5ae": {
+    "prefix": "a5a5ae",
+    "body": "\n$colors-grey-13\n",
+    "description": "[G] Snippet: Adds color variable for $colors-grey-13",
+    "scope": "source.scss"
+  },
+  "3f38381": {
+    "prefix": "3f3838",
+    "body": "\n$colors-grey-5\n",
+    "description": "[G] Snippet: Adds color variable for $colors-grey-5",
+    "scope": "source.scss"
+  },
+  "888c942": {
+    "prefix": "888c94",
+    "body": "\n$colors-grey-6\n",
+    "description": "[G] Snippet: Adds color variable for $colors-grey-6",
+    "scope": "source.scss"
+  },
+  "0e0e0e": {
+    "prefix": "0e0e0e",
+    "body": "\n$colors-grey-7\n",
+    "description": "[G] Snippet: Adds color variable for $colors-grey-7",
+    "scope": "source.scss"
+  },
+  "efefef1": {
+    "prefix": "efefef",
+    "body": "\n$colors-grey-9\n",
+    "description": "[G] Snippet: Adds color variable for $colors-grey-9",
+    "scope": "source.scss"
+  },
+  "f5c4001": {
+    "prefix": "f5c400",
+    "body": "\n$colors-guilded\n",
+    "description": "[G] Snippet: Adds color variable for $colors-guilded",
+    "scope": "source.scss"
+  },
+  "aaa": {
+    "prefix": "aaa",
+    "body": "\n$colors-horizontal-line\n",
+    "description": "[G] Snippet: Adds color variable for $colors-horizontal-line",
+    "scope": "source.scss"
+  },
+  "rgb(0,132,255)": {
+    "prefix": "rgb(0,132,255)",
+    "body": "\n$colors-messenger\n",
+    "description": "[G] Snippet: Adds color variable for $colors-messenger",
+    "scope": "source.scss"
+  },
+  "57d8ff": {
+    "prefix": "57d8ff",
+    "body": "\n$colors-overwatch-blue\n",
+    "description": "[G] Snippet: Adds color variable for $colors-overwatch-blue",
+    "scope": "source.scss"
+  },
+  "rgb(194,25,19)": {
+    "prefix": "rgb(194,25,19)",
+    "body": "\n$colors-overwolf\n",
+    "description": "[G] Snippet: Adds color variable for $colors-overwolf",
+    "scope": "source.scss"
+  },
+  "rgb(182,199,221)": {
+    "prefix": "rgb(182,199,221)",
+    "body": "\n$colors-platinum\n",
+    "description": "[G] Snippet: Adds color variable for $colors-platinum",
+    "scope": "source.scss"
+  },
+  "ff2d3d": {
+    "prefix": "ff2d3d",
+    "body": "\n$colors-red-1\n",
+    "description": "[G] Snippet: Adds color variable for $colors-red-1",
+    "scope": "source.scss"
+  },
+  "rgb(153,200,236)": {
+    "prefix": "rgb(153,200,236)",
+    "body": "\n$colors-reddit\n",
+    "description": "[G] Snippet: Adds color variable for $colors-reddit",
+    "scope": "source.scss"
+  },
+  "rgb(178,178,178)": {
+    "prefix": "rgb(178,178,178)",
+    "body": "\n$colors-silver\n",
+    "description": "[G] Snippet: Adds color variable for $colors-silver",
+    "scope": "source.scss"
+  },
+  "rgb(26,23,24)": {
+    "prefix": "rgb(26,23,24)",
+    "body": "\n$colors-steam\n",
+    "description": "[G] Snippet: Adds color variable for $colors-steam",
+    "scope": "source.scss"
+  },
+  "rgb(131,243,255)": {
+    "prefix": "rgb(131,243,255)",
+    "body": "\n$colors-team-average-blue-highlight\n",
+    "description": "[G] Snippet: Adds color variable for $colors-team-average-blue-highlight",
+    "scope": "source.scss"
+  },
+  "rgb(54,166,247)": {
+    "prefix": "rgb(54,166,247)",
+    "body": "\n$colors-team-average-blue\n",
+    "description": "[G] Snippet: Adds color variable for $colors-team-average-blue",
+    "scope": "source.scss"
+  },
+  "ededed": {
+    "prefix": "ededed",
+    "body": "\n$colors-text-inverse-primary\n",
+    "description": "[G] Snippet: Adds color variable for $colors-text-inverse-primary",
+    "scope": "source.scss"
+  },
+  "ddd": {
+    "prefix": "ddd",
+    "body": "\n$colors-text-inverse-secondary\n",
+    "description": "[G] Snippet: Adds color variable for $colors-text-inverse-secondary",
+    "scope": "source.scss"
+  },
+  "000": {
+    "prefix": "000",
+    "body": "\n$colors-text-primary\n",
+    "description": "[G] Snippet: Adds color variable for $colors-text-primary",
+    "scope": "source.scss"
+  },
+  "rgb(17,137,244)": {
+    "prefix": "rgb(17,137,244)",
+    "body": "\n$colors-twitter\n",
+    "description": "[G] Snippet: Adds color variable for $colors-twitter",
+    "scope": "source.scss"
+  },
+  "rgb(97,70,48)": {
+    "prefix": "rgb(97,70,48)",
+    "body": "\n$colors-wood\n",
+    "description": "[G] Snippet: Adds color variable for $colors-wood",
+    "scope": "source.scss"
+  },
+  "ffd700": {
+    "prefix": "ffd700",
+    "body": "\n$colors-yellow-1\n",
+    "description": "[G] Snippet: Adds color variable for $colors-yellow-1",
+    "scope": "source.scss"
+  },
+  "e4c5191": {
+    "prefix": "e4c519",
+    "body": "\n$colors-yellow-2\n",
+    "description": "[G] Snippet: Adds color variable for $colors-yellow-2",
+    "scope": "source.scss"
+  },
+  "ffb4001": {
+    "prefix": "ffb400",
+    "body": "\n$colors-yellow-3\n",
+    "description": "[G] Snippet: Adds color variable for $colors-yellow-3",
+    "scope": "source.scss"
+  },
+  "eabc00": {
+    "prefix": "eabc00",
+    "body": "\n$colors-yellow-4\n",
+    "description": "[G] Snippet: Adds color variable for $colors-yellow-4",
+    "scope": "source.scss"
+  },
+  "d89f0c": {
+    "prefix": "d89f0c",
+    "body": "\n$colors-yellow-5\n",
+    "description": "[G] Snippet: Adds color variable for $colors-yellow-5",
+    "scope": "source.scss"
+  },
+  "ffd800": {
+    "prefix": "ffd800",
+    "body": "\n$colors-yellow-6\n",
+    "description": "[G] Snippet: Adds color variable for $colors-yellow-6",
+    "scope": "source.scss"
+  },
+  "ffeca01": {
+    "prefix": "ffeca0",
+    "body": "\n$colors-yellow-highlight\n",
+    "description": "[G] Snippet: Adds color variable for $colors-yellow-highlight",
+    "scope": "source.scss"
+  },
+  "rgba(0,0,255,0.2)": {
+    "prefix": "rgba(0,0,255,0.2)",
+    "body": "\n$dev-bg-color-1\n",
+    "description": "[G] Snippet: Adds color variable for $dev-bg-color-1",
+    "scope": "source.scss"
+  },
+  "ellipsify": {
+    "prefix": "ellipsify",
+    "body": "\n@include mixins-ellipsify;\n",
+    "description": "[G] Snippet: Insert ellipsify mixin",
+    "scope": "source.scss"
+  },
+  "flex": {
+    "prefix": "flex",
+    "body": "\ndisplay: flex;\nflex-direction: ${1:row};\nflex: ${2:0} ${3:1} auto;\n",
+    "description": "[G] Snippet: inserts flex styling into a component; tab through to set values",
+    "scope": "source.scss"
+  },
+  "fsans": {
+    "prefix": "fsans",
+    "body": "\n@include text-font-sans-serif-${1:semibold};$0\n",
+    "description": "",
+    "scope": "source.scss"
+  },
+  "icon1": {
+    "prefix": "icon",
+    "body": "\n@include square-icon($size: ${1:10px}, $padding: ${2:2px});\n",
+    "description": "[G] Snippet: Insert icon",
+    "scope": "source.scss"
+  },
+  "img1": {
+    "prefix": "img",
+    "body": "\n@include square-image($size: ${1:16px})\n",
+    "description": "[G] Snippet: Insert a square image",
+    "scope": "source.scss"
+  },
+  "msdw": {
+    "prefix": "msdw",
+    "body": "\n@media (max-width: $consts-small-device-width) {\n  ${1}\n}\n",
+    "description": "",
+    "scope": "source.scss"
+  },
+  "subtext": {
+    "prefix": "subtext",
+    "body": "\n@include mixins-subtext${1:-heading}($color: ${2:$color-white});\n",
+    "description": "",
+    "scope": "source.scss"
+  },
+  "tpm": {
+    "prefix": "tpm",
+    "body": "\n@import 'team_page_v2_mixins';\n",
+    "description": "[G] Snippet: Inserts @import 'team_page_v2_mixins';",
+    "scope": "source.scss"
+  }
+}
