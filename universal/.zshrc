@@ -29,7 +29,7 @@ case `uname` in
         export PATH="$PATH:$ANDROID_HOME/platform-tools"
         export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin"
         export PATH="$PATH:$HOME/code/src/googlesource/depot_tools"
-        export PATH=$(brew --prefix ruby)/bin:$(brew --prefix)/lib/ruby/gems/3.1.0/bin:$PATH
+        export PATH=$(brew --prefix ruby)/bin:$(brew --prefix)/lib/ruby/gems/3.2.0/bin:$PATH
         export JAVA_HOME_11_X64=$(/usr/libexec/java_home -v 11)
         export JAVA_HOME_17_X64=$(/usr/libexec/java_home -v 17)
         # Guilded commands
