@@ -7,6 +7,10 @@
         "path": "./javascript.json"
       },
       {
+        "language": "javascriptreact",
+        "path": "./javascript.json"
+      },
+      {
         "language": "scss",
         "path": "./scss.json"
       }

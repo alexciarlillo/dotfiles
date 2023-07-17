@@ -2,1171 +2,996 @@
   "kuei": {
     "prefix": "kuei",
     "body": "\nKeyboardUtilities.EventIs${1:Down}(event)\n",
-    "description": "[G] Snippet: KeyboardUtilities.EventIs",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: KeyboardUtilities.EventIs"
   },
   "a2am": {
     "prefix": "a2am",
     "body": "\nObjectTools.ArrayToArrayMap(${1:array}, ${2:mapKey}, ${3:valueKey})\n",
-    "description": "[G] Snippet: insert ArrayToArrayMap",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert ArrayToArrayMap"
   },
   "a2vm": {
     "prefix": "a2vm",
     "body": "\nObjectTools.ArrayToValueMap(${1:array}, ${2:mapKey}, ${3:valueKey})\n",
-    "description": "[G] Snippet: insert ArrayToValueMap",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert ArrayToValueMap"
   },
   "abf": {
     "prefix": "abf",
     "body": "\n${1:@action}\n${2:Thing} = ${3:()} => {\n  ${4:}\n}\n",
-    "description": "[G] Snippet: Creates an autobinded/lambda class method",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Creates an autobinded/lambda class method"
   },
   "additionalrequestmetas": {
     "prefix": "additionalrequestmetas",
     "body": "\nadditionalRequestMetas: [\n  {\n    description: '${1:TODO}',\n    getReqParams({testContext}) {\n      const {reqParams} = testContext;\n      return {\n        ...reqParams.Create,\n        body: {\n          ...reqParams.Create.body,\n          /* NOCOMMIT todo */\n        },\n      };\n    },\n    getExpectedPartialResponse({testContext}) {\n      return {\n        /* NOCOMMIT todo */\n      };\n    },\n  },\n],\n",
-    "description": "[G] Snippet: Inserts a additionalRequestMetas",
-    "scope": "source.js"
+    "description": "[G] Snippet: Inserts a additionalRequestMetas"
   },
   "alterdb": {
     "prefix": "alterdb",
     "body": "\n{\n  Description: '${2:description}',\n  Script: `${1:query}`,\n},\n",
-    "description": "[G] Snippet: insert an alter database entry into the array",
-    "scope": "source.js"
+    "description": "[G] Snippet: insert an alter database entry into the array"
   },
   "animtiming": {
     "prefix": "animtiming",
     "body": "\nAnimated.timing(${1:this.animatedValue}, {\n  toValue: ${2:1},\n  duration: ${3:AnimationConsts.DurationMs},\n  easing: AnimationConsts.EasingInOutExp,\n  useNativeDriver: true,\n}).start();\n",
-    "description": "[G] Snippet: Creates a RN Animated.timing expression",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Creates a RN Animated.timing expression"
   },
   "asd": {
     "prefix": "asd",
     "body": "\nassert.deepStrictEqual(${1:paramName}, ${2:paramName}, `${3:expected ${JSON.stringify(${1:paramName})\\} but got ${JSON.stringify(${2:paramName})\\}}`);\n",
-    "description": "[G] Snippet: Insert assert deep strict equal",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert assert deep strict equal"
   },
   "asdse": {
     "prefix": "asdse",
     "body": "\nassert.deepStrictEqual(${1:actual}, ${2:expected}, '${3:was not equal}')\n",
-    "description": "[G] Snippet: Insert assert",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert assert"
   },
   "ase": {
     "prefix": "ase",
     "body": "\nassert.strictEqual(${1:paramName}, ${2:paramName}, `${3:${1:paramName} was not equal}`);\n",
-    "description": "[G] Snippet: Insert assert strict equal",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert assert strict equal"
   },
   "asm": {
     "prefix": "asm",
     "body": "\nstatic async ${1:StaticMethodName}(${2:}) {\n  ${3:}\n}\n",
-    "description": "[G] Snippet: async static method",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: async static method"
   },
   "assertSnapshot": {
     "prefix": "assertSnapshot",
     "body": "\n// see README-snapshot-tests.md for more info on what this is / how to update snapshots\nassertSnapshot.bind(this)({\n  actual: ${1:'actual'},\n  testFile: '${TM_FILENAME/(.+)\\..+|.*/$1/:name}',\n});\n",
-    "description": "[G] Snippet: Insert assertSnapshot",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert assertSnapshot"
   },
   "ast": {
     "prefix": "ast",
     "body": "\nassert(${1:paramName}, `${2:${1:paramName} is required}`);\n",
-    "description": "[G] Snippet: Insert assert",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert assert"
   },
   "astarray": {
     "prefix": "astarray",
     "body": "\nassert(Array.isArray(${1:array}), `${2:${1:array} must be an array}`);\n",
-    "description": "[G] Snippet: Insert assert for type array",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert assert for type array"
   },
   "astfunction": {
     "prefix": "astfunction",
     "body": "\nassert.strictEqual(typeof ${1:paramName}, 'function', `${2:${1:paramName} must be a function}`);\n",
-    "description": "[G] Snippet: Insert assert for type function",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert assert for type function"
   },
   "astnumber": {
     "prefix": "astnumber",
     "body": "\nassert.strictEqual(typeof ${1:paramName}, 'number', `${2:${1:paramName} must be a number}`);\n",
-    "description": "[G] Snippet: Insert assert for type number",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert assert for type number"
   },
   "aststring": {
     "prefix": "aststring",
     "body": "\nassert.strictEqual(typeof ${1:paramName}, 'string', `${2:${1:paramName} must be a string}`);\nassert(${1:paramName}.length > 0, `${3:${1:paramName} must not be empty}`);\n",
-    "description": "[G] Snippet: Insert assert for type string",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert assert for type string"
   },
   "badreq": {
     "prefix": "badreq",
     "body": "\nif (${3:!${1:condition}}) throw new BadRequestError('${2:${1:condition} is required}');\n",
-    "description": "[G] Snippet: bad request check (throw new BadReq...)\"`",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: bad request check (throw new BadReq...)\"`"
   },
   "batd": {
     "prefix": "batd",
     "body": "\nBotActionTypeDefinitions.${1:SendMessageToTeamChannel}\n",
-    "description": "[G] Snippet: BotActionTypeDefinitions",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: BotActionTypeDefinitions"
   },
   "bc": {
     "prefix": "bc",
     "body": "\nconst {${1:bracketId}} = this.bracketContext;\n",
-    "description": "[G] Snippet: insert prop from bracketContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert prop from bracketContext;"
   },
   "blogchannelid": {
     "prefix": "blogchannelid",
     "body": "\nSharedBlogConsts.BlogAnnouncementsChannelId\n",
-    "description": "[G] Snippet: SharedBlogConsts.BlogAnnouncementsChannelId",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: SharedBlogConsts.BlogAnnouncementsChannelId"
   },
   "botactionclient": {
     "prefix": "botactionclient",
     "body": "\nimport ${TM_FILENAME/(\\w+)\\..+|.*/$1/}MetaDescription from '${TM_FILENAME/(\\w+)\\..+|.*/$1/}MetaDescription';\nimport BotActionTypeDefinitions from 'BotActionTypeDefinitions';\n\nexport default {\n  type: BotActionTypeDefinitions.${TM_FILENAME/BotAction(\\w+)\\..+|.*/$1/},\n  title: '${TM_FILENAME/(\\w+)\\..+|.*/$1/} title',\n  description: '${TM_FILENAME/(\\w+)\\..+|.*/$1/} description',\n  iconName: 'icon-dm', // NOCOMMIT todo\n  appCategory: null, // NOCOMMIT todo\n  MetaDescription: ${TM_FILENAME/(\\w+)\\..+|.*/$1/}MetaDescription,\n};\n",
-    "description": "[G] Snippet: Inserts a bot action client",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts a bot action client"
   },
   "botactionserver": {
     "prefix": "botactionserver",
     "body": "\nimport {BadRequestError} from 'RestifyErrors';\nimport RequestParamHydrators from 'RequestParamHydrators';\nimport CommonJsonSchemaProperties from 'CommonJsonSchemaProperties';\nimport BotActionTypeDefinitions from 'BotActionTypeDefinitions';\nimport BotActionBase from 'BotActionBase';\nimport Promise from 'bluebird';\n\nclass ${TM_FILENAME/(\\w+)\\..+|.*/$1/} extends BotActionBase {\n  ConstructExecuteRemotelyArgsFromLogEvent(eventData) {\n    const {flow} = eventData;\n    const {actionMeta} = flow;\n    const {todo} = actionMeta;\n\n    // TODO\n    const route = RestApiTODORoute\n    const urlParams = {}\n    const body = {}\n\n    return {\n      route,\n      urlParams,\n      body,\n    };\n  }\n\n  async _ValidateMetaBeforeSave({meta, context}) {\n    // TODO\n    const {teamId, userId} = context;\n    const {todo} = meta;\n    await RequestParamHydrators.todo({\n      paramValue: todo,\n      hydratedParams: {teamId},\n      callerId: userId,\n    });\n    return {}\n  }\n}\n\n${TM_FILENAME/(\\w+)\\..+|.*/$1/}.prototype.type = BotActionTypeDefinitions.${TM_FILENAME/BotAction(\\w+)\\..+|.*/$1/};\n${TM_FILENAME/(\\w+)\\..+|.*/$1/}.prototype.JsonSchema = {\n  type: 'object',\n  required: [],\n  properties: {\n    todo: CommonJsonSchemaProperties.todo,\n  },\n};\n\nexport default new ${TM_FILENAME/(\\w+)\\..+|.*/$1/}();\n",
-    "description": "[G] Snippet: Inserts a bot action server",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts a bot action server"
   },
   "botactiontestconsts": {
     "prefix": "botactiontestconsts",
     "body": "\nimport BotActionTypeDefinitions from 'BotActionTypeDefinitions';\nimport assert from 'assert';\n\nexport default {\n  type: BotActionTypeDefinitions.${TM_FILENAME/BotAction(\\w+)TestConsts\\..+|.*/$1/},\n  Metas: {\n    Valid: [\n      {\n        description: '${1:TODO}',\n        meta({testContext}) {\n          ${2:// TODO}\n          return {};\n        },\n        async beforeExecute({testContext, meta}) {\n          ${3:// TODO}\n        },\n        async verifyExecuted({testContext, meta}) {\n          ${4:// TODO}\n        },\n      },\n    ],\n    Invalid: [\n      {\n        expectedStatusCode: 400,\n        expectedMessage: 'Bad Request: TODO bad meta',\n        description: 'empty meta',\n        meta: {},\n      },\n      ${5:// TODO}\n    ],\n  },\n};\n",
-    "description": "[G] Snippet: Inserts a bot action test consts",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts a bot action test consts"
   },
   "botentitymetaform": {
     "prefix": "botentitymetaform",
     "body": "\nimport Bot${TM_FILENAME/Bot(Action|Trigger).*/$1/}TypeDefinitions from 'Bot${TM_FILENAME/Bot(Action|Trigger).*/$1/}TypeDefinitions';\nimport FieldTypes from 'FieldTypes';\nimport BaseBotEntityMetaFormComponent from 'BaseBotEntityMetaFormComponent';\nimport {observable, computed, action} from 'mobx';\nimport {observer} from 'mobx-react';\n\n@observer\nclass ${TM_FILENAME/(\\w+)\\..+|.*/$1/} extends BaseBotEntityMetaFormComponent {\n  static type = Bot${TM_FILENAME/Bot(Action|Trigger).*/$1/}TypeDefinitions.${TM_FILENAME/(BotAction)?(BotTrigger(TeamAuditLog))?(\\w+)MetaForm\\..+|.*/$3$4/};\n\n  transformFormValues = values => {\n    ${1:// TODO}\n    return {};\n  };\n\n  @computed\n  get FormSpecs() {\n    const {meta} = this.props;\n\n    return {\n      sections: [\n        {\n          fieldSpecs: [\n            ${2:// TODO}\n          ],\n        },\n      ],\n    };\n  }\n}\n\nexport default ${TM_FILENAME/(\\w+)\\..+|.*/$1/};\n",
-    "description": "[G] Snippet: Inserts a bot entity meta form",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts a bot entity meta form"
   },
   "bottriggerchecker": {
     "prefix": "bottriggerchecker",
     "body": "\nimport BotTriggerCheckerBase from 'BotTriggerCheckerBase';\nimport BotTriggerTypeDefinitions from 'BotTriggerTypeDefinitions';\nimport Promise from 'bluebird';\n\nclass ${TM_FILENAME/(\\w+)\\..+|.*/$1/} extends BotTriggerCheckerBase {\n  type = BotTriggerTypeDefinitions.${TM_FILENAME/(BotTrigger(TeamAuditLog))?(\\w+)Checker\\..+|.*/$2$3/};\n\n  async _IsTriggered({eventData, triggerMeta}) {\n    const {teamId, originatorId, channel} = eventData;\n    const {${1:TODO}} = triggerMeta;\n    $0\n    return true\n  }\n}\n\nexport default new ${TM_FILENAME/(\\w+)\\..+|.*/$1/}();\n",
-    "description": "[G] Snippet: Inserts a bot trigger checker",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts a bot trigger checker"
   },
   "bottriggerclient": {
     "prefix": "bottriggerclient",
     "body": "\nimport AppCategories from 'AppCategories';\nimport ${TM_FILENAME/(\\w+)\\..+|.*/$1/}MetaDescription from '${TM_FILENAME/(\\w+)\\..+|.*/$1/}MetaDescription';\nimport BotTriggerTypeDefinitions from 'BotTriggerTypeDefinitions';\n\nexport default {\n  type: BotTriggerTypeDefinitions.${TM_FILENAME/(BotTrigger(TeamAuditLog))?(\\w+)\\..+|.*/$2$3/},\n  title: '${TM_FILENAME/(\\w+)\\..+|.*/$1/} title',\n  description: '${TM_FILENAME/(\\w+)\\..+|.*/$1/} description',\n  iconName: 'icon-dm',\n  appCategory: AppCategories.TODO, // TODO\n  MetaDescription: ${TM_FILENAME/(\\w+)\\..+|.*/$1/}MetaDescription,\n};\n",
-    "description": "[G] Snippet: Inserts a bot trigger for client",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts a bot trigger for client"
   },
   "bottriggerserver": {
     "prefix": "bottriggerserver",
     "body": "\nimport BotTriggerTypeDefinitions from 'BotTriggerTypeDefinitions';\nimport BotTriggerBase from 'BotTriggerBase';\nimport Promise from 'bluebird';\n\nclass ${TM_FILENAME/(\\w+)\\..+|.*/$1/} extends BotTriggerBase {\n  type = BotTriggerTypeDefinitions.${TM_FILENAME/(BotTrigger(TeamAuditLog))?(\\w+)\\..+|.*/$2$3/};\n\n  async _ValidateForBotFlow({meta, context}) {\n    const {teamId, userId} = context;\n    const {${2:TODO}} = meta\n    return {};\n  }\n}\n\nexport default new ${TM_FILENAME/(\\w+)\\..+|.*/$1/}();\n",
-    "description": "[G] Snippet: Inserts a bot trigger for server",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts a bot trigger for server"
   },
   "bottriggertestconsts": {
     "prefix": "bottriggertestconsts",
     "body": "\nimport BotTriggerTypeDefinitions from 'BotTriggerTypeDefinitions';\n\nexport default {\n  type: BotTriggerTypeDefinitions.${TM_FILENAME/(BotTrigger(TeamAuditLog))?(\\w+)TestConsts\\..+|.*/$2$3/},\n  Metas: {\n    Valid: [\n      {\n        description: '${2:TODO}',\n        meta({testContext}) {\n          ${1:// TODO}\n        },\n        async execute({testContext, meta}) {\n          ${4:// TODO}\n        },\n        async afterExecute({testContext, meta}) {\n          ${5:// TODO}\n        },\n      },\n    ],\n    Invalid: [\n      {\n        ${6:// TODO}\n        expectedStatusCode: 400,\n        description: 'empty meta',\n        meta: {},\n      },\n    ],\n  },\n};\n",
-    "description": "[G] Snippet: Inserts a bot trigger test const",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts a bot trigger test const"
   },
   "bttd": {
     "prefix": "bttd",
     "body": "\nBotTriggerTypeDefinitions.${1:TeamAuditLogTeamUpdated}\n",
-    "description": "[G] Snippet: BotTriggerTypeDefinitions",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: BotTriggerTypeDefinitions"
   },
   "callerid": {
     "prefix": "callerid",
     "body": "\nconst userId = req.callerId;\n",
-    "description": "",
-    "scope": "source.js, source.jsx"
+    "description": ""
   },
   "cc": {
     "prefix": "cc",
     "body": "\nconst {${1:content}} = this.contentContext;\n",
-    "description": "[G] Snippet: Inserts const {param} = this.contentContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts const {param} = this.contentContext;"
   },
   "ccc": {
     "prefix": "ccc",
     "body": "\nconst {${1:channel}} = this.chatChannelContext;\n",
-    "description": "",
-    "scope": "source.js, source.jsx"
+    "description": ""
   },
   "cctest": {
     "prefix": "cctest",
     "body": "\nconst {team: {baseGroup}} = await GuildedTeamService.GetTeamById({teamId});\n\nconst {id: channelId} = await ChannelCreators[ContentTypes.${1:Event}]({\n  teamId,\n  groupId: baseGroup.id,\n});\n",
-    "description": "",
-    "scope": "source.js, source.jsx"
+    "description": ""
   },
   "cubic": {
     "prefix": "cubic",
     "body": "\nconst {${1:usersById}} = this.channelUsersByIdContext;\n",
-    "description": "",
-    "scope": "source.js, source.jsx"
+    "description": ""
   },
   "chc": {
     "prefix": "chc",
     "body": "\nconst {${1:className}} = this.chatContext;\n",
-    "description": "[G] Snippet: Inserts const {param} = this.chatContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts const {param} = this.chatContext;"
   },
   "clientdalfunction": {
     "prefix": "clientdalfunction",
     "body": "\n${1:doSomething}({${2:param}, ${3:...body}}) {\n  return GuildedRequest({\n    xhrFields,\n    url: `${Urls.BaseUrl}/${4:path}`,\n    type: '${5:POST}',\n    contentType: 'application/json',\n    dataType: 'json',\n    ${3/(\\.\\.\\.body).*?/(?1data\\: JSON.stringify\\(body\\)),/}\n  });\n},\n",
-    "description": "[G] Snippet: insert client Dal function",
-    "scope": "source.js"
+    "description": "[G] Snippet: insert client Dal function"
   },
   "clientservicefunction": {
     "prefix": "clientservicefunction",
     "body": "\nstatic async ${1:DoSomething}({${2:param}, ${3:...args}}) {\n  return Tarobi${TM_FILENAME/Guilded(\\w+?)Service\\..+|.*/$1/}Dal.${1/(\\w)(\\w+?)/\\L$1$2/}({\n    ${2:param},\n    ${3:...args}\n  });\n}\n",
-    "description": "[G] Snippet: insert client Dal function",
-    "scope": "source.js"
+    "description": "[G] Snippet: insert client Dal function"
   },
   "cll": {
     "prefix": "cll",
     "body": "\nconsole.log({${2:}${1:logObj}}); /*DELETEME*/\n",
-    "description": "[G] Snippet: Create object logline",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Create object logline"
   },
   "cllcolor": {
     "prefix": "cllcolor",
-    "body": "\nconsole.log(`%c${1:Description}: %c$\\{${2:value}\\}`, `color: #66CC00`, `color: #00CCCC`); /*DELETEME*/\n",
-    "description": "[G] Snippet: Create string logline with color for easier reading",
-    "scope": "source.js, source.jsx"
+    "body": "\nconsole.log(`%c${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}}: %c$\\{${2:true}\\}`, `color: #66CC00`, `color: #00CCCC`); /*DELETEME*/\n",
+    "description": "[G] Snippet: Create string logline with color for easier reading"
   },
   "cmc": {
     "prefix": "cmc",
     "body": "\nconst {${1:OnBecomeInteractable}} = this.channelMetricsContext;\nOnBecomeInteractable?.({contentType: ContentTypes.${2:contentType}});\n",
-    "description": "[G] Snippet: insert prop from channelMetricsContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert prop from channelMetricsContext;"
   },
   "cms": {
     "prefix": "cms",
     "body": "\n{classNames(${1:containerNameOrPaste}, className)}\n",
-    "description": "[G] Snippet: Merge existing className with className param",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Merge existing className with className param"
   },
   "cn": {
     "prefix": "cn",
     "body": "\nclassName=\"${TM_FILENAME/(.+)\\..+|.*/$1/:name}-${1:classname}\"\n",
-    "description": "[G] Snippet: className. inserts `className=\"FileName-(input)\"`",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: className. inserts `className=\"FileName-(input)\"`"
   },
   "cns": {
     "prefix": "cns",
     "body": "\n{classNames({\n  \"${1:className1}\": true,\n  \"${1:className1}-${2:modifier}\": ${3:condition},\n})}\n",
-    "description": "[G] Snippet: classNames. Inserts object form of classNames.",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: classNames. Inserts object form of classNames."
   },
   "comp": {
     "prefix": "comp",
     "body": "\n@computed\nget ${1:computedName}() {\n  ${2:return ${3:this.props.${1:property}};}\n}\n",
-    "description": "[G] Snippet: Insert a computed getter",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert a computed getter"
   },
   "cdm": {
     "prefix": "cdm",
     "body": "\ncomponentDidMount() {\n\tsuper.componentDidMount && super.componentDidMount();\n  $0\n}\n",
-    "description": "[G] Snippet: Inserts componentDidMount()",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts componentDidMount()"
   },
   "cwum": {
     "prefix": "cwum",
     "body": "\ncomponentWillUnmount() {\n\tsuper.componentWillUnmount && super.componentWillUnmount();\n  $0\n}\n",
-    "description": "[G] Snippet: Inserts componentWillUnmount()",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts componentWillUnmount()"
   },
   "connected": {
     "prefix": "connected",
     "body": "\nimport ContextConnectedGenerator from 'ContextConnectedGenerator';\n\nexport default ContextConnectedGenerator('${1:your}Context');\n",
-    "description": "[G] Snippet: ContextConnectedGenerator",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: ContextConnectedGenerator"
   },
   "constructor": {
     "prefix": "constructor",
     "body": "\nconstructor(...args) {\n  super(...args);\n  $1\n}\n",
-    "description": "[G] Snippet: insert a constructor",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert a constructor"
   },
   "contentloader": {
     "prefix": "contentloader",
     "body": "\n<ContentLoader\n  className=\"${TM_FILENAME/(.+)\\..+|.*/$1/}-content-loader\"\n  loadedSignal={!this.isLoading}\n  networkError={this.networkError}\n  onRefresh={this.refetch}\n>\n  ${1:content}\n</ContentLoader>\n",
-    "description": "[G] Snippet: ContentLoader component",
-    "scope": "source.jsx"
+    "description": "[G] Snippet: ContentLoader component"
   },
   "counter": {
     "prefix": "counter",
     "body": "\nconst ${1:counter} = new Counter('ts_${2:label}_total', ['${3:dimension}']);\n",
-    "description": "[G] Snippet: Prometheus counter",
-    "scope": "source.js"
+    "description": "[G] Snippet: Prometheus counter"
   },
   "tc": {
     "prefix": "tc",
     "body": "\ncomponentDidMount() {\n  super.componentDidMount && super.componentDidMount();\n  ${1}\n}\n",
-    "description": "[G] Snippet: insert componentDidMount",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert componentDidMount"
   },
   "dbtx": {
     "prefix": "dbtx",
     "body": "\nconst result = await db.tx(async t => {\n\treturn t.batch([\n\t\t${1:// something}\n\t]):\n});\n",
-    "description": "[G] Snippet: db.tx()",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: db.tx()"
   },
   "debugger": {
     "prefix": "debugger",
     "body": "\nlet that = this;\ndebugger;\n",
-    "description": "[G] debugger statement with 'this' (that) context",
-    "scope": "source.js, source.jsx"
+    "description": "[G] debugger statement with 'this' (that) context"
   },
   "decorator": {
     "prefix": "decorator",
     "body": "\nimport React from 'react';\nimport {observable, computed, action} from 'mobx';\nimport {observer} from 'mobx-react';\n\nexport default function ${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}}(ClassName) {\n  return class ${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}}Wrapper extends ClassName {\n    static displayName = ClassName.displayName || ClassName.name;\n\n    ${2}\n  }\n}\n",
-    "description": "[G] Snippet: Insert new decorator component",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert new decorator component"
   },
   "displayError": {
     "prefix": "displayError",
     "body": "\nthis.statusContext.displayError({message: e.text, error: e});\n",
-    "description": "[G] Snippet: this.statusContext.displayError({message: displayed to user, error: sent to Sentry});",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: this.statusContext.displayError({message: displayed to user, error: sent to Sentry});"
   },
   "div": {
     "prefix": "div",
     "body": "\n<div className=\"${TM_FILENAME/(.+)\\..+|.*/$1/:name}-${1:name}\">\n  ${2:content}\n</div>\n",
-    "description": "[G] Snippet: Insert a div",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert a div"
   },
   "ed": {
     "prefix": "ed",
     "body": "\nimport DefaultLogTargetConfigurations from 'DefaultLogTargetConfigurations';\n\nexport default {\n  ${1:EventDefinition}: {\n    Targets: DefaultLogTargetConfigurations.${2:FrontendProductEvent},\n    Dimensions: [],\n  },\n};\n",
-    "description": "[G] Snippet: insert event definition`",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert event definition`"
   },
   "enabled": {
     "prefix": "enabled",
     "body": "\nimport {observable, computed, action} from 'mobx';\nimport {observer} from 'mobx-react';\n\nexport default function ${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}}(ClassName) {\n  return @observer\n  class ${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}}Wrapper extends ClassName {\n    static displayName = ClassName.displayName || ClassName.name;\n\n    $0\n  };\n}\n",
-    "description": "[G] Snippet: insert 'enabled' decorator template",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert 'enabled' decorator template"
   },
   "errlogger": {
     "prefix": "errlogger",
     "body": "\nErrorLogger.log(e)\n",
-    "description": "",
-    "scope": "source.js"
+    "description": ""
   },
   "eslint-disable": {
     "prefix": "eslint-disable",
     "body": "\n// ${1:please explain why you're doing this (required)}\n// eslint-disable-next-line ${2:eslint-rule-name (required)}\n",
-    "description": "[G] Snippet: disables eslint rule",
-    "scope": "source.js, source.jsx, source.scss, source.css"
+    "description": "[G] Snippet: disables eslint rule"
   },
   "etb": {
     "prefix": "etb",
     "body": "\nSlateEditorConsts.EditorTypes.Bare\n",
-    "description": "[G] Snippet: SlateEditorConsts.EditorTypes.Bare",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: SlateEditorConsts.EditorTypes.Bare"
   },
   "etd": {
     "prefix": "etd",
     "body": "\nSlateEditorConsts.EditorTypes.Default\n",
-    "description": "[G] Snippet: SlateEditorConsts.EditorTypes.Default",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: SlateEditorConsts.EditorTypes.Default"
   },
   "etr": {
     "prefix": "etr",
     "body": "\nSlateEditorConsts.EditorTypes.Reaction\n",
-    "description": "[G] Snippet: SlateEditorConsts.EditorTypes.Reaction",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: SlateEditorConsts.EditorTypes.Reaction"
   },
   "ets": {
     "prefix": "ets",
     "body": "\nSlateEditorConsts.EditorTypes.Simple\n",
-    "description": "[G] Snippet: SlateEditorConsts.EditorTypes.Simple",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: SlateEditorConsts.EditorTypes.Simple"
   },
   "eventlisteners": {
     "prefix": "eventlisteners",
     "body": "\n[EventListener.Listeners] = [\n  {\n    event: ${1:TeamSocketEvents.YourSocketEvent},\n    action: data => this.${2:_handleEvent}(data),\n  },\n];\n\n",
-    "description": "[G] Snippet: Add listeners",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Add listeners"
   },
   "exp": {
     "prefix": "exp",
     "body": "\nimport AutoExperimentIdTypes from 'AutoExperimentIdTypes';\n\n// For more information on how to use/add these and how to run experiments\n// see Experimentation.md\n\nexport default [\n  {\n    Name: '${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}}',\n    Version: 1,\n    Type: AutoExperimentIdTypes.User,\n    Experiments: [\n      {\n        Key: '${2:Experiment}',\n        Version: 1,\n        Size: ${3:1},\n        Groups: [\n          {\n            Name: ${4:'control'},\n            Size: 1 / 2,\n            IsControl: true,\n            Value: ${5:false},\n          },\n          {\n            Name: ${6:'test'},\n            Size: 1 / 2,\n            IsControl: false,\n            Value: ${7:true},\n          },\n        ],\n      },\n    ],\n  },\n];\n",
-    "description": "[G] Snippet: insert experiment definition template",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert experiment definition template"
   },
   "expectPromiseFailure": {
     "prefix": "expectPromiseFailure",
     "body": "\nawait GuildedTestUtils.expectPromiseFailure(async () => {\n  await ${1:GuildedService.Call()}\n}, ${2:400});\n",
-    "description": "[G] Snippet: Creates a snippet to assert promise failures",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Creates a snippet to assert promise failures"
   },
   "explicit": {
     "prefix": "explicit",
     "body": "\n{\n  return ${1:inlineFunctionContents};\n}\n",
-    "description": "[G] Snippet: converts implicit return to explicit return. Useful while debugging and trying to insert loglines/debugger.",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: converts implicit return to explicit return. Useful while debugging and trying to insert loglines/debugger."
   },
   "fd": {
     "prefix": "fd",
     "body": "\nfetchData = async () => {\n  ${1://fetch and return here}\n}\n",
-    "description": "[G] Snippet: inserts fetchData method (for DataStoreV2)`",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: inserts fetchData method (for DataStoreV2)`"
   },
   "felivemetric": {
     "prefix": "felivemetric",
     "body": "\nif (!window.__${1:timesInvoked}) {\n  window.__${1:timesInvoked} = 0;\n}\nwindow.__${1:timesInvoked}++;\n",
-    "description": "",
-    "scope": "source.js,source.jsx"
+    "description": ""
   },
   "filter": {
     "prefix": "filter",
     "body": "\nfilter((${1:item}) => {\n  return ${2:condition};\n})\n",
-    "description": "[G] Snippet: filter. inserts common `filter` function",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: filter. inserts common `filter` function"
   },
   "find": {
     "prefix": "find",
     "body": "\nfind((${1:item}) => {\n  $0\n  return ${2:trueOrFalse}\n})\n",
-    "description": "[G] Snippet: find function",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: find function"
   },
   "foreach": {
     "prefix": "foreach",
     "body": "\nforEach((${1:item}) => {\n  $0\n})\n",
-    "description": "[G] Snippet: foreach. inserts common `foreach` function",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: foreach. inserts common `foreach` function"
   },
   "forin": {
     "prefix": "forin",
     "body": "\nfor (const ${1:property} in ${2:object}) {\n  const item = ${2:object}[${1:property}];\n}\n",
-    "description": "[G] Snippet: for...in object",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: for...in object"
   },
   "forloop": {
     "prefix": "forloop",
     "body": "\nfor (let i = 0; i < ${2:${1:ArrayName}.length}; i++) {\n  const ${3:thing} = ${1:ArrayName}[i];\n  ${4://what do}\n}\n",
-    "description": "[G] Snippet: forloop`",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: forloop`"
   },
   "formconfirmbuttonv2": {
     "prefix": "formconfirmbuttonv2",
     "body": "\n<FormConfirmButtonV2\n  ${2:// delete this comment and any undesired properties below}\n  style=\"hollow\"\n  type=\"bleached\"\n  size=\"sm\"\n  onClick={this._handleClick}\n  disabled={disabled}\n  disabledTooltip=\"Disabled\"\n  disabledTooltipDirection=\"up\"\n  loading={loading}\n  href=\"href\"\n  isWide\n>\n  ${1:Confirm}\n</FormConfirmButtonV2>\n",
-    "description": "[G] Snippet: Creates a FormConfirmButtonV2 element",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Creates a FormConfirmButtonV2 element"
   },
   "forof": {
     "prefix": "forof",
     "body": "\nfor (const ${1:element} of ${1:element}s) {\n  // TODO\n}\n",
-    "description": "[G] Snippet: for...of (array)",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: for...of (array)"
   },
   "frag": {
     "prefix": "frag",
     "body": "\n<React.Fragment>\n  ${1:stuff}\n</React.Fragment>\n",
-    "description": "[G] Snippet: insert fragment",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert fragment"
   },
   "fspecs": {
     "prefix": "fspecs",
     "body": "\nFormSpecs = {\n  ${1:header: null /* optional: top-level form header */,}\n  sections: [\n    {\n      ${2:header: null /* optional: header for just this section */,}\n      fieldSpecs: [\n        {\n          type: ${3:FieldTypes.Text},\n          fieldName: '${4:camelCasedFieldName (required) for referencing value on form response}',\n          label: '${5:Label (required) user-copy, for identifying the field to user}',\n          isOptional: ${6:false},\n          ${7:validationFunction: value => {\n            // optional, should return an error string (user-facing error string copy)\n            // if invalid and nothing if valid. can be async (network call or etc.) or sync.\n          \\},}\n          ${8:defaultValue: 'defaultValue (optional, default: \"\")',}\n          ${9:iconFunction: (value, validity) => {\n            /* optional, if you return an icon it will be rendered in the text field */\n            /* assumed to be an image if it is a string */\n          \\},}\n          ${10:rowCollapseId: null /* optional, all keys that match will be in same row */,}\n          ${11:replacementFunction: value => {\n            /* optional, the value will be replaced with the return value if this is present */\n            /* useful for fixing casing and stuff like that */\n          \\},}\n        },\n      ],\n    },\n  ],\n};\n",
-    "description": "[G] Snippet: insert form specs",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert form specs"
+  },
+  "func": {
+    "prefix": "func",
+    "body": "\nfunction ${1:name}() {\n  $0\n}\n",
+    "description": "[G] Snippet: inserts function"
   },
   "fsc": {
     "prefix": "fsc",
     "body": "\nconst {${1:searchTerm}} = this.fuzzySortContext;\n",
-    "description": "[G] Snippet: insert prop from fuzzySortContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert prop from fuzzySortContext;"
   },
   "gc": {
     "prefix": "gc",
     "body": "\nconst {${1:group}} = this.groupContext;\n",
-    "description": "[G] Snippet: insert prop from groupContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert prop from groupContext;"
   },
   "getteam": {
     "prefix": "getteam",
     "body": "\nconst {team} = await GuildedTeamService.GetTeamById({teamId});\n",
-    "description": "",
-    "scope": "source.js, source.jsx"
+    "description": ""
   },
   "gfvc": {
     "prefix": "gfvc",
     "body": "\nconst {${1:hasNotBeenViewed}} = this.guildedFlatListItemVisibilityContext;\n",
-    "description": "[G] Snippet: insert prop from guildedFlatListItemVisibilityContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert prop from guildedFlatListItemVisibilityContext;"
   },
   "gpc": {
     "prefix": "gpc",
     "body": "\nconst {${1:group}} = this.groupContext;\n",
-    "description": "[G] Snippet: insert prop from groupContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert prop from groupContext;"
   },
   "grc": {
     "prefix": "grc",
     "body": "\nconst {${1:groupsByTeamId}} = this.groupsContext;\n",
-    "description": "[G] Snippet: insert prop from groupsContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert prop from groupsContext;"
   },
   "clientid": {
     "prefix": "clientid",
     "body": "\nconst guildedClientId = req.headers['guilded-client-id']\n",
-    "description": "",
-    "scope": "source.js, source.jsx"
+    "description": ""
+  },
+  "guildedpublicapisendrequest": {
+    "prefix": "guildedpublicapisendrequest",
+    "body": "\nawait this.guildedPublicApi.sendRequest({\n  operationId: 'ChannelMessageCreate',\n  urlParams: {\n    channelId: message.channelId,\n  },\n  body: {\n    replyMessageIds: [message.id],\n    isPrivate: message.isPrivate,\n    content,\n  },\n});\n",
+    "description": "[G] Snippet: guildedPublicApi.sendRequest"
   },
   "guildedtext": {
     "prefix": "guildedtext",
     "body": "\n<GuildedText\n  ${2:// delete this comment and any undesired properties below}\n  type=\"subtext\"\n  color=\"gilded\"\n  weight=\"bold\"\n  block\n  centered\n  ellipsify\n>\n  ${1:text}\n</GuildedText>\n",
-    "description": "[G] Snippet: Creates a GuildedText element",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Creates a GuildedText element"
   },
   "hdf": {
     "prefix": "hdf",
     "body": "\nhandleDataFetch = async data => {\n  ${1:console.log(data);}\n}\n",
-    "description": "[G] Snippet: inserts handleDataFetch method (for DataStoreV2)`",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: inserts handleDataFetch method (for DataStoreV2)`"
   },
   "hotkeys": {
     "prefix": "hotkeys",
     "body": "\n[HotkeyListener.HotkeyHandlers] = {\n  [SystemHotkeyNames.${1:YourHotkey}]: async () => {\n    ${0:// tab here}\n  },\n};\n",
-    "description": "[G] Snippet: Add hotkeyListeners",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Add hotkeyListeners"
   },
   "hovercontext": {
     "prefix": "hovercontext",
     "body": "\n<HoverContext\n  tooltipComponent={${1:TooltipComponent}}\n  tooltipComponentProps={${2:tooltipComponentProps}}\n  text=\"${3:hover text}\"\n  direction=\"${4:up}\"\n>\n  stuff\n</HoverContext>\n",
-    "description": "[G] Snippet: hoverContext",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: hoverContext"
   },
   "ic": {
     "prefix": "ic",
     "body": "\nconst {${1:elementsByIntersectionId}} = this.intersectionContext;\n",
-    "description": "[G] Snippet: insert prop from intersectionContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert prop from intersectionContext;"
   },
   "icon": {
     "prefix": "icon",
     "body": "\n<SVGIcon className=\"${TM_FILENAME/(.+)\\..+|.*/$1/:name}-icon\" iconName=\"icon-${1:iconName}\" />\n",
-    "description": "[G] Snippet: Insert icon",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert icon"
   },
   "iife": {
     "prefix": "iife",
     "body": "\n(() => {\n  ${1:// code here}\n})();\n",
-    "description": "[G] Snippet: inserts an iife",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: inserts an iife"
   },
   "img": {
     "prefix": "img",
     "body": "\n<Img\n  className=\"${TM_FILENAME/(.+)\\..+|.*/$1/:name}-${1:image}\"\n  src=${2:\"someimage.png\"}/>\n",
-    "description": "[G] Snippet: Insert an img",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert an img"
   },
   "insertMulti": {
     "prefix": "insertMulti",
     "body": "\nconst insertStatement = helpers.insert(\n      ${1:arrayName}.map(row => ({${2:data}})),\n      ['${3:columns}'],\n      '${4:table}'\n    );\n",
-    "description": "[G] Snippet: Creates a multi-insert database statement",
-    "scope": "source.js"
+    "description": "[G] Snippet: Creates a multi-insert database statement"
   },
   "invalidrequestmetas": {
     "prefix": "invalidrequestmetas",
     "body": "\ninvalidRequestMetas: [\n  {\n    description: '${1:TODO}',\n    getReqParams({testContext}) {\n      const {reqParams, teamId, ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel} = testContext;\n      return {\n        urlParams: {\n          teamId,\n          channelId: ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel.id,\n          /* NOCOMMIT todo */\n        },\n        body: {\n          /* NOCOMMIT todo */\n        },\n      };\n    },\n    expectedStatusCode: 400,\n    expectedMessage: 'Bad Request: TODO' /* NOCOMMIT todo */,\n  },\n],\n",
-    "description": "[G] Snippet: Inserts a invalidRequestMetas",
-    "scope": "source.js"
+    "description": "[G] Snippet: Inserts a invalidRequestMetas"
   },
   "iscibuild": {
     "prefix": "iscibuild",
     "body": "\nCIBuildEnvironmentInfo.IsCIBuild\n",
-    "description": "[G] Snippet: CIBuildEnvironmentInfo.IsCIBuild",
-    "scope": "source.js"
+    "description": "[G] Snippet: CIBuildEnvironmentInfo.IsCIBuild"
+  },
+  "itemManagementSpecs": {
+    "prefix": "itemManagementSpecs",
+    "body": "\n    @computed.struct\n    get ItemManagementSpecs() {\n      return {\n        values: {\n          [/* Column */]: {\n            label: 'Item 1',\n            itemKey: 'item1Key',\n          },\n          [/* Column */]: {\n            label: 'Item 2',\n            itemKey: 'item2Key',\n            // getValue: this.getValue,\n            // getValueDisplay: this.getValueDisplay,\n            // getValueDisplayTitle: this.getValueDisplayTitle,\n          },\n        },\n        columns: {\n          [/* Column */]: {\n            valueKey: /* Column */,\n            valueRenderer: /* Platform specific render */,\n            // style: {\n            //   maxWidth: 180,\n            // },\n          },\n        },\n        sort: {\n          [/* Column */]: {\n            priority: 0,\n            //compareFunc: this.whenCompareFunc,\n          },\n        },\n        filter: {\n          [/* Column */]: {\n            options: [],\n            allOptionLabel: 'All statuses',\n            isMulti: true,\n            priority: 1,\n          },\n        },\n        itemOptions: {\n          //getCanView: this.getCanViewItemOptions,\n          //onOpen: this.onOpenItemOptions,\n        },\n        defaultValues: {\n          //compareFunc: this.defaultCompareFunc,\n          //sortKey: this.DefaultSortKey,\n          //sortDirection: this.DefaultSortIsDescending ? 'desc' : 'asc',\n        },\n        display: {\n          label: 'items',\n          searchPlaceholder: 'Search items',\n          //getFlavor: this.getItemFlavor,\n        },\n        //onNavigate: this.onNavigate,\n        asyncOptions: {\n          onFiltersChange: this.onFiltersChange,\n          onLoadNextPage: this.onLoadNextPage,\n          onSearchChange: this.onSearchChangeDebounced,\n          onSortChange: this.onSortChange,\n        },\n        headerSpecs: {\n          hideHeader: PlatformInfo.IsNative,\n        },\n      };\n    }\n",
+    "description": "[G] Snippet: insert default itemManagementSpecs;"
   },
   "jsonstringify": {
     "prefix": "jsonstringify",
     "body": "\nJSON.stringify(${1:object}${2:, null, 2})\n",
-    "description": "[G] Snippet: inserts `JSON.stringify(...)`",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: inserts `JSON.stringify(...)`"
   },
   "lazyload": {
     "prefix": "lazyload",
     "body": "\nlet _${1:privateName} = null;\nconst Get${1/^([a-zA-Z]){1}(.+)/\\U$1\\E$2/:privateName} = () => {\n  if (!_${1:privateName}) {\n    _${1:privateName} = require('${2:${1/^([a-zA-Z]){1}(.+)/\\U$1\\E$2/}}').default;\n  }\n  return _${1:privateName};\n};\n",
-    "description": "[G] Snippet: insert lazy load getter",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert lazy load getter"
   },
   "lc": {
     "prefix": "lc",
     "body": "\nconst {${1:isLayerVisible}} = this.layerContext;\n",
-    "description": "[G] Snippet: insert prop from layerContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert prop from layerContext;"
   },
   "lintrule": {
     "prefix": "lintrule",
     "body": "\n//\n// /* NOCOMMIT */\n// To run lint tests:   linttestsrun\n//\n// Don't forget to add your lint rule to the right .eslintrc files\n//\n// Resources:\n//   https://astexplorer.net\n//   https://eslint.org/docs/developer-guide/selectors\n//   https://eslint.org/docs/developer-guide/working-with-rules\n//   official rules for examples: https://github.com/eslint/eslint/tree/main/lib/rules\n//\n\nconst message = `[G] ${1:write good code instead of bad code when possible}`;\n\nexport default {\n  Meta: {\n    // fixable is mandatory for fixable rules\n    // @see https://eslint.org/docs/developer-guide/working-with-rules#rule-basics\n    fixable: 'code',\n  },\n  Rule: context => {\n    return {\n      [`${4:Identifier}`]: node => {\n        // context.report({\n        //   node,\n        //   message,\n        //   fix(fixer) {\n        //     return fixer.insertTextBefore(node, 'TODO');\n        //   },\n        // });\n      },\n    }\n  },\n  TestInfo: {\n    Valid: [`${2:foo = 123;}`],\n    Invalid: [\n      {\n        code: '${3:bad code 1}',\n        // output is required if the rule fixes code\n        // @see https://eslint.org/docs/developer-guide/nodejs-api#ruletester\n        // Note: running `linttestsrun <this-rule>` will produce the expected output so you can copy/paste\n        output: \"\",\n        errors: [\n          {\n            message,\n            type: '${4:Identifier}',\n          },\n        ],\n      },\n    ]\n  },\n};\n",
-    "description": "[G] Snippet: create lint rule definition",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: create lint rule definition"
   },
   "log": {
     "prefix": "log",
     "body": "\nconsole.log($1);$0\n",
-    "description": "",
-    "scope": "source.js, source.jsx"
+    "description": ""
   },
   "logTime": {
     "prefix": "logTime",
     "body": "\nClientPerformanceTools.LogElapsedTime({functionName: `${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}}.${2:function}`, eventId: 'testing'}); /* NOCOMMIT */\n",
-    "description": "[G] Snippet: Inserts ClientPerformanceTools.LogElapsedTime",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts ClientPerformanceTools.LogElapsedTime"
   },
   "logd": {
     "prefix": "logd",
     "body": "\nconsole.log('$1', $1);$0\n",
-    "description": "",
-    "scope": "source.js, source.jsx"
+    "description": ""
   },
   "logger": {
     "prefix": "logger",
     "body": "\nLogger.Log(Events.$1${2:, {\n  ${3:eventProp}\n\\}});\n",
-    "description": "",
-    "scope": "source.js, source.jsx"
+    "description": ""
   },
   "logj": {
     "prefix": "logj",
     "body": "\nconsole.log(JSON.stringify($1, ${2:null}, ${3:2})); /*DELETEME*/ $0\n",
-    "description": "[G] Snippet: Insert a console.log with a JSON.stringify for easy formatted printing of objects",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert a console.log with a JSON.stringify for easy formatted printing of objects"
   },
   "lookaside": {
     "prefix": "lookaside",
     "body": "\nimport RedisLookasideDal from 'RedisLookasideDal';\nimport dbQueries from 'dbQueries';\nimport LookasideBase from 'LookasideBase';\n\nclass ${TM_FILENAME/(.+)\\..+|.*/$1/:name} extends LookasideBase {\n  async GetTemplate({userId}) {\n    return this.LookasideGet(\n      'CategoryKey',\n      this.GetTemplateKey({userId}),\n      async () => {\n        /* do something */\n      },\n      60 * 60 * 24\n    );\n  }\n}\n\nexport default new ${TM_FILENAME/(.+)\\..+|.*/$1/:name}({redisDal: RedisLookasideDal, name: '${TM_FILENAME/(.+)\\..+|.*/$1/:name}'});\n\n",
-    "description": "[G] Snippet: Initialize a {name}Lookaside.js file",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Initialize a {name}Lookaside.js file"
   },
   "main": {
     "prefix": "main",
     "body": "\n(async function main() {\n  ${0:// code goes here}\n})().catch(error => {\n  process.exitCode = 1;\n  console.error(error);\n});\n",
-    "description": "[G] Snippet: insert main function for a CLI tool",
-    "scope": "source.js"
+    "description": "[G] Snippet: insert main function for a CLI tool"
   },
   "map": {
     "prefix": "map",
     "body": "\nmap((${1:item}) => {\n  $0\n  return ${2:mapped};\n})\n",
-    "description": "[G] Snippet: map. inserts common `map` function",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: map. inserts common `map` function"
   },
   "mapprop": {
     "prefix": "mapprop",
     "body": "\nmap(({${1:prop}}) => ${1:prop})$0\n",
-    "description": "[G] Snippet: map prop. inserts map function to extract a property",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: map prop. inserts map function to extract a property"
   },
   "mapseries": {
     "prefix": "mapseries",
     "body": "\nawait Promise.mapSeries(${1:things}, async (${2:thing}) => {\n  $0\n  return;\n});\n",
-    "description": "[G] Snippet: Promise.mapSeries",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Promise.mapSeries"
   },
   "mapshort": {
     "prefix": "mapshort",
     "body": "\nmap((${1:item}) => ${1:item})$0\n",
-    "description": "[G] Snippet: map short. inserts shorthand arrow function for `map`",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: map short. inserts shorthand arrow function for `map`"
   },
   "mc": {
     "prefix": "mc",
     "body": "\nconst {${1:match}} = this.matchContext;\n",
-    "description": "[G] Snippet: insert prop from matchContext",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert prop from matchContext"
   },
   "modelfield": {
     "prefix": "modelfield",
     "body": "\n@computed\nget ${1:field}() {\n  const {${1:field}} = this.${2:subObj};\n  return ${1:field};\n}\n",
-    "description": "[G] Snippet: Insert assert strict equal",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert assert strict equal"
   },
   "mspecs": {
     "prefix": "mspecs",
     "body": "\nMenuSpecs = {\n  sections: [\n    {\n      name: '${1:Section name}', /* optional, if you want a section label to display in some contexts */\n      actions: [\n        {\n          label: '${2:Action name}',\n          id: ${3:''}, /* optional; used to identify what was clicked */\n          icon: ${4:null} /* optional; SVG icon name */,\n          onClick: ${5:null, /* () => console.log('todo implement') */}\n        },\n      ],\n    },\n  ],\n}\n",
-    "description": "[G] Snippet: insert menu specs",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert menu specs"
   },
   "nc": {
     "prefix": "nc",
     "body": "\nimport Promise from 'bluebird';\n\nexport default class ${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}} {\n  ${2:constructor() {\n    super();\n    ${3://tab to complete}\n  }}\n}\n",
-    "description": "[G] Snippet: new class (non-component)",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: new class (non-component)"
   },
   "newpromise": {
     "prefix": "newpromise",
     "body": "\nnew Promise((resolve, reject) => {\n\t${1:// do something}\n});\n",
-    "description": "[G] Snippet: new Promise",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: new Promise"
   },
   "nocom": {
     "prefix": "nocom",
     "body": "\n/* NOCOMMIT ${1:todo} */$0\n",
-    "description": "[G] Snippet: Inserts NOCOMMIT message",
-    "scope": "source.js, source.jsx, source.scss"
+    "description": "[G] Snippet: Inserts NOCOMMIT message"
   },
   "nudge": {
     "prefix": "nudge",
     "body": "\nimport Nudges from 'Nudges';\nimport Urls from 'Urls';\nimport ClientRoutes from 'ClientRoutes';\n\nexport default {\n  [Nudges.${TM_FILENAME/(\\w+)\\..+|.*/$1/}]: {\n    Weight: 1,\n    GetExtraInfo: async (user, {info, characteristics}, nudgeInfo) => {\n      return {};\n    },\n    Test: (user, {info, characteristics}, extraInfo) => {\n      /* NOCOMMIT Add criteria to return true/false */\n      return false;\n    },\n    GenerateNudgeInfo: async (user, {info, characteristics}, extraInfo) => {\n      /* NOCOMMIT For emails see EmailContentService.NudgeEmail */\n\n      return {\n        title: ``,\n        image: `${Urls.getWebDomainFull()}/asset/Emails/SomeImage.png`,\n        description: ``,\n        linkHeader: null,\n        linkPath: null,\n        ctaText: 'Button Text',\n        path: ClientRoutes.TeamPage.Tab.getPath({}),\n      };\n    },\n  },\n};\n\n",
-    "description": "[G] Snippet: Insert a nudge definition",
-    "scope": "source.js"
+    "description": "[G] Snippet: Insert a nudge definition"
   },
   "nudgetest": {
     "prefix": "nudgetest",
     "body": "\n  {\n    NudgeName: Nudges.${1:${TM_FILENAME/(.+)Tests\\..+|.*/$1/}},\n    GetUserIdsForNegativeTests: [async testContext => testContext.userInfo.id],\n    GetUserIdForPositiveTest: async testContext => {\n      const {teamId, teamName, userId, email} = await utils.getUserAndTeam();\n      testContext.teamName = teamName;\n      testContext.teamId = teamId;\n      testContext.userInfo = {id: userId, email};\n\n      const {team} = await GuildedTeamService.GetTeamById({teamId});\n      const {baseGroup} = team;\n      testContext.team = team;\n      testContext.baseGroup = baseGroup;\n\n      return userId;\n    },\n    ValidateTitle: (title, testContext) => {\n      assert(title, `title is required`);\n      const expectedPrefix = 'You have new notifications from';\n      assert.strictEqual(\n        title.slice(0, expectedPrefix.length),\n        expectedPrefix,\n        `title should be correct`\n      );\n    },\n    ValidateDescription: (description, testContext) => {\n      assert(description, `description is required`);\n      assert(description.includes(testContext.teamName), `description should include teamName`);\n    },\n    ValidateDescriptionNodes: (descriptionNodes, testContext) => {\n      assert(descriptionNodes, `descriptionNodes is required`);\n    },\n    ValidatePath: (path, testContext) => {\n      assert(path, `path is required`);\n      const expectedRoute = ClientRoutes.${2:SomeRoute};\n      const matches = expectedRoute.matches(path);\n      assert.strictEqual(!!matches, true, `path should be a ${2:SomeRoute} route`);\n    },\n    ValidateActivityInfos: (activityInfos, testContext) => {\n      assert(activityInfos, `activityInfos is required`);\n    },\n    ValidateUseLoginToken: (useLoginToken, testContext) => {\n      assert.strictEqual(useLoginToken, false, 'login token should be disabled');\n    },\n  }\n",
-    "description": "[G] Snippet: Insert a nudge test definition (For NudgeContentTestConsts)",
-    "scope": "source.js"
+    "description": "[G] Snippet: Insert a nudge test definition (For NudgeContentTestConsts)"
   },
   "obs": {
     "prefix": "obs",
     "body": "\n@observable${3:} ${1:observableName} = ${2:value};\n",
-    "description": "[G] Snippet: Insert an observable",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert an observable"
   },
   "obstracker": {
     "prefix": "obstracker",
     "body": "\n[ObservableTracker.Trackers] = [\n  {\n    // Reason: please write a valid reason for adding this\n    getIsEnabled: () => /* something to trigger when to observe */,\n    getTargetFn: () => this,\n    propertyName: 'property to keep alive',\n  },\n];\n\n",
-    "description": "[G] Snippet: Add observable trackers",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Add observable trackers"
   },
   "oc": {
     "prefix": "oc",
     "body": "\nimport OverlayConnected from 'OverlayConnected';\nimport {${1:ConfirmationOverlay}} from 'OverlayTypes';\n@OverlayConnected([${1:ConfirmationOverlay}])\n",
-    "description": "[G] Snippet: Make overlay connected",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Make overlay connected"
   },
   "odes": {
     "prefix": "odes",
     "body": "\nconst {${1:property}} = ${2:obj};\n$0\n",
-    "description": "[G] Snippet: object destructure",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: object destructure"
   },
   "op": {
     "prefix": "op",
     "body": "\nimport OverlayProvider from 'OverlayProvider';\nimport {${1:ConfirmationOverlay}} from 'OverlayTypes';\n@OverlayProvider([${1:ConfirmationOverlay}])\n",
-    "description": "[G] Snippet: Make overlay provider",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Make overlay provider"
   },
   "opcode": {
     "prefix": "opcode",
     "body": "\nRestApiSocketOpcodes.SentMessage.${1:Dispatch}\n",
-    "description": "[G] Snippet: Creates an opcode",
-    "scope": "source.js"
+    "description": "[G] Snippet: Creates an opcode"
   },
   "pdse": {
     "prefix": "pdse",
     "body": "\nAssertTools.PartialDeepStrictEqual(${1:paramName}, ${2:paramName}, `${3:${1:paramName} was not equal}`);\n",
-    "description": "[G] Snippet: Insert assert partial deep strict equal",
-    "scope": "source.js"
+    "description": "[G] Snippet: Insert assert partial deep strict equal"
   },
   "perf-force-rerender": {
     "prefix": "perf-force-rerender",
     "body": "\nconst a = ${1:FrameTimeStore}.NowHighResolution;\n",
-    "description": "[G] Snippet: forces component to rerender a lot",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: forces component to rerender a lot"
   },
   "perf-sfc": {
     "prefix": "perf-sfc",
     "body": "\n// NOTE: These stateless observer components are a performance optimization to prevent lists\n// from needlessly rendering and reconciling, or to optimize away repeated reconciliation in a\n// small chunk of a function that is rendered very frequently. These are the *only* valid cases\n// where we should have components in the same file and the only case where we want to use\n// (observer) stateless functional components; do not follow this pattern elsewhere except\n// for this use\n//\n// For more info, see \"Render lists in dedicated components\" at:\n// https://mobx.js.org/react-optimizations.html#render-lists-in-dedicated-components\n//\nconst ${1:SFCName} = observer(({${2:SFCProps}}) =>\n  ${3:SFCMapObject}${4:?}.map(${5:SFCSingularMapObject} => ${6:SFCMapObjectItem})\n);\n",
-    "description": "[G] Snippet: Inserts SFC for perf optimization",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts SFC for perf optimization"
   },
   "perfcheck": {
     "prefix": "perfcheck",
     "body": "\n      const start = performance.now();\n      // test code here\n      ${0}\n\n      console.log({Id: '${1}', PerformanceTime: `${(performance.now() - start).toFixed(4)} ms`}); /*NOCOMMIT*/\n",
-    "description": "[G] Snippet: Add performance.now() check for timing tests",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Add performance.now() check for timing tests"
   },
   "perfcheckserver": {
     "prefix": "perfcheckserver",
     "body": "\n      const start = performance.now();\n      // test code here\n      ${0}\n      console.log({Id: '${1}', PerformanceTime: `${(performance.now() - start).toFixed(4)} ms`}); /*NOCOMMIT*/\n",
-    "description": "[G] Snippet: Add performance.now() check for timing tests",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Add performance.now() check for timing tests"
   },
   "pjoin": {
     "prefix": "pjoin",
     "body": "\nawait Promise.join(\n\t$1\n);\n",
-    "description": "[G] Snippet: await Promise.join",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: await Promise.join"
   },
   "pluralize": {
     "prefix": "pluralize",
     "body": "\nEnglishTools.Pluralize({\n  amount: ${1:length},\n  label: '${2:thing}',\n})\n",
-    "description": "[G] Snippet: EnglishTools.Pluralize",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: EnglishTools.Pluralize"
   },
   "pmap": {
     "prefix": "pmap",
     "body": "\nawait Promise.map(${1:items}, async (${2:item}) => {\n  $0\n  return ${2:item};\n});\n",
-    "description": "[G] Snippet: await Promise.map",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: await Promise.map"
   },
   "polluntilassertionsmet": {
     "prefix": "polluntilassertionsmet",
     "body": "\nawait pollUntilAssertionsMet(async () => {\n  $1\n  assert.deepStrictEqual('actual', 'expected', 'message');\n});\n",
-    "description": "[G] Snippet: pollUntilAssertionsMet",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: pollUntilAssertionsMet"
   },
   "pollwebnotification": {
     "prefix": "pollwebnotification",
     "body": "\nawait pollUntilWebPushNotification({userId: ${1:userId}, payload: ${2:{}}});\n",
-    "description": "[G] Snippet: pollUntilWebPushNotification",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: pollUntilWebPushNotification"
   },
   "ppt": {
     "prefix": "ppt",
     "body": "\n${1:prop}={${1:prop}}\n",
-    "description": "[G] Snippet: pass through a prop to a sub-component",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: pass through a prop to a sub-component"
   },
   "qformat": {
     "prefix": "qformat",
     "body": "\nDbDebugTools.Format(queryLoader.get('${1:queryFile}'), {\n     ${2:params}\n    });\n",
-    "description": "[G] Snippet: Output a formatted query with parameters",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Output a formatted query with parameters"
   },
   "rb": {
     "prefix": "rb",
     "body": "\nconst {${1:prop}} = req.body;\n",
-    "description": "[G] Snippet: const {param} = req.body;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: const {param} = req.body;"
   },
   "rcc": {
     "prefix": "rcc",
     "body": "\nimport classNames from 'classnames';\nimport React from 'react';\nimport CSSLoaderEnabled from 'CSSLoaderEnabled';\nimport {observable, computed, action} from 'mobx';\nimport {observer} from 'mobx-react';\n\n@observer\n@CSSLoaderEnabled({name: '${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}}', loader: () => require('${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}}.lazy.scss')})\nclass ${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}} extends React.Component {\n  render() {\n    const {className} = this.props;\n\n    return (\n      <div className={classNames(\"${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}}-container\", className)}>\n        TODO build ${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}} component\n      </div>\n    );\n  }\n}\n\nexport default ${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}};\n",
-    "description": "[G] Snippet: Insert new React component",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert new React component"
   },
   "re": {
     "prefix": "re",
     "body": "\n@ResolveEnvironment\n${1:SingularConstantPropertyName}: {${2:\n  [EnvironmentTypes.Build]: null,}${3:\n  [EnvironmentTypes.Local]: null,}${4:\n  [EnvironmentTypes.Test]: null,}${5:\n  [EnvironmentTypes.Sandbox]: null,}${6:\n  [EnvironmentTypes.Staging]: null,}${7:\n  [EnvironmentTypes.Preprod]: null,}${8:\n  [EnvironmentTypes.Prod]: null,}\n},\n",
-    "description": "[G] Snippet: Inserts @ResolveEnvironment object",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts @ResolveEnvironment object"
   },
   "reaction": {
     "prefix": "reaction",
     "body": "\n{\n  dataFn: () => ${1:data},\n  reaction: ${2:param} => {\n    $0\n  },\n  fireImmediately: false,\n},\n",
-    "description": "[G] Snippet: Creates a Mobx Reaction",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Creates a Mobx Reaction"
   },
   "reactions": {
     "prefix": "reactions",
     "body": "\nreactions = [{\n  dataFn: () => ${1:/* get some data */},\n  reaction: ${2:data} => ${3:/* do something */},\n}];\n",
-    "description": "[G] Snippet: adds reactions to @ReactionListener-decorated component",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: adds reactions to @ReactionListener-decorated component"
   },
   "red": {
     "prefix": "red",
-    "body": "\n${1:objectName}.reduce((${5:acc}, ${4:val}) => ${3:({...acc, val\\})}, ${2:{\\}});\n",
-    "description": "[G] Snippet: .reduce(...)",
-    "scope": "source.js, source.jsx"
+    "body": "\n${1:objectName}.reduce((${5:acc}, ${4:val}) => ${3:{\n  acc[val] = val;\n  return acc;\n  }}, ${2:{\\}});\n",
+    "description": "[G] Snippet: .reduce(...)"
   },
   "redisq": {
     "prefix": "redisq",
     "body": "\nimport assert from 'assert';\nimport Promise from 'bluebird';\nimport RedisDal from 'RedisDal';\n\nfunction ${1:getSomeKey}({${2:params}}) {\n  return `${3:key}-${userId}`;\n}\n\nexport default class ${TM_FILENAME/(.+)\\..+|.*/$1/:name} {\n  static async GetSomeUserValue({userId}) {\n    const key = ${1:getSomeKey}({${2:params}});\n    return RedisDal.get(key);\n  }\n\n  static async SetSomeUserValue({userId, value}) {\n    const key = ${1:getSomeKey}({${2:params}});\n    const expireInSeconds = 60 * 60 * 2;\n    return RedisDal.set(key, value, expireInSeconds);\n  }\n}\n",
-    "description": "[G] Snippet: Initialize a Redis{name}Queries.js file",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Initialize a Redis{name}Queries.js file"
   },
   "redlong": {
     "prefix": "redlong",
     "body": "\nreduce((acc, ${1:val}) => {\n  $0\n  return acc\n}, ${2:{\\}});\n",
-    "description": "[G] Snippet: .reduce(...)",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: .reduce(...)"
   },
   "ref": {
     "prefix": "ref",
     "body": "\n${1:ref} = null\n\n_handle${2:Ref} = ${1:ref} => {\n  this.${1:ref} = ${1:ref}\n}\n",
-    "description": "[G] Snippet: create ref",
-    "scope": "source.js"
+    "description": "[G] Snippet: create ref"
   },
   "refn": {
     "prefix": "refn",
     "body": "\nResolveEnvironment({${2:\n  [EnvironmentTypes.Build]: null,}${3:\n  [EnvironmentTypes.Local]: null,}${4:\n  [EnvironmentTypes.Test]: null,}${5:\n  [EnvironmentTypes.Sandbox]: null,}${6:\n  [EnvironmentTypes.Staging]: null,}${7:\n  [EnvironmentTypes.Preprod]: null,}${8:\n  [EnvironmentTypes.Prod]: null,}\n})\n",
-    "description": "[G] Snippet: Inserts ResolveEnvironment function",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts ResolveEnvironment function"
   },
   "requestparamhydrator": {
     "prefix": "requestparamhydrator",
     "body": "\n// NOCOMMIT fix entityId\nasync entityId({paramValue: eventId, hydratedParams, callerId}) {\n  assert(callerId, `callerId is required`);\n\n  const entity = await TODO; // NOCOMMIT fetch entity\n\n  if (!entity) {\n    throw new NotFoundError('Entity not found'); // NOCOMMIT fix entity name\n  }\n\n  if (entity.teamId !== hydratedParams.teamId) {\n    throw new BadRequestError(\"Entity doesn't exist on this server\"); // NOCOMMIT fix entity name\n  }\n\n  const {channelInfo} = hydratedParams;\n  if (channelInfo.contentType !== ContentTypes.TODO) { // NOCOMMIT fix content type\n    throw new BadRequestError(`Channel must be a entity channel`); // NOCOMMIT fix entity name\n  }\n\n  if (entity.channelId !== channelInfo.id) {\n    throw new BadRequestError('Entity does not exist in this channel'); // NOCOMMIT fix entity name\n  }\n\n  return {entity};\n},\n",
-    "description": "[G] Snippet: Inserts a Request Hydrator",
-    "scope": "source.js"
+    "description": "[G] Snippet: Inserts a Request Hydrator"
   },
   "restapicomponentschema": {
     "prefix": "restapicomponentschema",
     "body": "\nimport SharedRestApiConsts from 'SharedRestApiConsts';\nimport RestApiOpenApiTags from 'RestApiOpenApiTags';\nimport CommonJsonSchemaProperties from 'CommonJsonSchemaProperties';\n\nconst example = {\n  id: '00000000-0000-0000-0000-000000000000', // NOCOMMIT todo\n  serverId: SharedRestApiConsts.ExampleTeamId,\n  channelId: SharedRestApiConsts.ExampleChannelId,\n  createdAt: '2021-06-15T20:15:00.706Z', // NOCOMMIT todo\n  createdBy: SharedRestApiConsts.ExampleUserId, // NOCOMMIT todo\n};\n\nconst entity = '${TM_FILENAME/RestApiOpenApiComponents(\\w)(\\w+?)\\..+|.*/\\L$1\\E$2/}' // NOCOMMIT todo\n\nexport default {\n  schema: {\n    type: 'object',\n    'x-tag': RestApiOpenApiTags.${TM_FILENAME/RestApiOpenApiComponents(\\w)(\\w+?)\\..+|.*/$1$2/}s.name,\n    properties: {\n      // NOCOMMIT todo\n      id: {\n        ...CommonJsonSchemaProperties.${TM_FILENAME/RestApiOpenApiComponents(\\w)(\\w+?)\\..+|.*/\\L$1\\E$2/}Id(), // NOCOMMIT todo\n      },\n      serverId: {\n        ...CommonJsonSchemaProperties.serverId(),\n      },\n      channelId: {\n        ...CommonJsonSchemaProperties.channelId(),\n      },\n      createdAt: {\n        ...CommonJsonSchemaProperties.createdAt({entity}),\n      },\n      createdBy: {\n        ...CommonJsonSchemaProperties.createdBy({entity}),\n      },\n    },\n    required: ['id', 'serverId', 'channelId', 'createdAt', 'createdBy'],\n    example,\n  },\n};\n",
-    "description": "[G] Snippet: Inserts a REST API route",
-    "scope": "source.js"
+    "description": "[G] Snippet: Inserts a REST API route"
   },
   "restapicrudroutetests": {
     "prefix": "restapicrudroutetests",
     "body": "\nimport AllEvents from 'AllEvents';\nimport RestApiWireTransformerTypes from 'RestApiWireTransformerTypes';\nimport ContentTypes from 'ContentTypes';\nimport {ChannelCreators} from 'teamChannelContentCreators';\nimport Promise from 'bluebird';\nimport TestRestApiTools from 'TestRestApiTools';\nimport RestApiCrudRoutesTestSuite from 'RestApiCrudRoutesTestSuite';\n\nconst ${TM_FILENAME/(\\w+)\\..+|.*/$1/} = new RestApiCrudRoutesTestSuite({\n  entityName: '${TM_FILENAME/restApiCrudRoutes(.+)Tests.*/$1/}',\n  restApiWireTransformerType: RestApiWireTransformerTypes.${TM_FILENAME/restApiCrudRoutes(.+)Tests.*/$1/},\n  async initialize({testContext}) {\n    const {teamId, baseGroupId, webSocket, owner} = testContext;\n    const ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel = await ChannelCreators[ContentTypes.${TM_FILENAME/restApiCrudRoutes(\\w+?)Tests\\..+|.*/$1/}]({\n      teamId,\n      groupId: baseGroupId,\n    });\n    testContext.${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel = ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel;\n\n    ${0:// NOCOMMIT todo initialize}\n  },\n  routes: {\n    Create: {\n      operationId: '${TM_FILENAME/restApiCrudRoutes(.+)Tests.*/$1/}Create',\n      getReqParams({testContext}) {\n        const {teamId, ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel} = testContext;\n        return {\n          urlParams: {\n            teamId,\n            channelId: ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel.id,\n          },\n        };\n      },\n      getExpectedPartialResponse({testContext}) {\n        const {teamId, botUserId, ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel} = testContext;\n        return {\n          createdBy: botUserId,\n          teamId,\n          channelId: ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel.id,\n          todo: 'todo', // NOCOMMIT todo\n        };\n      },\n      getExpectedAuditLogData({testContext}) {\n        const {teamId, ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel, baseGroupId, responses, botUserId} = testContext;\n\n        return {\n          eventName: AllEvents.TeamAuditLogContentCreated.Name,\n          expectedPartialData: {\n            channel: {\n              id: ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel.id,\n              name: ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel.name,\n              teamId,\n              groupId: baseGroupId,\n              contentType: ContentTypes.${TM_FILENAME/restApiCrudRoutes(.+)Tests.*/$1/},\n            },\n            content: {\n              title: responses.Create.body.${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}.title, // NOCOMMIT todo\n              contentId: responses.Create.body.${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}.id,\n              contentType: ContentTypes.${TM_FILENAME/restApiCrudRoutes(.+)Tests.*/$1/},\n            },\n            originatorId: botUserId,\n          },\n        };\n      },\n      additionalRequestMetas: [\n        {\n          description: 'TODO',\n          getReqParams({testContext}) {\n            const {reqParams} = testContext;\n            return {\n              ...reqParams.Create,\n              body: {\n                ...reqParams.Create.body,\n                /* NOCOMMIT todo */\n              },\n            };\n          },\n          getExpectedPartialResponse({testContext}) {\n            return {\n              /* NOCOMMIT todo */\n            };\n          },\n        },\n      ],\n      invalidRequestMetas: [\n        {\n          description: 'TODO',\n          getReqParams({testContext}) {\n            const {reqParams, teamId, ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel} = testContext;\n            return {\n              urlParams: {\n                teamId,\n                channelId: ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel.id,\n                /* NOCOMMIT todo */\n              },\n              body: {\n                /* NOCOMMIT todo */\n              },\n            };\n          },\n          expectedStatusCode: 400,\n          expectedMessage: 'Bad Request: TODO' /* NOCOMMIT todo */,\n        },\n      ],\n    },\n    Read: {\n      operationId: '${TM_FILENAME/restApiCrudRoutes(.+)Tests.*/$1/}Read',\n      getReqParams({testContext}) {\n        const {teamId, ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel} = testContext;\n        return {\n          urlParams: {\n            teamId,\n            channelId: ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel.id,\n            ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Id: testContext.responses.Create.body.${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}.id,\n          },\n        };\n      },\n    },\n    ReadMany: {\n      operationId: '${TM_FILENAME/restApiCrudRoutes(.+)Tests.*/$1/}ReadMany',\n      isOrderedAscending: true, // NOCOMMIT todo\n      orderedBy: 'createdAt', // NOCOMMIT todo\n      expectedLengthBeforeCreate: undefined, // NOCOMMIT todo, you can usually just delete this if you aren't creating entities in the `initialize` function\n      getReqParams({testContext}) {\n        const {teamId, ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel} = testContext;\n        return {\n          urlParams: {\n            teamId,\n            channelId: ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel.id,\n          },\n        };\n      },\n    },\n    Update: {\n      operationId: '${TM_FILENAME/restApiCrudRoutes(.+)Tests.*/$1/}Update',\n      getReqParams({testContext}) {\n        const {teamId, ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel} = testContext;\n        return {\n          urlParams: {\n            teamId,\n            channelId: ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel.id,\n            ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Id: testContext.responses.Create.body.${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}.id,\n          },\n        };\n      },\n      getExpectedPartialResponse({testContext}) {\n        const {teamId, ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel} = testContext;\n        return {\n          teamId,\n          channelId: ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel.id,\n          todo: 'todo', // NOCOMMIT todo\n        };\n      },\n      getExpectedAuditLogData({testContext}) {\n        const {teamId, ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel, baseGroupId, responses, botUserId} = testContext;\n\n        return {\n          eventName: AllEvents.TeamAuditLogContentUpdated.Name,\n          expectedPartialData: {\n            channel: {\n              id: ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel.id,\n              name: ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel.name,\n              teamId,\n              groupId: baseGroupId,\n              contentType: ContentTypes.${TM_FILENAME/restApiCrudRoutes(.+)Tests.*/$1/},\n            },\n            content: {\n              title: responses.Create.body.${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}.title, // NOCOMMIT todo\n              contentId: responses.Create.body.${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}.id,\n              contentType: ContentTypes.${TM_FILENAME/restApiCrudRoutes(.+)Tests.*/$1/},\n            },\n            originatorId: botUserId,\n          },\n        };\n      },\n      additionalRequestMetas: [\n        {\n          description: 'TODO',\n          getReqParams({testContext}) {\n            const {reqParams} = testContext;\n            return {\n              ...reqParams.Update,\n              body: {\n                ...reqParams.Update.body,\n                /* NOCOMMIT todo */\n              },\n            };\n          },\n          getExpectedPartialResponse({testContext}) {\n            return {\n              /* NOCOMMIT todo */\n            };\n          },\n        },\n      ],\n      invalidRequestMetas: [\n        {\n          description: 'TODO',\n          getReqParams({testContext}) {\n            const {reqParams, teamId, ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel} = testContext;\n            return {\n              urlParams: {\n                teamId,\n                channelId: ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel.id,\n                ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Id: testContext.responses.Create.body.${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}.id,\n              },\n              body: {\n                /* NOCOMMIT todo */\n              },\n            };\n          },\n          expectedStatusCode: 400,\n          expectedMessage: 'Bad Request: TODO' /* NOCOMMIT todo */,\n        },\n      ],\n    },\n    Delete: {\n      operationId: '${TM_FILENAME/restApiCrudRoutes(.+)Tests.*/$1/}Delete',\n      getReqParams({testContext}) {\n        const {teamId, ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel} = testContext;\n        return {\n          urlParams: {\n            teamId,\n            channelId: ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel.id,\n            ${TM_FILENAME/restApiCrudRoutes(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Id: testContext.responses.Create.body.${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}.id,\n          },\n        };\n      },\n      getExpectedAuditLogData({testContext}) {\n        const {teamId, ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel, baseGroupId, responses, botUserId} = testContext;\n\n        return {\n          eventName: AllEvents.TeamAuditLogContentDeleted.Name,\n          expectedPartialData: {\n            channel: {\n              id: ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel.id,\n              name: ${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}Channel.name,\n              teamId,\n              groupId: baseGroupId,\n              contentType: ContentTypes.${TM_FILENAME/restApiCrudRoutes(.+)Tests.*/$1/},\n            },\n            content: {\n              title: (responses.Update || responses.Create).body.${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}.title, // NOCOMMIT todo\n              contentId: (responses.Update || responses.Create).body.${TM_FILENAME/restApiCrudRoutes(\\w)(\\w+?)Tests\\..+|.*/\\L$1\\E$2/}.id,\n              contentType: ContentTypes.${TM_FILENAME/restApiCrudRoutes(.+)Tests.*/$1/},\n            },\n            originatorId: botUserId,\n          },\n        };\n      },\n    },\n  },\n});\n\nexport default ${TM_FILENAME/(\\w+)\\..+|.*/$1/}.run;\n",
-    "description": "[G] Snippet: Inserts a bot API tests",
-    "scope": "source.js"
+    "description": "[G] Snippet: Inserts a bot API tests"
   },
   "restapiroute": {
     "prefix": "restapiroute",
-    "body": "\nimport UserSocketEvents from 'UserSocketEvents';\nimport RestApiWireTransformerTypes from 'RestApiWireTransformerTypes';\nimport RestApiOpenApiTags from 'RestApiOpenApiTags';\nimport CommonOpenApiParameters from 'CommonOpenApiParameters';\nimport CommonJsonSchemaProperties from 'CommonJsonSchemaProperties';\nimport BaseRestApiRoute from 'BaseRestApiRoute';\n\nimport Promise from 'bluebird';\n\nclass ${TM_FILENAME/(\\w+)\\..+|.*/$1/} extends BaseRestApiRoute {\n  async _Validate({params, hydratedParams, context}) {\n    // no additional validation needed from route param hydrators\n  }\n\n  WireTransformerType = RestApiWireTransformerTypes.${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/$1$2/}\n\n  async _Execute({req, context, internalReq}) {\n    const {todo} = req.params;\n    const {teamId} = context;\n\n    const body = {};\n    Object.assign(internalReq, {\n      params: {\n        ...body, // restify embeds body in params\n        teamId,\n      },\n      body,\n    });\n\n    // NOCOMMIT todo implement bot user path\n\n    const ${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/\\L$1\\E$2/} = TODORoute.Action;\n\n    return {${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/\\L$1\\E$2/}};\n  }\n}\n\n${TM_FILENAME/(\\w+)\\..+|.*/$1/}.prototype.OpenApiSchemaPaths = {\n  // NOCOMMIT todo route path\n  '/channels/{channelId}/${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/\\L$1\\E$2/}s/{${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/\\L$1\\E$2/}Id\\}': {\n    ${TM_FILENAME/RestApi\\w+?((Create)|(Update)|(Read)|(ReadMany)|(Delete))Route\\..+|.*/\\L(?2post)(?3patch)(?4get)(?5get)(?6delete)/}: {\n      summary: '${TM_FILENAME/RestApi(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/$2/} a ${TM_FILENAME/RestApi([A-Z][a-z]+)([A-Z][a-z]+)?([A-Z][a-z]+)?([A-Z][a-z]+)?(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/\\L$1(?2 $2)(?3 $3)(?4 $4)/}', // NOCOMMIT todo\n      operationId: '${TM_FILENAME/RestApi(\\w+)Route\\..+|.*/$1/}',\n      'x-permissions': [\n        // NOCOMMIT todo\n        {\n          name: 'CanRead${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/$1$2/}s',\n        },\n        {\n          name: 'Can${TM_FILENAME/RestApi(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/$2/}${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/$1$2/}s',\n        },\n      ],\n      'x-events': [\n        {\n          name: UserSocketEvents.YourEvent, // NOCOMMIT todo\n        },\n      ],\n      parameters: [\n        {\n          ...CommonOpenApiParameters.channelId,\n        },\n        {\n          // NOCOMMIT todo implement\n          ...CommonOpenApiParameters.${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/\\L$1\\E$2/}Id,\n        },\n      ],\n      requestBody: {\n        required: true,\n        content: {\n          'application/json': {\n            schema: {\n              type: 'object',\n              required: [], // NOCOMMIT todo\n              properties: {\n                // NOCOMMIT todo implement\n              },\n            },\n            example: {\n              // NOCOMMIT todo implement\n            },\n          },\n        },\n      },\n      tags: [RestApiOpenApiTags.${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/$1$2/}s.name],\n      responses: {\n        200: {\n          description: 'Success',\n          content: {\n            'application/json': {\n              schema: {\n                type: 'object',\n                required: ['${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/\\L$1\\E$2/}'],\n                properties: {\n                  ${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/\\L$1\\E$2/}: {\n                    $ref: '#/components/schemas/${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/$1$2/}',\n                  },\n                },\n              },\n            },\n          },\n        },\n      },\n    },\n  },\n};\n\nexport default new ${TM_FILENAME/(\\w+)\\..+|.*/$1/}();\n",
-    "description": "[G] Snippet: Inserts a REST API route",
-    "scope": "source.js"
+    "body": "\nimport RestApiUserSocketEvents from 'RestApiUserSocketEvents';\nimport RestApiWireTransformerTypes from 'RestApiWireTransformerTypes';\nimport RestApiOpenApiTags from 'RestApiOpenApiTags';\nimport CommonOpenApiParameters from 'CommonOpenApiParameters';\nimport CommonJsonSchemaProperties from 'CommonJsonSchemaProperties';\nimport BaseRestApiRoute from 'BaseRestApiRoute';\n\nimport Promise from 'bluebird';\n\nclass ${TM_FILENAME/(\\w+)\\..+|.*/$1/} extends BaseRestApiRoute {\n  async _Validate({body, params, hydratedParams, context}) {\n    // no additional validation needed from route param hydrators\n  }\n\n  WireTransformerType = RestApiWireTransformerTypes.${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/$1$2/}\n\n  async _Execute({req, context, internalReq}) {\n    const {todo} = req.params;\n    const {teamId} = context;\n\n    const body = {};\n    Object.assign(internalReq, {\n      params: {\n        ...body, // restify embeds body in params\n        teamId,\n      },\n      body,\n    });\n\n    // NOCOMMIT todo implement bot user path\n\n    const ${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/\\L$1\\E$2/} = TODORoute.Action;\n\n    return {${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/\\L$1\\E$2/}};\n  }\n}\n\n${TM_FILENAME/(\\w+)\\..+|.*/$1/}.prototype.OpenApiSchemaPaths = {\n  // NOCOMMIT todo route path\n  '/channels/{channelId}/${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/\\L$1\\E$2/}s/{${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/\\L$1\\E$2/}Id\\}': {\n    ${TM_FILENAME/RestApi\\w+?((Create)|(Update)|(Read)|(ReadMany)|(Delete))Route\\..+|.*/\\L(?2post)(?3patch)(?4get)(?5get)(?6delete)/}: {\n      summary: '${TM_FILENAME/RestApi(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/$2/} a ${TM_FILENAME/RestApi([A-Z][a-z]+)([A-Z][a-z]+)?([A-Z][a-z]+)?([A-Z][a-z]+)?(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/\\L$1(?2 $2)(?3 $3)(?4 $4)/}', // NOCOMMIT todo\n      operationId: '${TM_FILENAME/RestApi(\\w+)Route\\..+|.*/$1/}',\n      'x-permissions': [\n        // NOCOMMIT todo\n        {\n          name: 'CanRead${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/$1$2/}s',\n        },\n        {\n          name: 'Can${TM_FILENAME/RestApi(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/$2/}${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/$1$2/}s',\n        },\n      ],\n      'x-events': [\n        {\n          name: RestApiUserSocketEvents.${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/$1$2/}${TM_FILENAME/RestApi(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/$2/}d, // NOCOMMIT todo\n        },\n      ],\n      parameters: [\n        {\n          ...CommonOpenApiParameters.channelId,\n        },\n        {\n          // NOCOMMIT todo implement\n          ...CommonOpenApiParameters.${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/\\L$1\\E$2/}Id,\n        },\n      ],\n      requestBody: {\n        required: true,\n        content: {\n          'application/json': {\n            schema: {\n              type: 'object',\n              required: [], // NOCOMMIT todo\n              properties: {\n                // NOCOMMIT todo implement\n              },\n            },\n            example: {\n              // NOCOMMIT todo implement\n            },\n          },\n        },\n      },\n      tags: [RestApiOpenApiTags.${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/$1$2/}s.name],\n      responses: {\n        200: {\n          description: 'Success',\n          content: {\n            'application/json': {\n              schema: {\n                type: 'object',\n                required: ['${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/\\L$1\\E$2/}'],\n                properties: {\n                  ${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/\\L$1\\E$2/}: {\n                    $ref: '#/components/schemas/${TM_FILENAME/RestApi(\\w)(\\w+?)(Create|Update|Read|ReadMany|Delete)Route\\..+|.*/$1$2/}',\n                  },\n                },\n              },\n            },\n          },\n        },\n      },\n    },\n  },\n};\n\nexport default new ${TM_FILENAME/(\\w+)\\..+|.*/$1/}();\n",
+    "description": "[G] Snippet: Inserts a REST API route"
+  },
+  "restapisocketevents": {
+    "prefix": "restapisocketevents",
+    "body": "\nimport CommonJsonSchemaProperties from 'CommonJsonSchemaProperties';\n\n/* NOCOMMIT todo */\nconst JsonSchema = {\n  type: 'object',\n  properties: {\n    serverId: CommonJsonSchemaProperties.serverId(),\n    ${TM_FILENAME/RestApiSocketEvent(\\w)(\\w+?)(Created|Updated|Deleted)JsonSchema\\..+|.*/\\L$1\\E$2/}: {\n      $ref: '#/components/schemas/${TM_FILENAME/RestApiSocketEvent(\\w)(\\w+?)(Created|Updated|Deleted)JsonSchema\\..+|.*/$1$2/}',\n    },\n  },\n  required: ['serverId', '${TM_FILENAME/RestApiSocketEvent(\\w)(\\w+?)(Created|Updated|Deleted)JsonSchema\\..+|.*/\\L$1\\E$2/}'],\n};\n\nexport default JsonSchema;\n",
+    "description": "[G] Snippet: Inserts a REST API socket event"
   },
   "restifyerrors": {
     "prefix": "restifyerrors",
     "body": "\nimport restify from 'restify';\n\nconst {BadRequestError, NotFoundError, ForbiddenError} = restify.errors;\n",
-    "description": "[G] Snippet: creates restify errors",
-    "scope": "source.js"
+    "description": "[G] Snippet: creates restify errors"
   },
   "ria": {
     "prefix": "ria",
     "body": "\nrunInAction(() => ${1:this.thing = 123});\n",
-    "description": "[G] Snippet: runInAction( . . .)",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: runInAction( . . .)"
   },
   "rl": {
     "prefix": "rl",
     "body": "\n${2:@}RateLimit({max: 10, seconds: 5, name: '${1:$SELECTION}'})\n",
-    "description": "[G] Snippet: rate limit",
-    "scope": "source.js"
+    "description": "[G] Snippet: rate limit"
   },
   "rncc": {
     "prefix": "rncc",
     "body": "\nimport React from 'react';\nimport GuildedText from 'GuildedText';\nimport {View} from 'react-native';\nimport {observable, computed, action} from 'mobx';\nimport {observer} from 'mobx-react';\nimport ContainerStyleProvider from 'ContainerStyleProvider';\n\nimport Style from '${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}}.style';\n\n@ContainerStyleProvider(Style.Container)\n@observer\nclass ${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}} extends React.Component {\n  render() {\n    const {containerStyle} = this;\n\n    return (\n      <View style={containerStyle}>\n        <GuildedText>TODO build ${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}} component</GuildedText>\n      </View>\n    );\n  }\n}\n\nexport default ${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}};\n",
-    "description": "[G] Snippet: Insert new React Native component",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert new React Native component"
   },
   "rnstyles": {
     "prefix": "rnstyles",
     "body": "\nimport {StyleSheet} from 'react-native';\nimport {Row} from 'GuildedStyles';\nimport colors from 'colors.scss';\n\nexport default StyleSheet.create({\n  Container: {\n    ${1}\n  },\n});\n",
-    "description": "[G] Snippet: Insert new React Native Styleheet component",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert new React Native Styleheet component"
   },
   "rp": {
     "prefix": "rp",
     "body": "\nconst {${1:prop}} = req.params;\n",
-    "description": "[G] Snippet: const {param} = req.params;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: const {param} = req.params;"
   },
   "sec": {
     "prefix": "sec",
     "body": "\nconst {${1:type}} = this.slateEditorContext;\n",
-    "description": "",
-    "scope": "source.js, source.jsx"
+    "description": ""
   },
   "sentrydallogexception": {
     "prefix": "sentrydallogexception",
     "body": "\nSentryDal.LogException(${1:error});\n",
-    "description": "",
-    "scope": "source.js, source.jsx"
+    "description": ""
   },
   "shebang1": {
     "prefix": "shebang",
     "body": "\n#!/usr/bin/env node\n$0\n",
-    "description": "[G] Snippet: Shebang for nodejs script",
-    "scope": "source.js"
+    "description": "[G] Snippet: Shebang for nodejs script"
   },
   "simpleconfirmationoverlayopen": {
     "prefix": "simpleconfirmationoverlayopen",
     "body": "\nconst {confirmed} = await this.SimpleConfirmationOverlay.Open({\n  header: '${1:TODO header}',\n  text: '${2:TODO text}',\n  confirmText: '${3:TODO confirm}',\n  verificationPhrase: '${4:TODO verification phrase}',\n});\n",
-    "description": "[G] Snippet: insert SimpleConfirmationOverlay.Open",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert SimpleConfirmationOverlay.Open"
   },
   "span": {
     "prefix": "span",
     "body": "\n<span className=\"${TM_FILENAME/(.+)\\..+|.*/$1/:name}-${1:name}\">\n  ${2:content}\n</span>\n",
-    "description": "[G] Snippet: Insert a span",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert a span"
   },
   "status": {
     "prefix": "status",
     "body": "\nthis.statusContext.displayStatus({\n  text: '${1:text here}',\n  type: '${2:success}',${3:\n  // isPersistent: false,}\n})\n",
-    "description": "[G] Snippet: status message",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: status message"
   },
   "style": {
     "prefix": "style",
     "body": "\nstyle={Style.${1:Prop}}\n",
-    "description": "",
-    "scope": "source.js, source.jsx"
+    "description": ""
   },
   "swus": {
     "prefix": "swus",
     "body": "\nawait GuildedTestUtils.switchUser(${1:owner}.email)$0;\n",
-    "description": "await GuildedTestUtils.switchUser",
-    "scope": "source.js"
+    "description": "await GuildedTestUtils.switchUser"
   },
   "sysmessage": {
     "prefix": "sysmessage",
     "body": "\nawait ChatService.CreateSystemMessage({\n  channelInfo,\n  data: {\n    type: SlateEditorConsts.SystemMessageTypes.${1:YourType},\n    createdBy,\n  },\n});\n",
-    "description": "",
-    "scope": "source.js, source.jsx"
+    "description": ""
   },
   "tc1": {
     "prefix": "tc",
     "body": "\nconst {${1:teamInfo}} = this.teamContext;\n",
-    "description": "[G] Snippet: insert prop from teamContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert prop from teamContext;"
   },
   "tcc": {
     "prefix": "tcc",
     "body": "\nconst {${1:channelId}} = this.teamChannelContext;\n",
-    "description": "[G] Snippet: insert prop from teamChannelContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert prop from teamChannelContext;"
   },
   "tcsc": {
     "prefix": "tcsc",
     "body": "\nconst {${1:allGroupChannelsFlat}} = this.teamChannelsContext;\n",
-    "description": "[G] Snippet: insert prop from teamChannelsContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert prop from teamChannelsContext;"
   },
   "tlic": {
     "prefix": "tlic",
     "body": "\nconst {${1:focusedId}} = this.teamListItemsContext;\n\n",
-    "description": "[G] Snippet: this.teamListItemsContext",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: this.teamListItemsContext"
   },
   "tsc": {
     "prefix": "tsc",
     "body": "\nconst {${1:channelsById}} = this.teamSearchContext;\n",
-    "description": "[G] Snippet: this.teamSearchContext",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: this.teamSearchContext"
   },
   "teco": {
     "prefix": "teco",
     "body": "\nconst {${1:userInfo}} = testContext;\n",
-    "description": "[G] Snippet: insert prop from testContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert prop from testContext;"
   },
   "test": {
     "prefix": "test",
     "body": "\n{\n  name: `${1:Can test some really important thing}`,\n  async action() {\n    ${2:await Promise.delay(100);}\n  },\n},\n",
-    "description": "[G] Snippet: new test",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: new test"
   },
   "testcase": {
     "prefix": "testcase",
     "body": "{\n  name: `${1:Can test some really important thing}`,\n  async action() {\n    const {${2:channelId}} = testContext;\n  },\n},\n",
-    "description": "[G] Snippet: new test case",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: new test case"
   },
   "tests": {
     "prefix": "tests",
     "body": "\nimport GuildedTeamService from 'GuildedTeamService';\nimport assert from 'assert';\nimport TestSuite from 'TestSuite';\nimport GuildedTestUtils from 'GuildedTestUtils';\nimport Promise from 'bluebird';\n\nlet testContext = {};\nconst ${1:Something} = {\n  category: '${1:Something} ${2:category name}',\n  name: '${1:Something}',\n  async before() {\n    testContext = {};\n    // const {userInfo, teamId, userId, email} = await GuildedTestUtils.getUserAndTeam();\n    // testContext.owner = userInfo;\n    // testContext.userId = userId;\n    // testContext.email = email;\n    // testContext.teamId = teamId;\n    // testContext.team = (await GuildedTeamService.GetTeamById({teamId})).team;\n    // testContext.baseRole = testContext.team.rolesById.baseRole;\n    // testContext.baseGroupId = testContext.team.baseGroupId;\n  },\n  tests: [\n    {\n      name: `Can test some really important thing`,\n      async action() {\n        testContext.something = 123;\n        await Promise.delay(100);\n      },\n    },\n  ],\n};\n\nexport default new TestSuite(() => ({testContext}), [${1:Something}], '${1:Something}').run;\n",
-    "description": "[G] Snippet: new tests",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: new tests"
   },
   "testsui": {
     "prefix": "testsui",
     "body": "\nimport TestBrowser from 'TestBrowser';\nimport ContentTypes from 'ContentTypes';\nimport {ChannelCreators} from 'teamChannelContentCreators';\nimport {BaseUrl} from 'UITestUtils';\nimport GuildedTeamService from 'GuildedTeamService';\nimport assert from 'assert';\nimport UITestSuite from 'UITestSuite';\nimport GuildedTestUtils from 'GuildedTestUtils';\nimport Promise from 'bluebird';\n\nlet testContext = {};\nlet browser = null;\n\nconst refreshBrowserAndPage = async () => {\n  if (browser) {\n    await browser.close();\n    browser = null;\n  }\n\n  browser = await TestBrowser.Launch();\n  const page = await browser.newPage();\n\n  testContext.browser = browser;\n  testContext.page = page;\n};\n\nconst ${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}} = {\n  category: '${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}} category',\n  name: '${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}}',\n  async before() {\n    testContext = {};\n    await refreshBrowserAndPage();\n\n    const {userInfo, teamId, userId, email, password} = await GuildedTestUtils.getUserAndTeam();\n    testContext.owner = userInfo;\n    testContext.userId = userId;\n    testContext.password = password;\n    testContext.email = email;\n    testContext.teamId = teamId;\n\n    const {team} = await GuildedTeamService.GetTeamById({teamId});\n    const {baseGroupId} = team;\n    testContext.baseGroupId = baseGroupId;\n    testContext.team = team;\n\n    const channel = await ChannelCreators[ContentTypes.Event]({\n      teamId,\n      groupId: testContext.baseGroupId,\n    });\n\n    testContext.channel = channel;\n    testContext.channelUrl = `${BaseUrl}${channel.href}`;\n\n    await testContext.page.logInViaRest({email, password});\n  },\n  tests: [\n    {\n      name: `Can test some really important thing`,\n      async action() {\n        const {page, channelUrl} = testContext;\n        await page.goto(channelUrl);\n\n        assert.strictEqual('something', true, 'message');\n      },\n    },\n  ],\n};\n\nexport default new UITestSuite([${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}}], '${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}}', () => ({\n  testContext,\n})).run;\n",
-    "description": "[G] Snippet: new ui tests",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: new ui tests"
   },
   "testteamsocketassert": {
     "prefix": "testteamsocketassert",
     "body": "\ntestContext.testTeamSocket.assertEventSocketed({\n  eventType: TeamSocketEvents.Team${1:Event},\n  ignoreGuildedClientId: true,\n  expectedData: {\n  \t${2:prop: 'value'},\n  },\n});\n",
-    "description": "[G] Snippet: Insert testTeamSocket.assertEventSocketed",
-    "scope": "source.js"
+    "description": "[G] Snippet: Insert testTeamSocket.assertEventSocketed"
   },
   "timed-perf": {
     "prefix": "timed-perf",
     "body": "\n@ClientPerformanceTools.Timed\n",
-    "description": "[G] Snippet: insert `@ClientPerformanceTools.Timed` decorator",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert `@ClientPerformanceTools.Timed` decorator"
   },
   "timed": {
     "prefix": "timed",
     "body": "\n@SharedUtilities.Timed({label: '${1:timed}'})\n",
-    "description": "[G] Snippet: insert `SharedUtilities.Timed`",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert `SharedUtilities.Timed`"
   },
   "timedagg-perf": {
     "prefix": "timedagg-perf",
     "body": "\n@ClientPerformanceTools.TimedAggregate\n",
-    "description": "[G] Snippet: insert `@ClientPerformanceTools.TimedAggregate` decorator",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert `@ClientPerformanceTools.TimedAggregate` decorator"
   },
   "toc": {
     "prefix": "toc",
     "body": "\nconst {${1:tournament}} = this.tournamentContext;\n",
-    "description": "[G] Snippet: insert prop from tournamentContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert prop from tournamentContext;"
   },
   "tp": {
     "prefix": "tp",
     "body": "\nconst {${1:className}} = this.props;\n",
-    "description": "[G] Snippet: Inserts const {param} = this.props;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts const {param} = this.props;"
   },
   "tryc": {
     "prefix": "tryc",
     "body": "\ntry {\n  ${1}\n} catch(error) {\n  ${2}\n}\n",
-    "description": "[G] Snippet: Inserts try/catch block",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts try/catch block"
   },
   "tt": {
     "prefix": "tt",
     "body": "\nconst {${1:prop}} = this;\n",
-    "description": "[G] Snippet: Inserts const {param} = this;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Inserts const {param} = this;"
   },
   "twitchCommand": {
     "prefix": "twitchCommand",
     "body": "\nimport Events from 'Events';\nimport Logger from 'Logger';\nimport socialDbQueries from 'socialDbQueries';\nimport SocialLinkTypes from 'SocialLinkTypes';\nimport {TwitchEventTypes} from 'TwitchEventTypeConsts';\nimport Promise from 'bluebird';\n\nexport default class ${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}} {\n  constructor({event, callback}) {\n    this._event = event;\n    this._callback = callback;\n  }\n\n  async Execute() {\n    const {broadcaster_user_id} = this._event;\n\n    try {\n      const socialLinks = await socialDbQueries.getSocialLinkByServiceIdAndType({\n        serviceId: broadcaster_user_id,\n        type: SocialLinkTypes.Twitch,\n      });\n\n      if (!socialLinks || socialLinks.length === 0) {\n        Logger.Log(Events.TwitchEventNotificationUnknownUser, {\n          event: this._event,\n          type: TwitchEventTypes.${2},\n        });\n        return;\n      }\n\n      const {userId} = socialLinks[0];\n\n      await this._callback({userId});\n    } catch (error) {\n      Logger.Log(Events.TwitchEventNotificationFailed, {\n        error,\n        event: this._event,\n        type: TwitchEventTypes.${2},\n      });\n      throw error;\n    }\n  }\n}\n\n",
-    "description": "[G] Snippet: insert a twitch command definition template for event subs",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert a twitch command definition template for event subs"
   },
   "twitchExclude": {
     "prefix": "twitchExclude",
     "body": "\n// Modules to include only if not in Twitch Extension\nlet ${1:ModuleToExcludeFromTwitch} = null;\nif (!process.env.IS_GUILDED_TWITCH_EXTENSION) {\n  ${1:ModuleToExcludeFromTwitch} = require('${1:ModuleToExcludeFromTwitch}').default;\n}\n",
-    "description": "[G] Snippet: insert a condition block using IS_GUILDED_TWITCH_EXTENSION to exclude modules from Twitch extensions",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert a condition block using IS_GUILDED_TWITCH_EXTENSION to exclude modules from Twitch extensions"
   },
   "uc": {
     "prefix": "uc",
     "body": "\nconst {${1:userInfo}} = this.userContext;\n",
-    "description": "[G] Snippet: insert prop from this.userContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert prop from this.userContext;"
   },
   "uielement": {
     "prefix": "uielement",
     "body": "\nget $0() {\n  return this.findElement($0);\n}\n",
-    "description": "[G] Snippet: Insert a findElement getter for UIObjects",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: Insert a findElement getter for UIObjects"
   },
   "unc": {
     "prefix": "unc",
     "body": "\nconst {$1} = this.unreadContext;\n",
-    "description": "[G] Snippet: insert prop from this.unreadContext;",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert prop from this.unreadContext;"
   },
   "upsellmodelc": {
     "prefix": "upsellmodelc",
     "body": "\nimport BaseSetupUpsellModel from 'BaseSetupUpsellModel';\n\nclass ${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}} extends BaseSetupUpsellModel {\n  constructor(upsellInfo, entityId) {\n    super(upsellInfo, entityId);\n  }\n\n  get stageOrderIds() {\n    return [\n      // stages here (ex. ServerSetupUpsellStages.InviteToServer.id)\n    ];\n  }\n\n  isEligible({userInfo, expose}) {\n    return true;\n  }\n\n  // this will swap stage1 with stage2 if isEligible is true\n  @action\n  setStageSwapCriteria({userInfo}) {\n    this.stageSwapCriteria = [\n      /* Sample\n       {\n          stage1: ServerSetupUpsellStages.InviteToServer.id,\n          stage2: UserSetupUpsellStages.GetDesktopApp.id,\n          isEligible: ({expose}) =>\n            ae('SwapUpsellDesktopAppInviteStagesWeb', userInfo.id, {expose}),\n        },\n        */\n    ].filter(Boolean);\n  }\n}\n\nexport default ${1:${TM_FILENAME/(.+)\\..+|.*/$1/:name}};\n\n",
-    "description": "[G] Snippet: insert setup upsell model (client) definition template",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert setup upsell model (client) definition template"
   },
   "upsellspec": {
     "prefix": "upsellspec",
     "body": "\nimport {SetupUpsellActivationTypes, SetupUpsellTopics} from 'SetupUpsellConsts';\nimport SetupUpsellTypes from 'SetupUpsellTypes';\n// Add server & client classes\nimport ${1:${TM_FILENAME/(.+)Spec\\..+|.*/$1/:name}}Model from '${1:${TM_FILENAME/(.+)Spec\\..+|.*/$1/:name}}Model';\n// Add Stages file in shared/setup_upsells/specs\nimport ${1:${TM_FILENAME/(.+)Spec\\..+|.*/$1/:name}}Stages from '${1:${TM_FILENAME/(.+)Spec\\..+|.*/$1/:name}}Stages';\n\nexport default {\n  type: SetupUpsellTypes.${1:${TM_FILENAME/(.+)Spec\\..+|.*/$1/:name}},\n  activationType: SetupUpsellActivationTypes.${2:${TM_FILENAME/(.+)SetupUpsellSpec\\..+|.*/$1/:name}}Creation,\n  topic: SetupUpsellTopics.${3:${TM_FILENAME/(.+)SetupUpsellSpec\\..+|.*/$1/:name}},\n  stages: Object.values(${1:${TM_FILENAME/(.+)Spec\\..+|.*/$1/:name}}Stages),\n  model: ${1:${TM_FILENAME/(.+)Spec\\..+|.*/$1/:name}}Model,\n  includedUpsellSpecs: [],\n};\n",
-    "description": "[G] Snippet: insert setup upsell specs definition template",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert setup upsell specs definition template"
   },
   "upsellstage": {
     "prefix": "upsellstage",
     "body": "\n  [${1:StageClass}.${2:StageName}.id]: {\n    canBeShown({upsell, userInfo, teamInfo, membershipRole, ownsATeam, expose = false}) {\n      /* NOCOMMIT update stage and joinDate\n         Do not check stage completion here, only platform availability\n       */\n      return (\n        userInfo &&\n        moment(userInfo.joinDate).isAfter('2020-10-09') &&\n        ae('[stage experiment]', userInfo.id, {expose})\n      );\n    },\n    isCompleted({upsell, userInfo, teamInfo, membershipRole, ownsATeam, expose = false}) {\n      /* NOCOMMIT return true if user completed the criteria for this stage\n         Omit this function if there's no completion criteria to check for on the client\n       */\n    },\n    button: {\n      text: '${3:Action}',\n      action({entityId}) {\n        ${0}\n      },\n    },\n  }\n",
-    "description": "[G] Snippet: insert setup upsell stage details",
-    "scope": "source.js, source.jsx"
+    "description": "[G] Snippet: insert setup upsell stage details"
   },
   "utilinspect": {
     "prefix": "utilinspect",
     "body": "\nutil.inspect(${1:data}, false, null, true)\n",
-    "description": "[G] Snippet: insert util.inspect",
-    "scope": "source.js"
+    "description": "[G] Snippet: insert util.inspect"
   }
 }
