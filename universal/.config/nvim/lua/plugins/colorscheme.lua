@@ -4,6 +4,7 @@ return {
     "catppuccin/nvim",
     lazy = true,
     name = "catppuccin",
+    vscode = true,
     opts = {
       integrations = {
         alpha = true,

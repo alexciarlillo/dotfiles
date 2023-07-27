@@ -7,4 +7,7 @@ local expr_opts = { noremap = true, expr = true, silent = true }
 
 keymap("i", "jk", "<ESC>", default_opts)
 keymap("i", "kj", "<ESC>", default_opts)
+
+if vim.g.vscode == false then
 vim.keymap.set("n", "<leader>sx", require("telescope.builtin").resume, { noremap = true, silent = true, desc = "Resume" })
+end
