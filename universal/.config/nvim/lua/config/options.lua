@@ -4,3 +4,6 @@
 --
 
 vim.opt.swapfile = false
+vim.opt.clipboard = "unnamedplus"
+vim.opt.autoindent = false
+vim.opt.smartindent = false

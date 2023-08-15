@@ -6,7 +6,7 @@ return {
         tsserver = function(_, opts)
           require("lazyvim.util").on_attach(function(client, buffer)
             if client.name == "tsserver" then
-              client.handlers["textDocument/publishDiagnostics"] = function() end
+              -- client.handlers["textDocument/publishDiagnostics"] = function() end
               client.server_capabilities.documentFormattingProvider = false
             end
             if client.name == "eslint" then
@@ -28,5 +28,20 @@ return {
         "eslint-lsp",
       },
     },
+  },
+  {
+    "jose-elias-alvarez/null-ls.nvim",
+    opts = function()
+      local nls = require("null-ls")
+      return {
+        root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
+        sources = {
+          nls.builtins.formatting.stylua,
+          nls.builtins.formatting.shfmt.with({
+            extra_args = { "-i=2" },
+          }),
+        },
+      }
+    end,
   },
 }

@@ -10,6 +10,12 @@ my_grep = function(opts)
   require("telescope").extensions.live_grep_args.live_grep_args(opts)
 end
 
+my_grep_word = function(opts)
+  opts = opts or { word_match = "-w" }
+  opts.cwd = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+  require("telescope.builtin").grep_string(opts)
+end
+
 return {
   {
     "nvim-telescope/telescope.nvim",
@@ -30,6 +36,8 @@ return {
         my_grep,
         desc = "Grep (root dir git)",
       },
+      { "<leader>sw", my_grep_word, desc = "Word (root dir git)" },
+      { "<leader>sw", my_grep_word, mode = "v", desc = "Selection (root dir git)" },
     },
   },
 }
