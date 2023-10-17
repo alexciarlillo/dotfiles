@@ -16,6 +16,9 @@ znap source zsh-users/zsh-syntax-highlighting
 export NVM_DIR="$HOME/.nvm"
 export NVM_SYMLINK_CURRENT=true
 
+# ripgrep config
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
+
 case `uname` in
     Darwin)
         export NVM_AUTO_USE=true

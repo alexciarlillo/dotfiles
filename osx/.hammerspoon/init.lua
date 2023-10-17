@@ -65,10 +65,11 @@ hs.hotkey.bind(hyper,"l", gridset(6,0,6,12))
 hs.hotkey.bind(hyper,"i", gridset(0,0,12,6))
 -- bottom half
 hs.hotkey.bind(hyper,",", gridset(0,6,12,6))
+-- center half
+hs.hotkey.bind(hyper,"8", gridset(2,0,8,12))
 
 -- horizonal 1/3's
 hs.hotkey.bind(hyper,"7", gridset(0,0,4,12))
-hs.hotkey.bind(hyper,"8", gridset(4,0,4,12))
 hs.hotkey.bind(hyper,"9", gridset(8,0,4,12))
 
 -- horizontal 2/3's
