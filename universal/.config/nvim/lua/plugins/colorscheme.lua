@@ -1,11 +1,12 @@
 return {
- -- catppuccin
+  -- catppuccin
   {
     "catppuccin/nvim",
     lazy = true,
     name = "catppuccin",
     vscode = true,
     opts = {
+      flavour = "frappe",
       integrations = {
         alpha = true,
         cmp = true,

@@ -1,3 +1,6 @@
+function fix-stderr () {
+   "$@" &> >(sed "s/^/[$2] /")
+}
 [[ -r ~/.config/zsh/znap ]] ||
     git clone --depth 1 -- https://github.com/marlonrichert/zsh-snap.git ~/.config/zsh/znap
 
@@ -35,6 +38,7 @@ case `uname` in
         export PATH=$(brew --prefix ruby)/bin:$(brew --prefix)/lib/ruby/gems/3.2.0/bin:$PATH
         export JAVA_HOME_11_X64=$(/usr/libexec/java_home -v 11)
         export JAVA_HOME_17_X64=$(/usr/libexec/java_home -v 17)
+        export PATH=$PATH:/Applications/Sublime\ Merge.app/Contents/SharedSupport/bin
         # Guilded commands
         source $HOME/code/src/github/TeamGuilded/guilded/guilded_profile.sh
         cd $HOME

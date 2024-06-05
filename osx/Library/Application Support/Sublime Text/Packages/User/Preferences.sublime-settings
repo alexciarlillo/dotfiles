@@ -149,10 +149,13 @@
 	"highlight_modified_tabs": true,
 	"ignored_packages":
 	[
+		"Catppuccin",
+		"GitGutter",
 		"NeoVintageous",
-		"Six",
+		"Package Control",
+		"SublimeLinter-stylelint",
+		"Theme - Monokai Pro",
 		"Vintage",
-		"Vintageous",
 	],
 	"indent_guide_options":
 	[
@@ -173,11 +176,12 @@
 	"word_wrap": true,
 	"neovintageous_build_version": 12700,
 	"theme": "Adaptive.sublime-theme",
-	"color_scheme": "Catppuccin Mocha.sublime-color-scheme",
+	"color_scheme": "Mariana.sublime-color-scheme",
 	"shell_environment": "/bin/zsh",
 	"vintageous_i_escape_jk": true,
 	"vintageous_enable_sneak": true,
 	"vintageous_handle_keys": {
     "<C-s>": false,
   },
+	"index_files": true,
 }
