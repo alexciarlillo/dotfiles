@@ -40,7 +40,7 @@ case `uname` in
         export JAVA_HOME_17_X64=$(/usr/libexec/java_home -v 17)
         export PATH=$PATH:/Applications/Sublime\ Merge.app/Contents/SharedSupport/bin
         # Guilded commands
-        source $HOME/code/src/github/TeamGuilded/guilded/guilded_profile.sh
+        source $HOME/GitHub/guilded/guilded/guilded_profile.sh
         cd $HOME
 
     ;;
