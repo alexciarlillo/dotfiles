@@ -14,7 +14,7 @@ hs.window.animationDuration = 0
 -- spoon.hs_select_window:bindHotkeys(SWbindings)
 
 -- Window focus hints
-hs.hotkey.bind({ "alt", "ctrl" }, "e", hs.hints.windowHints)
+hs.hotkey.bind(hyper, "return", hs.hints.windowHints)
 
 -- Launch new iTerm window on current desktop
 hs.hotkey.bind({ "alt" }, "return", function()
