@@ -1,16 +1,12 @@
 after-login-command = [
-    'workspace q', 'move-workspace-to-monitor --wrap-around prev', 'workspace-back-and-forth',
-    'workspace t', 'move-workspace-to-monitor --wrap-around next', 'workspace-back-and-forth'
 ]
 
 after-startup-command = [
-    'workspace q', 'move-workspace-to-monitor --wrap-around prev', 'workspace-back-and-forth',
-    'workspace t', 'move-workspace-to-monitor --wrap-around next', 'workspace-back-and-forth',
     'exec-and-forget borders active_color=0xffa6e3a1 inactive_color=0xffa6adc8 width=5.0'
 ]
 
 # Start AeroSpace at login
-start-at-login = false
+start-at-login = true
 
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
@@ -39,10 +35,14 @@ outer.bottom =     10
 outer.top =        10
 outer.right =      10
 
+[workspace-to-monitor-force-assignment]
+q = [1, 'main', 'built-in'] 
+a = [1, 'main', 'built-in']
+t = [3, 'main', 'built-in']
+g = [3, 'main', 'built-in']
 
 [mode.main.binding]
 cmd-h = [] # Disable "hide application"
-cmd-alt-h = [] # Disable "hide others"
 
 ctrl-alt-space = 'fullscreen'
 
@@ -52,12 +52,11 @@ alt-k = 'focus up --boundaries all-monitors-outer-frame'
 alt-l = 'focus right --boundaries all-monitors-outer-frame'
 
 alt-comma = 'focus-back-and-forth'
-alt-i = 'focus-back-and-forth'
 
-ctrl-alt-h = 'move left'
-ctrl-alt-j = 'move down'
-ctrl-alt-k = 'move up'
-ctrl-alt-l = 'move right'
+cmd-alt-h = 'move left'
+cmd-alt-j = 'move down'
+cmd-alt-k = 'move up'
+cmd-alt-l = 'move right'
 
 alt-shift-minus = 'resize smart -50'
 alt-shift-equal = 'resize smart +50'
@@ -73,19 +72,37 @@ alt-x = 'workspace x'
 alt-c = 'workspace c'
 alt-v = 'workspace v'
 alt-q = 'workspace q'
+alt-a = 'workspace a'
 alt-t = 'workspace t'
+alt-g = 'workspace g'
 
-ctrl-alt-w = 'move-node-to-workspace w'
-ctrl-alt-e = 'move-node-to-workspace e'
-ctrl-alt-r = 'move-node-to-workspace r'
-ctrl-alt-s = 'move-node-to-workspace s'
-ctrl-alt-d = 'move-node-to-workspace d'
-ctrl-alt-f = 'move-node-to-workspace f'
-ctrl-alt-x = 'move-node-to-workspace x'
-ctrl-alt-c = 'move-node-to-workspace c'
-ctrl-alt-v = 'move-node-to-workspace v'
-ctrl-alt-q = 'move-node-to-workspace q'
-ctrl-alt-t = 'move-node-to-workspace t'
+ctrl-alt-w = ['move-node-to-workspace w', 'workspace w']
+ctrl-alt-e = ['move-node-to-workspace e', 'workspace e']
+ctrl-alt-r = ['move-node-to-workspace r', 'workspace r']
+ctrl-alt-s = ['move-node-to-workspace s', 'workspace s']
+ctrl-alt-d = ['move-node-to-workspace d', 'workspace d']
+ctrl-alt-f = ['move-node-to-workspace f', 'workspace f']
+ctrl-alt-x = ['move-node-to-workspace x', 'workspace x']
+ctrl-alt-c = ['move-node-to-workspace c', 'workspace c']
+ctrl-alt-v = ['move-node-to-workspace v', 'workspace v']
+ctrl-alt-q = ['move-node-to-workspace q', 'workspace q']
+ctrl-alt-a = ['move-node-to-workspace a', 'workspace a']
+ctrl-alt-t = ['move-node-to-workspace t', 'workspace t']
+ctrl-alt-g = ['move-node-to-workspace g', 'workspace g']
+
+cmd-alt-w = 'move-node-to-workspace w'
+cmd-alt-e = 'move-node-to-workspace e'
+cmd-alt-r = 'move-node-to-workspace r'
+cmd-alt-s = 'move-node-to-workspace s'
+cmd-alt-d = 'move-node-to-workspace d'
+cmd-alt-f = 'move-node-to-workspace f'
+cmd-alt-x = 'move-node-to-workspace x'
+cmd-alt-c = 'move-node-to-workspace c'
+cmd-alt-v = 'move-node-to-workspace v'
+cmd-alt-q = 'move-node-to-workspace q'
+cmd-alt-a = 'move-node-to-workspace a'
+cmd-alt-t = 'move-node-to-workspace t'
+cmd-alt-g = 'move-node-to-workspace g'
 
 alt-shift-m = 'move-workspace-to-monitor --wrap-around next'
 
@@ -93,10 +110,10 @@ alt-shift-r = 'mode resize'
 alt-shift-s = 'mode service'
 
 [mode.resize.binding]
-h = 'resize width -50'
-j = 'resize height +50'
-k = 'resize height -50'
-l = 'resize width +50'
+h = 'resize width -100'
+j = 'resize height +100'
+k = 'resize height -100'
+l = 'resize width +100'
 enter = 'mode main'
 esc = 'mode main'
 

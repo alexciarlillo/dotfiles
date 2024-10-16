@@ -39,6 +39,7 @@ case `uname` in
         export JAVA_HOME_11_X64=$(/usr/libexec/java_home -v 11)
         export JAVA_HOME_17_X64=$(/usr/libexec/java_home -v 17)
         export PATH=$PATH:/Applications/Sublime\ Merge.app/Contents/SharedSupport/bin
+        export PATH="$PATH:$HOME/.bin"
         # Guilded commands
         source $HOME/GitHub/guilded/guilded/guilded_profile.sh
         cd $HOME
@@ -81,3 +82,4 @@ aliasNvm
 
 znap eval starship 'starship init zsh'
 znap prompt
+# eval "$(zellij setup --generate-auto-start zsh)"

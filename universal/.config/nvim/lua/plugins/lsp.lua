@@ -4,12 +4,15 @@ return {
     opts = {
       inlay_hints = { enabled = false },
       servers = {
+        ts_ls = {
+          enabled = false,
+        },
         vtsls = {
           root_dir = function()
             local lazyvimRoot = require("lazyvim.util.root")
             return lazyvimRoot.git()
           end,
-          autoUseWorkspaceTsdk = false,
+          autoUseWorkspaceTsdk = true,
           settings = {
             typescript = {
               tsserver = {

@@ -4,3 +4,11 @@ alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %
 alias wip="git add . && git commit -m 'wip'"
 alias gs="git status"
 alias vim="nvim"
+
+# rblx
+alias rblx-cnp="cd ~/GitHub/roblox/channel-notif-preferences/"
+
+# zellij layouts
+alias ggbe="zellij action new-tab --layout ~/.config/zellij/layouts/ggbe.kdl --name ggbe"
+alias ggfe="zellij action new-tab --layout ~/.config/zellij/layouts/ggfe.kdl --name ggfe"
+alias rblx="zellij action new-tab --layout ~/.config/zellij/layouts/rblx.kdl --name rblx"

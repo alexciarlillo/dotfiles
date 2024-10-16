@@ -1,0 +1,18 @@
+gctestsdev_pane=$(wezterm cli spawn)
+
+wezterm cli activate-pane --pane-id $gctestsdev_pane
+wezterm cli set-tab-title --pane-id $gctestsdev_pane "gg-fe"
+
+echo "gg" | wezterm cli send-text --no-paste --pane-id $gctestsdev_pane
+echo "clear" | wezterm cli send-text --no-paste --pane-id $gctestsdev_pane
+wezterm cli send-text --pane-id $gctestsdev_pane "gctestsdev "
+
+gcdev_pane=$(wezterm cli split-pane --bottom --percent 80 --pane-id $gctestsdev_pane)
+
+echo "gg" | wezterm cli send-text --no-paste --pane-id $gcdev_pane
+echo "clear" | wezterm cli send-text --no-paste --pane-id $gcdev_pane
+wezterm cli send-text --pane-id $gcdev_pane "gcdev --env.disableHmr --env.admin "
+
+term_pane=$(wezterm cli split-pane --bottom --percent 30 --pane-id $gcdev_pane)
+
+echo "gg" | wezterm cli send-text --no-paste --pane-id $term_pane

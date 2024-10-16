@@ -1,16 +1,6 @@
 return {
   -- disable friendly-snippets (just use Guilded ones)
   { "rafamadriz/friendly-snippets", enabled = false },
-  -- override nvim-cmp and add cmp-emoji
-  {
-    "hrsh7th/nvim-cmp",
-    dependencies = { "hrsh7th/cmp-emoji" },
-    ---@param opts cmp.ConfigSchema
-    opts = function(_, opts)
-      local cmp = require("cmp")
-      opts.sources = cmp.config.sources(vim.list_extend(opts.sources, { { name = "emoji" } }))
-    end,
-  },
   -- Use <tab> for completion and snippets (supertab)
   -- first: disable default <tab> and <s-tab> behavior in LuaSnip
   {
@@ -39,7 +29,10 @@ return {
 
       local luasnip = require("luasnip")
       local cmp = require("cmp")
+
       require("luasnip.loaders.from_vscode").lazy_load({ paths = { "./snippets" } })
+
+      opts.sources = cmp.config.sources(vim.list_extend(opts.sources, { { name = "emoji" } }))
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {
         ["<Tab>"] = cmp.mapping(function(fallback)
@@ -67,14 +60,14 @@ return {
       })
 
       opts.enabled = function()
-        -- disable completion in comments
         local context = require("cmp.config.context")
-        -- keep command mode completion enabled when cursor is in a comment
-        if vim.api.nvim_get_mode().mode == "c" then
-          return true
-        else
-          return not context.in_treesitter_capture("comment") and not context.in_syntax_group("Comment")
-        end
+        local disabled = false
+        disabled = disabled or vim.g.vscode
+        disabled = disabled or (vim.bo.bt == "prompt")
+        disabled = disabled or (vim.fn.reg_recording() ~= "")
+        disabled = disabled or (vim.fn.reg_executing() ~= "")
+        disabled = disabled or context.in_treesitter_capture("comment") -- Disable in comments
+        return not disabled
       end
     end,
   },

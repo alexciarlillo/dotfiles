@@ -24,6 +24,7 @@ return {
         markdown = true,
         help = true,
       },
+      copilot_node_command = "/Users/alex/.nvm/versions/node/v20.17.0/bin/node",
     },
     keys = {
       {

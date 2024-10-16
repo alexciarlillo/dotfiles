@@ -31,7 +31,7 @@ config.leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1500 }
 local function move_pane(key, direction)
 	return {
 		key = key,
-		mods = "LEADER",
+		mods = "CTRL|ALT",
 		action = wezterm.action.ActivatePaneDirection(direction),
 	}
 end
@@ -47,7 +47,10 @@ config.keys = {
 	{
 		key = "k",
 		mods = "CMD",
-		action = act.ClearScrollback("ScrollbackAndViewport"),
+		action = act.Multiple({
+			act.ClearScrollback("ScrollbackAndViewport"),
+			act.SendKey({ key = "L", mods = "CTRL" }),
+		}),
 	},
 	{
 		key = "v",
@@ -84,6 +87,15 @@ config.keys = {
 	move_pane("l", "Right"),
 }
 
+for i = 1, 8 do
+	-- CTRL+ALT + number to move to that position
+	table.insert(config.keys, {
+		key = tostring(i),
+		mods = "CTRL|ALT",
+		action = wezterm.action.MoveTab(i - 1),
+	})
+end
+
 config.key_tables = {
 	resize_panes = {
 		resize_pane("j", "Down"),
@@ -93,48 +105,4 @@ config.key_tables = {
 	},
 }
 
--- wezterm.on("gui-startup", function()
--- 	-- Check for the specific argument, e.g., `--my-custom-start`
--- 	if os.getenv("WEZTERM_GUILDED") == "1" then
--- 		local tab, pane, window = wezterm.mux.spawn_window({})
---
--- 		-- First Tab: Create a vertical split
--- 		pane:split({ direction = "Right" })
--- 		pane:split({ direction = "Right" })
---
--- 		-- Second Tab: Create a new tab with a vertical split
--- 		tab = window:spawn_tab({})
--- 		tab:active_pane():split({ direction = "Right" })
--- 	end
--- end)
-
--- wezterm.on("gui-startup", function(cmd)
--- 	-- allow `wezterm start -- something` to affect what we spawn
--- 	-- in our initial window
--- 	local args = {}
--- 	if cmd then
--- 		args = cmd.args
--- 	end
---
--- 	-- Set a workspace for coding on a current project
--- 	-- Top pane is for the editor, bottom pane is for the build tool
--- 	local tab, build_pane, window = mux.spawn_window({
--- 		workspace = "coding",
--- 	})
--- 	local editor_pane = build_pane:split({
--- 		direction = "Top",
--- 		size = 0.6,
--- 	})
---
--- 	-- A workspace for interacting with a local machine that
--- 	-- runs some docker containners for home automation
--- 	local tab, pane, window = mux.spawn_window({
--- 		workspace = "automation",
--- 	})
---
--- 	-- We want to startup in the coding workspace
--- 	mux.set_active_workspace("coding")
--- end)
-
--- and finally, return the configuration to wezterm
 return config
