@@ -1,0 +1,79 @@
+#!/bin/bash
+
+# on unlock we want to tell aerospace to make all workspaces
+# accordion layout if we only have 1 monitor and a tiled layout
+# if we have more than 1 monitor
+
+# check a tempfile to see how many monitors were detected on last run
+
+last_monitors=$(cat /tmp/monitors)
+
+echo $(date)
+
+# get the number of monitors
+num_monitors=$(aerospace list-monitors --count)
+
+echo "Detected $num_monitors monitors"
+
+# if the number of monitors has changed, we need to reconfigure the workspaces
+# last_monitors may not be set if this is the first run or the tmp file was deleted
+
+if [[ $num_monitors -ne $last_monitors ]]; then
+  echo "Number of monitors changed, reconfiguring workspaces"
+  echo $num_monitors >/tmp/monitors
+else
+  echo "Number of monitors has not changed, skipping reconfiguration"
+  exit 0
+fi
+
+if [[ $num_monitors -eq 1 ]]; then
+  # move obsidian to workspace A
+  # window id is the first column of the output
+  obsidian_id=$(aerospace list-windows --all | grep "Obsidian" | awk '{print $1}')
+  aerospace move-node-to-workspace --window-id $obsidian_id a
+else
+
+  # move obsidian to workspace T
+  # window id is the first column of the output
+  obsidian_id=$(aerospace list-windows --all | grep "Obsidian" | awk '{print $1}')
+  aerospace move-node-to-workspace --window-id $obsidian_id t
+fi
+
+# iterate over each monitor
+for i in $(seq 1 $num_monitors); do
+  aerospace focus-monitor $i
+
+  workspace_ids=$(aerospace list-workspaces --monitor focused)
+
+  # iterate over each workspace
+  for id in $workspace_ids; do
+    aerospace workspace $id
+
+    if [[ $num_monitors -eq 1 ]]; then
+      aerospace layout h_accordion
+    elif [[ $((i % 2)) -eq 1 ]]; then
+      aerospace layout v_tiles
+    else
+      aerospace layout h_tiles
+    fi
+  done
+done
+
+# finally set each monitor to default workspace
+if [[ $num_monitors -eq 1 ]]; then
+  aerospace focus-monitor 1
+  aerospace workspace w
+else
+  aerospace focus-monitor 1
+  aerospace workspace q
+
+  aerospace focus-monitor 3
+  aerospace workspace t
+
+  # fixup workspace T
+  aerospace layout h_accordion
+  aerospace move --window-id $obsidian_id down
+
+  aerospace focus-monitor 2
+  aerospace workspace w
+fi

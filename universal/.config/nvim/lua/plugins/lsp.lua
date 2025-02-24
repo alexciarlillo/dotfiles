@@ -4,9 +4,6 @@ return {
     opts = {
       inlay_hints = { enabled = false },
       servers = {
-        ts_ls = {
-          enabled = false,
-        },
         vtsls = {
           root_dir = function()
             local lazyvimRoot = require("lazyvim.util.root")
@@ -17,11 +14,7 @@ return {
             typescript = {
               tsserver = {
                 -- log = "verbose",
-                maxTsServerMemory = 4096,
-                watchOptions = {
-                  watchFile = "useFsEventsOnParentDirectory",
-                  fallbackPolling = "dynamicPriorityPolling",
-                },
+                maxTsServerMemory = 8192,
               },
               disableAutomaticTypeAcquisition = true,
               validate = {

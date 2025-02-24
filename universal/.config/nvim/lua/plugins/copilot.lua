@@ -1,13 +1,10 @@
 return {
   {
     "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    build = ":Copilot auth",
     opts = {
       suggestion = {
         enabled = true,
         auto_trigger = true,
-        debounce = 75,
         keymap = {
           accept = "<C-i>",
           accept_word = false,
@@ -17,21 +14,12 @@ return {
           dismiss = "<C-,>",
         },
       },
-      panel = { enabled = true, keymap = { open = "<C-;>" }, layout = {
-        ratio = 0.3,
-      } },
+      panel = { enabled = false },
       filetypes = {
         markdown = true,
         help = true,
       },
       copilot_node_command = "/Users/alex/.nvm/versions/node/v20.17.0/bin/node",
-    },
-    keys = {
-      {
-        "<leader>as",
-        "<cmd>Copilot<cr>",
-        desc = "Copilot Start",
-      },
     },
   },
 }

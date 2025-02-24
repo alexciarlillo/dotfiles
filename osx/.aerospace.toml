@@ -15,7 +15,7 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 # Mouse follows focus when focused monitor changes
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
-accordion-padding = 60
+accordion-padding = 70
 
 # Possible values: tiles|accordion
 default-root-container-layout = 'tiles'
@@ -104,6 +104,11 @@ cmd-alt-a = 'move-node-to-workspace a'
 cmd-alt-t = 'move-node-to-workspace t'
 cmd-alt-g = 'move-node-to-workspace g'
 
+cmd-ctrl-k = 'join-with up'
+cmd-ctrl-j = 'join-with down'
+cmd-ctrl-l = 'join-with right'
+cmd-ctrl-h = 'join-with left'
+
 alt-shift-m = 'move-workspace-to-monitor --wrap-around next'
 
 alt-shift-r = 'mode resize'
@@ -129,16 +134,15 @@ backspace = ['close-all-windows-but-current', 'mode main']
 
 [[on-window-detected]]
 if.app-id = 'com.spotify.client'
-run = ['layout floating', 'move-node-to-workspace w']
+run = ['move-node-to-workspace x']
 
 [[on-window-detected]]
 if.app-id = 'com.electron.guilded-tarobi'
-run = ['layout tiling', 'move-node-to-workspace t']
-
+run = ['move-node-to-workspace t']
 
 [[on-window-detected]]
 if.app-id = 'com.tinyspeck.slackmacgap'
-run = ['layout tiling', 'move-node-to-workspace t']
+run = ['move-node-to-workspace t']
 
 [[on-window-detected]]
 if.app-id = 'com.todoist.mac.Todoist'
@@ -149,13 +153,5 @@ if.app-id = 'com.flexibits.fantastical2.mac'
 run = 'move-node-to-workspace e'
 
 [[on-window-detected]]
-if.app-id = 'org.getstation.DesktopApp'
-run = 'move-node-to-workspace e'
-
-[[on-window-detected]]
 if.app-id = 'com.tinyapp.TablePlus'
 run = 'move-node-to-workspace x'
-
-[[on-window-detected]]
-if.app-id = 'us.zoom.xos'
-run = ['layout floating', 'move-node-to-workspace r']

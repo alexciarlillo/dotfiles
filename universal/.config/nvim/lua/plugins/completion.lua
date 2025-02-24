@@ -29,9 +29,7 @@ return {
 
       local luasnip = require("luasnip")
       local cmp = require("cmp")
-
       require("luasnip.loaders.from_vscode").lazy_load({ paths = { "./snippets" } })
-
       opts.sources = cmp.config.sources(vim.list_extend(opts.sources, { { name = "emoji" } }))
 
       opts.mapping = vim.tbl_extend("force", opts.mapping, {

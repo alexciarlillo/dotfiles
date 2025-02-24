@@ -20,6 +20,17 @@ hs.hotkey.bind(hyper, "return", hs.hints.windowHints)
 hs.hotkey.bind({ "alt" }, "return", function()
 	hs.osascript.applescriptFromFile("/Users/alex/.bin/wezterm-new.scpt")
 end)
+
+-- launch script on unlock and log to file
+hs.caffeinate.watcher
+	.new(function(event)
+		if event == hs.caffeinate.watcher.screensDidUnlock then
+			-- log script with errors
+			hs.execute("/Users/alex/.bin/unlock > /tmp/unlock.log 2>&1", true)
+		end
+	end)
+	:start()
+
 -- Grid config
 
 hs.grid.setGrid("12x12")
