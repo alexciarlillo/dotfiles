@@ -1,3 +1,5 @@
+# Add deno completions to search path
+if [[ ":$FPATH:" != *":/Users/alex/.zsh/completions:"* ]]; then export FPATH="/Users/alex/.zsh/completions:$FPATH"; fi
 function fix-stderr () {
    "$@" &> >(sed "s/^/[$2] /")
 }
@@ -88,3 +90,7 @@ fpath=(/Users/alex/.docker/completions $fpath)
 autoload -Uz compinit
 compinit
 # End of Docker CLI completions
+. "/Users/alex/.deno/env"
+# Initialize zsh completions (added by deno install script)
+autoload -Uz compinit
+compinit

@@ -2,7 +2,7 @@ after-login-command = [
 ]
 
 after-startup-command = [
-    'exec-and-forget borders active_color=0xffa6e3a1 inactive_color=0xffa6adc8 width=5.0'
+     'exec-and-forget borders active_color=0xffa6e3a1 inactive_color=0xffa6adc8 width=5.0'
 ]
 
 # Start AeroSpace at login
@@ -44,23 +44,31 @@ g = [3, 'main', 'built-in']
 [mode.main.binding]
 cmd-h = [] # Disable "hide application"
 
-ctrl-alt-space = 'fullscreen'
+cmd-enter = 'fullscreen'
+
+cmd-shift-i = 'resize smart +50'
+cmd-shift-u = 'resize smart -50'
 
 alt-h = 'focus left --boundaries all-monitors-outer-frame'
 alt-j = 'focus down --boundaries all-monitors-outer-frame'
 alt-k = 'focus up --boundaries all-monitors-outer-frame'
 alt-l = 'focus right --boundaries all-monitors-outer-frame'
 
-alt-comma = 'focus-back-and-forth'
+alt-comma = 'workspace-back-and-forth'
+alt-shift-comma = 'focus-back-and-forth'
+
+# this is borderline "navigation" but we follow the command + alt convention for action+navigation
+cmd-alt-m = 'move-workspace-to-monitor --wrap-around next'
 
 cmd-alt-h = 'move left'
 cmd-alt-j = 'move down'
 cmd-alt-k = 'move up'
 cmd-alt-l = 'move right'
 
-alt-shift-minus = 'resize smart -50'
-alt-shift-equal = 'resize smart +50'
-
+cmd-alt-ctrl-h = 'join-with left'
+cmd-alt-ctrl-j = 'join-with down'
+cmd-alt-ctrl-k = 'join-with up'
+cmd-alt-ctrl-l = 'join-with right'
 
 alt-w = 'workspace w'
 alt-e = 'workspace e'
@@ -76,20 +84,6 @@ alt-a = 'workspace a'
 alt-t = 'workspace t'
 alt-g = 'workspace g'
 
-ctrl-alt-w = ['move-node-to-workspace w', 'workspace w']
-ctrl-alt-e = ['move-node-to-workspace e', 'workspace e']
-ctrl-alt-r = ['move-node-to-workspace r', 'workspace r']
-ctrl-alt-s = ['move-node-to-workspace s', 'workspace s']
-ctrl-alt-d = ['move-node-to-workspace d', 'workspace d']
-ctrl-alt-f = ['move-node-to-workspace f', 'workspace f']
-ctrl-alt-x = ['move-node-to-workspace x', 'workspace x']
-ctrl-alt-c = ['move-node-to-workspace c', 'workspace c']
-ctrl-alt-v = ['move-node-to-workspace v', 'workspace v']
-ctrl-alt-q = ['move-node-to-workspace q', 'workspace q']
-ctrl-alt-a = ['move-node-to-workspace a', 'workspace a']
-ctrl-alt-t = ['move-node-to-workspace t', 'workspace t']
-ctrl-alt-g = ['move-node-to-workspace g', 'workspace g']
-
 cmd-alt-w = 'move-node-to-workspace w'
 cmd-alt-e = 'move-node-to-workspace e'
 cmd-alt-r = 'move-node-to-workspace r'
@@ -104,31 +98,33 @@ cmd-alt-a = 'move-node-to-workspace a'
 cmd-alt-t = 'move-node-to-workspace t'
 cmd-alt-g = 'move-node-to-workspace g'
 
-cmd-ctrl-k = 'join-with up'
-cmd-ctrl-j = 'join-with down'
-cmd-ctrl-l = 'join-with right'
-cmd-ctrl-h = 'join-with left'
+cmd-alt-shift-w = ['move-node-to-workspace w', 'workspace w']
+cmd-alt-shift-e = ['move-node-to-workspace e', 'workspace e']
+cmd-alt-shift-r = ['move-node-to-workspace r', 'workspace r']
+cmd-alt-shift-s = ['move-node-to-workspace s', 'workspace s']
+cmd-alt-shift-d = ['move-node-to-workspace d', 'workspace d']
+cmd-alt-shift-f = ['move-node-to-workspace f', 'workspace f']
+cmd-alt-shift-x = ['move-node-to-workspace x', 'workspace x']
+cmd-alt-shift-c = ['move-node-to-workspace c', 'workspace c']
+cmd-alt-shift-v = ['move-node-to-workspace v', 'workspace v']
+cmd-alt-shift-q = ['move-node-to-workspace q', 'workspace q']
+cmd-alt-shift-a = ['move-node-to-workspace a', 'workspace a']
+cmd-alt-shift-t = ['move-node-to-workspace t', 'workspace t']
+cmd-alt-shift-g = ['move-node-to-workspace g', 'workspace g']
 
-alt-shift-m = 'move-workspace-to-monitor --wrap-around next'
-
-alt-shift-r = 'mode resize'
-alt-shift-s = 'mode service'
-
-[mode.resize.binding]
-h = 'resize width -100'
-j = 'resize height +100'
-k = 'resize height -100'
-l = 'resize width +100'
-enter = 'mode main'
-esc = 'mode main'
-
+cmd-ctrl-space = 'mode service'
 
 [mode.service.binding]
-esc = ['reload-config', 'mode main']
+esc = 'mode main'
+enter = 'mode main'
 r = ['flatten-workspace-tree', 'mode main'] # reset layout
 a = ['layout accordion horizontal vertical', 'mode main']
 f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
 t = ['layout tiles horizontal vertical', 'mode main']
+h = 'resize width -100'
+j = 'resize height +100'
+k = 'resize height -100'
+l = 'resize width +100'
 backspace = ['close-all-windows-but-current', 'mode main']
 
 

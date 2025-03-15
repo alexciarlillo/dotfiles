@@ -1,7 +1,4 @@
 hyper = { "⌘", "⌥", "⌃" }
-shyper = { "⌘", "⌥", "⌃", "shift" }
-meh = { "⌥", "⌃", "shift" }
-missionControlKey = { "alt" }
 hs.window.animationDuration = 0
 
 -- hs.loadSpoon("hs_select_window")
@@ -16,9 +13,9 @@ hs.window.animationDuration = 0
 -- Window focus hints
 hs.hotkey.bind(hyper, "return", hs.hints.windowHints)
 
--- Launch new iTerm window on current desktop
+-- Launch new wezterm window on current desktop
 hs.hotkey.bind({ "alt" }, "return", function()
-	hs.osascript.applescriptFromFile("/Users/alex/.bin/wezterm-new.scpt")
+	hs.osascript.applescriptFromFile("/Users/alex/.bin/new-wezterm.applescript")
 end)
 
 -- launch script on unlock and log to file
@@ -33,18 +30,18 @@ hs.caffeinate.watcher
 
 -- Grid config
 
-hs.grid.setGrid("12x12")
-hs.grid.setMargins("4x4")
-
-local gridset = function(x, y, w, h)
-	return function()
-		local win = hs.window.focusedWindow()
-		hs.grid.set(win, { x = x, y = y, w = w, h = h }, win:screen())
-	end
-end
-
+-- hs.grid.setGrid("12x12")
+-- hs.grid.setMargins("4x4")
+--
+-- local gridset = function(x, y, w, h)
+-- 	return function()
+-- 		local win = hs.window.focusedWindow()
+-- 		hs.grid.set(win, { x = x, y = y, w = w, h = h }, win:screen())
+-- 	end
+-- end
+--
 -- fullscreen
-hs.hotkey.bind(hyper, "k", gridset(2, 0, 8, 12))
+-- hs.hotkey.bind(hyper, "k", gridset(2, 0, 8, 12))
 
 -- -- top left
 -- hs.hotkey.bind(hyper, "u", gridset(0, 0, 6, 6))

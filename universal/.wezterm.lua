@@ -26,12 +26,12 @@ config.window_padding = {
 }
 
 config.window_decorations = "RESIZE"
-config.leader = { key = "Space", mods = "CTRL", timeout_milliseconds = 1500 }
+config.leader = { key = "Space", mods = "CMD|SHIFT", timeout_milliseconds = 1500 }
 
 local function move_pane(key, direction)
 	return {
 		key = key,
-		mods = "CTRL|ALT",
+		mods = "ALT|SHIFT",
 		action = wezterm.action.ActivatePaneDirection(direction),
 	}
 end
@@ -53,14 +53,39 @@ config.keys = {
 		}),
 	},
 	{
-		key = "v",
+		key = "s",
 		mods = "LEADER",
 		action = wezterm.action({ SplitVertical = { domain = "CurrentPaneDomain" } }),
 	},
 	{
-		key = "b",
+		key = "v",
 		mods = "LEADER",
 		action = wezterm.action({ SplitHorizontal = { domain = "CurrentPaneDomain" } }),
+	},
+	{
+		key = "t",
+		mods = "LEADER",
+		action = act.SpawnTab("CurrentPaneDomain"),
+	},
+	{
+		key = "w",
+		mods = "LEADER",
+		action = act.CloseCurrentTab({ confirm = true }),
+	},
+	{
+		key = "j",
+		mods = "CTRL|ALT",
+		action = act.ActivateTabRelative(-1),
+	},
+	{
+		key = "k",
+		mods = "CTRL|ALT",
+		action = act.ActivateTabRelative(1),
+	},
+	{
+		key = ",",
+		mods = "CTRL|ALT",
+		action = act.ActivateLastTab,
 	},
 	{
 		-- When we push LEADER + R...
@@ -88,11 +113,11 @@ config.keys = {
 }
 
 for i = 1, 8 do
-	-- CTRL+ALT + number to move to that position
+	-- ALT+SHIFT + number to move to that position
 	table.insert(config.keys, {
 		key = tostring(i),
 		mods = "CTRL|ALT",
-		action = wezterm.action.MoveTab(i - 1),
+		action = wezterm.action.ActivateTab(i - 1),
 	})
 end
 
