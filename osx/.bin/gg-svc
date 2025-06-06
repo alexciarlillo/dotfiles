@@ -7,12 +7,12 @@ echo "gg" | wezterm cli send-text --no-paste --pane-id $gdsdevmedia_pane
 echo "clear" | wezterm cli send-text --no-paste --pane-id $gdsdevmedia_pane
 wezterm cli send-text --pane-id $gdsdevmedia_pane "gdsdevmedia "
 
-gdsdevrtc_pane=$(wezterm cli split-pane --bottom --percent 60 --pane-id $gdsdevmedia_pane)
+gdsdevrtc_pane=$(wezterm cli split-pane --top --percent 60 --pane-id $gdsdevmedia_pane)
 
 echo "gg" | wezterm cli send-text --no-paste --pane-id $gdsdevrtc_pane
 echo "clear" | wezterm cli send-text --no-paste --pane-id $gdsdevrtc_pane
 wezterm cli send-text --pane-id $gdsdevrtc_pane "gdsdevrtc "
 
-term_pane=$(wezterm cli split-pane --bottom --percent 20 --pane-id $gdsdevrtc_pane)
+term_pane=$(wezterm cli split-pane --top --percent 50 --pane-id $gdsdevrtc_pane)
 
 echo "gg" | wezterm cli send-text --no-paste --pane-id $term_pane

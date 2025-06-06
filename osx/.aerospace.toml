@@ -151,3 +151,7 @@ run = 'move-node-to-workspace e'
 [[on-window-detected]]
 if.app-id = 'com.tinyapp.TablePlus'
 run = 'move-node-to-workspace x'
+
+[[on-window-detected]]
+if.app-id = 'com.bambulab.bambu-studio'
+run = 'layout floating'
