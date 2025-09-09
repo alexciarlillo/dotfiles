@@ -1,0 +1,210 @@
+#!/bin/bash
+
+# Tmux Sessionizer - Quick workspace management functions
+# Source this file in your shell to get these functions
+
+# General session management
+tmux-new() {
+  local session_name="${1:-$(basename $(pwd))}"
+  if tmux has-session -t "$session_name" 2>/dev/null; then
+    tmux attach-session -t "$session_name"
+  else
+    tmux new-session -s "$session_name"
+  fi
+}
+
+tmux-kill() {
+  local session_name="$1"
+  if [[ -z "$session_name" ]]; then
+    echo "Usage: tmux-kill <session-name>"
+    return 1
+  fi
+  tmux kill-session -t "$session_name"
+}
+
+tmux-list() {
+  tmux list-sessions
+}
+
+tmux-switch() {
+  local sessions=$(tmux list-sessions -F "#{session_name}")
+  local session=$(echo "$sessions" | fzf --prompt="Switch to session: ")
+  if [[ -n "$session" ]]; then
+    tmux switch-client -t "$session" 2>/dev/null || tmux attach-session -t "$session"
+  fi
+}
+
+# Generic project sessionizer
+tmux-project() {
+  local project_dir="$1"
+  if [[ -z "$project_dir" ]]; then
+    echo "Usage: tmux-project <project-directory>"
+    return 1
+  fi
+
+  if [[ ! -d "$project_dir" ]]; then
+    echo "Directory $project_dir does not exist"
+    return 1
+  fi
+
+  local session_name=$(basename "$project_dir")
+
+  if tmux has-session -t "$session_name" 2>/dev/null; then
+    tmux attach-session -t "$session_name"
+  else
+    tmux new-session -d -s "$session_name" -c "$project_dir"
+    tmux send-keys -t "$session_name" 'clear' Enter
+    tmux attach-session -t "$session_name"
+  fi
+}
+
+# Interactive project finder (requires fzf)
+tmux-find() {
+  local search_dirs=("$HOME/code" "$HOME/GitHub" "$HOME/work" "$HOME/projects" "$HOME")
+  local projects=""
+
+  for dir in "${search_dirs[@]}"; do
+    if [[ -d "$dir" ]]; then
+      projects+=$(find "$dir" -maxdepth 3 -type d -name ".git" | sed 's|/.git||' | head -20)
+      projects+="\n"
+    fi
+  done
+
+  local selected_project=$(echo -e "$projects" | grep -v "^$" | fzf --prompt="Select project: ")
+
+  if [[ -n "$selected_project" ]]; then
+    tmux-project "$selected_project"
+  fi
+}
+
+# Save current session layout
+tmux-save() {
+  local session_name="${1:-$(tmux display-message -p '#S')}"
+  local save_file="$HOME/.tmux-layouts/$session_name.layout"
+  mkdir -p "$HOME/.tmux-layouts"
+
+  tmux list-windows -t "$session_name" -F "#{window_index}:#{window_name}:#{window_layout}" >"$save_file"
+  echo "Session layout saved to $save_file"
+}
+
+# Restore session layout
+tmux-restore() {
+  local session_name="$1"
+  if [[ -z "$session_name" ]]; then
+    echo "Usage: tmux-restore <session-name>"
+    return 1
+  fi
+
+  local save_file="$HOME/.tmux-layouts/$session_name.layout"
+  if [[ ! -f "$save_file" ]]; then
+    echo "No saved layout found for session $session_name"
+    return 1
+  fi
+
+  if tmux has-session -t "$session_name" 2>/dev/null; then
+    tmux kill-session -t "$session_name"
+  fi
+
+  tmux new-session -d -s "$session_name"
+
+  while IFS=':' read -r window_index window_name window_layout; do
+    if [[ "$window_index" != "0" ]]; then
+      tmux new-window -t "$session_name:$window_index" -n "$window_name"
+    else
+      tmux rename-window -t "$session_name:$window_index" "$window_name"
+    fi
+    tmux select-layout -t "$session_name:$window_index" "$window_layout"
+  done <"$save_file"
+
+  tmux attach-session -t "$session_name"
+}
+
+# Kill all sessions except current
+tmux-kill-others() {
+  local current_session=$(tmux display-message -p '#S')
+  tmux list-sessions -F "#{session_name}" | grep -v "^$current_session$" | xargs -I {} tmux kill-session -t {}
+}
+
+# Tmux doctor - check configuration and setup
+tmux-doctor() {
+  echo "=== Tmux Configuration Check ==="
+  echo
+
+  echo "Tmux version: $(tmux -V)"
+  echo
+
+  echo "Checking required programs:"
+  command -v reattach-to-user-namespace >/dev/null 2>&1 && echo "✓ reattach-to-user-namespace" || echo "✗ reattach-to-user-namespace (install with: brew install reattach-to-user-namespace)"
+  command -v fzf >/dev/null 2>&1 && echo "✓ fzf" || echo "✗ fzf (install with: brew install fzf)"
+  echo
+
+  echo "Active sessions:"
+  tmux list-sessions 2>/dev/null || echo "No active sessions"
+  echo
+
+  echo "Configuration files:"
+  [[ -f ~/.tmux.conf ]] && echo "✓ ~/.tmux.conf" || echo "✗ ~/.tmux.conf"
+  [[ -f ~/.tmux.conf.user ]] && echo "✓ ~/.tmux.conf.user" || echo "✗ ~/.tmux.conf.user"
+  echo
+
+  echo "Workspace scripts:"
+  for script in tmux-gg-fe tmux-gg-be tmux-gg-svc tmux-gg-code tmux-rblx-code; do
+    [[ -x ~/.bin/$script ]] && echo "✓ ~/.bin/$script" || echo "✗ ~/.bin/$script"
+  done
+}
+
+# Display help
+tmux-help() {
+  cat <<'EOF'
+Tmux Sessionizer Functions:
+
+Session Management:
+  tmux-new [name]          - Create or attach to session
+  tmux-list                - List all sessions  
+  tmux-switch              - Interactively switch sessions (requires fzf)
+  tmux-kill <name>         - Kill specific session
+  tmux-kill-others         - Kill all sessions except current
+
+Workspace Launchers:
+  gg-fe               - Launch Guilded frontend workspace
+  gg-be               - Launch Guilded backend workspace  
+  gg-svc              - Launch Guilded services workspace
+  gg-code             - Launch Guilded code session
+
+Project Management:
+  tmux-project <dir>       - Create session for project directory
+  tmux-find                - Interactively find and open project (requires fzf)
+
+Layout Management:
+  tmux-save [name]         - Save current session layout
+  tmux-restore <name>      - Restore saved session layout
+
+Utilities:
+  tmux-doctor              - Check tmux configuration and setup
+  tmux-help                - Show this help message
+
+Key Bindings (from ~/.tmux.conf.user):
+  Ctrl+Space               - Alternate leader key
+  Leader + s/v             - Split panes vertical/horizontal
+  Leader + t               - New window
+  Leader + w/d             - Close window/pane
+  Alt+Shift+hjkl           - Navigate panes
+  Alt+Ctrl+jk              - Navigate windows
+  Alt+Ctrl+hl              - Move windows
+  Alt+Ctrl+1-8             - Select window by number
+  Leader + r               - Resize mode (hjkl to resize, Esc to exit)
+  Leader + S               - New session
+  Leader + K               - Kill session
+EOF
+}
+
+# Auto-complete for session names
+if [[ -n "$BASH_VERSION" ]]; then
+  _tmux_sessions() {
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local sessions=$(tmux list-sessions -F "#{session_name}" 2>/dev/null)
+    COMPREPLY=($(compgen -W "$sessions" -- "$cur"))
+  }
+  complete -F _tmux_sessions tmux-kill tmux-restore
+fi
+

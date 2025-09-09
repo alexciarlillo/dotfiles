@@ -1,18 +1,38 @@
-gdsdevmedia_pane=$(wezterm cli spawn)
+#!/bin/bash
 
-wezterm cli activate-pane --pane-id $gdsdevmedia_pane
-wezterm cli set-tab-title --pane-id $gdsdevmedia_pane "gg-svc"
+# Tmux equivalent of gg-svc WezTerm script  
+# Creates a 3-pane layout: terminal (top), gdsdevrtc (middle), gdsdevmedia (bottom)
 
-echo "gg" | wezterm cli send-text --no-paste --pane-id $gdsdevmedia_pane
-echo "clear" | wezterm cli send-text --no-paste --pane-id $gdsdevmedia_pane
-wezterm cli send-text --pane-id $gdsdevmedia_pane "gdsdevmedia "
+# Source the workspace helper
+source ~/.dotfiles/universal/.config/tmux/tmux-workspace-helper
 
-gdsdevrtc_pane=$(wezterm cli split-pane --top --percent 60 --pane-id $gdsdevmedia_pane)
+# Create workspace (window or session)
+WINDOW=$(tmux_create_workspace "gg-svc")
+SESSION_NAME="gg-svc"  # Used for attach if outside tmux
 
-echo "gg" | wezterm cli send-text --no-paste --pane-id $gdsdevrtc_pane
-echo "clear" | wezterm cli send-text --no-paste --pane-id $gdsdevrtc_pane
-wezterm cli send-text --pane-id $gdsdevrtc_pane "gdsdevrtc "
+# Start with the first pane (will become terminal pane at top)
+tmux send-keys -t $WINDOW 'gg' Enter
 
-term_pane=$(wezterm cli split-pane --top --percent 50 --pane-id $gdsdevrtc_pane)
+# Split to create middle pane - 33% from top (this pushes original to bottom)  
+tmux split-window -t $WINDOW -v -p 67
+# Now we have: pane 0 (top), pane 1 (bottom 67%)
 
-echo "gg" | wezterm cli send-text --no-paste --pane-id $term_pane
+# Set up the middle pane (gdsdevrtc)
+tmux send-keys -t $WINDOW.1 'gg' Enter
+tmux send-keys -t $WINDOW.1 'clear' Enter  
+tmux send-keys -t $WINDOW.1 'gdsdevrtc ' # Leave command ready
+
+# Split the bottom pane to create the actual bottom pane - 50% of remaining space
+tmux split-window -t $WINDOW.1 -v -p 50
+# Now we have: pane 0 (top terminal), pane 1 (middle gdsdevrtc), pane 2 (bottom gdsdevmedia)
+
+# Set up the bottom pane (gdsdevmedia) 
+tmux send-keys -t $WINDOW.2 'gg' Enter
+tmux send-keys -t $WINDOW.2 'clear' Enter
+tmux send-keys -t $WINDOW.2 'gdsdevmedia ' # Leave command ready but not executed
+
+# Focus on the middle pane (gdsdevrtc)
+tmux select-pane -t $WINDOW.1
+
+# Attach to session if we're outside tmux
+tmux_attach_if_outside "$SESSION_NAME"

@@ -20,6 +20,7 @@ set -g base-index 1
 setw -g pane-base-index 1
 setw -g automatic-rename on
 set -g renumber-windows on
+setw -g aggressive-resize on
 
 # -- Keybindings (WezTerm-style) ----------------------------------------------
 
@@ -84,6 +85,11 @@ bind -T resize k resize-pane -U 3
 bind -T resize l resize-pane -R 3
 bind -T resize Escape switch-client -T root
 
+# Pane layout management - equalize panes
+bind = select-layout even-horizontal
+bind + select-layout even-vertical
+bind Space select-layout tiled
+
 # -- Mouse and Clipboard -------------------------------------------------------
 
 # Mouse support
@@ -113,7 +119,7 @@ bind K confirm-before 'kill-session'
 # -- Minimal, Clean Appearance -------------------------------------------------
 
 # Status bar - simple and unobtrusive
-set -g status-position bottom
+set -g status-position top
 set -g status-justify left
 
 # Use terminal default colors to avoid conflicts

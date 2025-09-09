@@ -82,8 +82,13 @@ if [ -f ~/.aliases ]; then
 fi
 
 # Load tmux sessionizer functions
-if [ -f ~/.tmux-sessionizer ]; then
-    . ~/.tmux-sessionizer
+if [ -f ~/.config/tmux/tmux-sessionizer ]; then
+    . ~/.config/tmux/tmux-sessionizer
+fi
+
+
+if [ -f ~/.config/tmux/tmux-workspace-helper ]; then
+    . ~/.config/tmux/tmux-workspace-helper
 fi
 
 aliasNvm

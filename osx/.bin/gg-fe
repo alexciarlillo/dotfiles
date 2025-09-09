@@ -1,18 +1,38 @@
-gctestsdev_pane=$(wezterm cli spawn)
+#!/bin/bash
 
-wezterm cli activate-pane --pane-id $gctestsdev_pane
-wezterm cli set-tab-title --pane-id $gctestsdev_pane "gg-fe"
+# Tmux equivalent of gg-fe WezTerm script
+# Creates a 3-pane layout: terminal (top), gcdev (middle), gctestsdev (bottom)
 
-echo "gg" | wezterm cli send-text --no-paste --pane-id $gctestsdev_pane
-echo "clear" | wezterm cli send-text --no-paste --pane-id $gctestsdev_pane
-wezterm cli send-text --pane-id $gctestsdev_pane "gctestsdev "
+# Source the workspace helper
+source ~/.dotfiles/universal/.config/tmux/tmux-workspace-helper
 
-gcdev_pane=$(wezterm cli split-pane --top --percent 80 --pane-id $gctestsdev_pane)
+# Create workspace (window or session)
+WINDOW=$(tmux_create_workspace "gg-fe")
+SESSION_NAME="gg-fe"  # Used for attach if outside tmux
 
-echo "gg" | wezterm cli send-text --no-paste --pane-id $gcdev_pane
-echo "clear" | wezterm cli send-text --no-paste --pane-id $gcdev_pane
-wezterm cli send-text --pane-id $gcdev_pane "gcdev --env.disableHmr --env.admin "
+# Start with the first pane (will become top terminal pane)
+tmux send-keys -t $WINDOW 'gg' Enter
 
-term_pane=$(wezterm cli split-pane --top --percent 50 --pane-id $gcdev_pane)
+# Split to create middle pane - 33% from top (this pushes original to top)  
+tmux split-window -t $WINDOW -v -p 67
+# Now we have: pane 0 (top), pane 1 (bottom 67%)
 
-echo "gg" | wezterm cli send-text --no-paste --pane-id $term_pane
+# Set up the middle pane (gcdev)
+tmux send-keys -t $WINDOW.1 'gg' Enter
+tmux send-keys -t $WINDOW.1 'clear' Enter  
+tmux send-keys -t $WINDOW.1 'gcdev --env.disableHmr --env.admin ' # Leave command ready
+
+# Split the bottom pane to create the actual bottom pane - 50% of remaining space
+tmux split-window -t $WINDOW.1 -v -p 50
+# Now we have: pane 0 (top terminal), pane 1 (middle gcdev), pane 2 (bottom gctestsdev)
+
+# Set up the bottom pane (gctestsdev) 
+tmux send-keys -t $WINDOW.2 'gg' Enter
+tmux send-keys -t $WINDOW.2 'clear' Enter
+tmux send-keys -t $WINDOW.2 'gctestsdev ' # Leave command ready but not executed
+
+# Focus on the top pane (gcdev)
+tmux select-pane -t $WINDOW.1
+
+# Attach to session if we're outside tmux
+tmux_attach_if_outside "$SESSION_NAME"

@@ -1,0 +1,7 @@
+nvim_pane=$(wezterm cli spawn)
+
+wezterm cli activate-pane --pane-id $nvim_pane
+wezterm cli set-tab-title --pane-id $nvim_pane "guilded-code"
+
+echo "gg" | wezterm cli send-text --no-paste --pane-id $nvim_pane
+echo "nvim" | wezterm cli send-text --no-paste --pane-id $nvim_pane

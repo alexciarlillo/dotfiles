@@ -1,18 +1,39 @@
-ssdev_pane=$(wezterm cli spawn)
+#!/bin/bash
 
-wezterm cli activate-pane --pane-id $ssdev_pane
-wezterm cli set-tab-title --pane-id $ssdev_pane "gg-be"
+# Tmux equivalent of gg-be WezTerm script
+# Creates a 3-pane layout: gdsdev (top), ssdev (middle), terminal (bottom)
 
-echo "gg" | wezterm cli send-text --no-paste --pane-id $ssdev_pane
-echo "clear" | wezterm cli send-text --no-paste --pane-id $ssdev_pane
-wezterm cli send-text --pane-id $ssdev_pane "ssdev "
+# Source the workspace helper
+source ~/.dotfiles/universal/.config/tmux/tmux-workspace-helper
 
-gdsdev_pane=$(wezterm cli split-pane --top --percent 80 --pane-id $ssdev_pane)
+# Create workspace (window or session)
+WINDOW=$(tmux_create_workspace "gg-be")
+SESSION_NAME="gg-be" # Used for attach if outside tmux
 
-echo "gg" | wezterm cli send-text --no-paste --pane-id $gdsdev_pane
-echo "clear" | wezterm cli send-text --no-paste --pane-id $gdsdev_pane
-wezterm cli send-text --pane-id $gdsdev_pane "gdsdev "
+# Start with the first pane (will become terminal pane at bottom)
+tmux send-keys -t $WINDOW 'gg' Enter
 
-term_pane=$(wezterm cli split-pane --top --percent 50 --pane-id $gdsdev_pane)
+# Split to create middle pane - 33% from top (this pushes original to bottom)
+tmux split-window -t $WINDOW -v -p 67
+# Now we have: pane 0 (top), pane 1 (bottom 67%)
 
-echo "gg" | wezterm cli send-text --no-paste --pane-id $term_pane
+# Set up the middle pane (ssdev)
+tmux send-keys -t $WINDOW.1 'gg' Enter
+tmux send-keys -t $WINDOW.1 'clear' Enter
+tmux send-keys -t $WINDOW.1 'ssdev ' # Leave command ready
+
+# Split the bottom pane to create the actual bottom pane - 50% of remaining space
+tmux split-window -t $WINDOW.1 -v -p 50
+# Now we have: pane 0 (top gdsdev), pane 1 (middle ssdev), pane 2 (bottom terminal)
+
+# Set up the top pane (gdsdev)
+tmux send-keys -t $WINDOW.2 'gg' Enter
+tmux send-keys -t $WINDOW.2 'clear' Enter
+tmux send-keys -t $WINDOW.2 'gdsdev ' # Leave command ready but not executed
+
+# Focus on the top pane (gdsdev)
+tmux select-pane -t $WINDOW.1
+
+# Attach to session if we're outside tmux
+tmux_attach_if_outside "$SESSION_NAME"
+
