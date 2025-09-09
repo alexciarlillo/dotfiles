@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Tmux equivalent of rblx-code WezTerm script
+# Creates a simple nvim session for Roblox coding
+
+# Source the workspace helper
+source ~/.dotfiles/universal/.tmux-workspace-helper
+
+# Create workspace (window or session)
+WINDOW=$(tmux_create_workspace "rblx-code")
+SESSION_NAME="rblx-code"  # Used for attach if outside tmux
+
+# Navigate to rblx-cnp directory and start nvim
+tmux send-keys -t $WINDOW 'rblx-cnp' Enter
+tmux send-keys -t $WINDOW 'nvim' Enter
+
+# Attach to session if we're outside tmux
+tmux_attach_if_outside "$SESSION_NAME"

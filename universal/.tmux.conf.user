@@ -1,236 +1,146 @@
-# https://github.com/gpakosz/.tmux
-# (‑●‑●)> released under the WTFPL v2 license, by Gregory Pakosz (@gpakosz)
+# Minimal tmux configuration - Clean and non-interfering
+# Focus on functionality over theming to avoid color conflicts
 
+# -- Basic Settings ------------------------------------------------------------
 
-# -- navigation ----------------------------------------------------------------
+# Enable 24-bit color support for proper nvim colors
+set-option -sa terminal-overrides ",xterm*:Tc"
+set -g default-terminal "tmux-256color"
 
-# if you're running tmux within iTerm2
-#   - and tmux is 1.9 or 1.9a
-#   - and iTerm2 is configured to let option key act as +Esc
-#   - and iTerm2 is configured to send [1;9A -> [1;9D for option + arrow keys
-# then uncomment the following line to make Meta + arrow keys mapping work
-#set -ga terminal-overrides "*:kUP3=\e[1;9A,*:kDN3=\e[1;9B,*:kRIT3=\e[1;9C,*:kLFT3=\e[1;9D"
+# Fast command sequences and focus events
+set -s escape-time 0
+set -s focus-events on
+set -sg repeat-time 500
 
+# Increase history size
+set -g history-limit 50000
 
-# -- windows & pane creation ---------------------------------------------------
+# Window and pane behavior
+set -g base-index 1
+setw -g pane-base-index 1
+setw -g automatic-rename on
+set -g renumber-windows on
 
-# new window retains current path, possible values are:
-#   - true
-#   - false (default)
-tmux_conf_new_window_retain_current_path=false
+# -- Keybindings (WezTerm-style) ----------------------------------------------
 
-# new pane retains current path, possible values are:
-#   - true (default)
-#   - false
-tmux_conf_new_pane_retain_current_path=true
+# Leader key similar to WezTerm (using Ctrl+Space as alternative to Cmd+Shift+Space)
+set -g prefix2 C-Space
+bind C-Space send-prefix -2
 
-# new pane tries to reconnect ssh sessions (experimental), possible values are:
-#   - true
-#   - false (default)
-tmux_conf_new_pane_reconnect_ssh=false
+# Clear screen and scrollback (Leader+C for clear, C = clear)
+bind C send-keys C-l \; run 'sleep 0.05 && tmux clear-history'
 
-# prompt for session name when creating a new session, possible values are:
-#   - true
-#   - false (default)
-tmux_conf_new_session_prompt=false
+# Split panes (like WezTerm Leader+s/v)
+bind s split-window -v -c '#{pane_current_path}'
+bind v split-window -h -c '#{pane_current_path}'
 
+# New window/tab (like WezTerm Leader+t)
+bind t new-window -c '#{pane_current_path}'
 
-# -- display -------------------------------------------------------------------
+# Close window (like WezTerm Leader+w)
+bind w confirm-before -p "kill-window #W? (y/n)" kill-window
 
-# RGB 24-bit colour support (since tmux 2.2), possible values are:
-#  - true
-#  - false (default)
-tmux_conf_theme_24b_colour=false
+# Close pane (like WezTerm Leader+d)  
+bind d confirm-before -p "kill-pane #P? (y/n)" kill-pane
 
-# window style
-tmux_conf_theme_window_fg='default'
-tmux_conf_theme_window_bg='default'
+# Pane navigation - Leader + hjkl (vim-style, always reliable)
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
 
-# highlight focused pane (tmux 2.1+), possible values are:
-#   - true
-#   - false (default)
-tmux_conf_theme_highlight_focused_pane=false
+# Alt+Shift with capital letters (often works better than lowercase)
+bind -n M-H select-pane -L
+bind -n M-J select-pane -D
+bind -n M-K select-pane -U
+bind -n M-L select-pane -R
 
-# focused pane colours:
-tmux_conf_theme_focused_pane_fg='default'
-tmux_conf_theme_focused_pane_bg='#458588'               # light blue
+# Window navigation (like WezTerm Ctrl+Alt+j/k)
+bind -n M-C-j previous-window
+bind -n M-C-k next-window
 
-# pane border style, possible values are:
-#   - thin (default)
-#   - fat
-tmux_conf_theme_pane_border_style=thin
+# Last window (like WezTerm Ctrl+Alt+comma)
+bind -n 'M-C-,' last-window
 
-# pane borders colours:
-tmux_conf_theme_pane_border='#ebdbb2'                   # gray
-tmux_conf_theme_pane_active_border='#fabd2f'            # light blue
+# Window movement (like WezTerm Ctrl+Alt+h/l)
+bind -n M-C-h swap-window -t -1\; select-window -t -1
+bind -n M-C-l swap-window -t +1\; select-window -t +1
 
-# pane indicator colours
-tmux_conf_theme_pane_indicator='#458588'                # light blue
-tmux_conf_theme_pane_active_indicator='#458588'         # light blue
+# Window selection by number (like WezTerm Ctrl+Alt+1-8)
+bind -n M-C-1 select-window -t 1
+bind -n M-C-2 select-window -t 2
+bind -n M-C-3 select-window -t 3
+bind -n M-C-4 select-window -t 4
+bind -n M-C-5 select-window -t 5
+bind -n M-C-6 select-window -t 6
+bind -n M-C-7 select-window -t 7
+bind -n M-C-8 select-window -t 8
 
-# status line style
-tmux_conf_theme_message_fg='#ebdbb2'                    # tan
-tmux_conf_theme_message_bg='#282828'                    # gray
-tmux_conf_theme_message_attr='bold'
+# Pane resizing (like WezTerm Leader+r mode)
+bind r switch-client -T resize
+bind -T resize h resize-pane -L 3
+bind -T resize j resize-pane -D 3
+bind -T resize k resize-pane -U 3
+bind -T resize l resize-pane -R 3
+bind -T resize Escape switch-client -T root
 
-# status line command style (<prefix> : Escape)
-tmux_conf_theme_message_command_fg='#282828'            # gray
-tmux_conf_theme_message_command_bg='#ebdbb2'            # tan
-tmux_conf_theme_message_command_attr='bold'
+# -- Mouse and Clipboard -------------------------------------------------------
 
-# window modes style
-tmux_conf_theme_mode_fg='#ebdbb2'                       # tan
-tmux_conf_theme_mode_bg='#282828'                       # gray
-tmux_conf_theme_mode_attr='bold'
+# Mouse support
+set -g mouse on
 
-# status line style
-tmux_conf_theme_status_fg='#282828'                     # gray
-tmux_conf_theme_status_bg='#ebdbb2'                     # tan
-tmux_conf_theme_status_attr='none'
+# Clipboard integration for macOS
+set -g set-clipboard on
+# Only use reattach-to-user-namespace if it's installed
+if-shell 'command -v reattach-to-user-namespace >/dev/null' \
+    'set-option -g default-command "reattach-to-user-namespace -l $SHELL"'
 
-# window status style
-#   - built-in variables are:
-#     - #{circled_window_index}
-tmux_conf_theme_window_status_fg='#282828'              # gray
-tmux_conf_theme_window_status_bg='#ebdbb2'              # tan
-tmux_conf_theme_window_status_attr='none'
-tmux_conf_theme_window_status_format='#I #W'
-#tmux_conf_theme_window_status_format='#{circled_window_index} #W'
-#tmux_conf_theme_window_status_format='#I #W#{?window_bell_flag,🔔,}#{?window_zoomed_flag,🔍,}'
+# Copy mode improvements (vi-style)
+setw -g mode-keys vi
+bind -T copy-mode-vi v send-keys -X begin-selection
 
-# window current status style
-#   - built-in variables are:
-#     - #{circled_window_index}
-tmux_conf_theme_window_status_current_fg='#282828'      # black
-tmux_conf_theme_window_status_current_bg='#458588'      # light blue
-tmux_conf_theme_window_status_current_attr='bold'
-tmux_conf_theme_window_status_current_format='#I #W'
-#tmux_conf_theme_window_status_current_format='#{circled_window_index} #W'
-#tmux_conf_theme_window_status_current_format='#I #W#{?window_zoomed_flag,🔍,}'
+# Use reattach-to-user-namespace for clipboard if available, otherwise use pbcopy directly
+if-shell 'command -v reattach-to-user-namespace >/dev/null' \
+    'bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"; bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"' \
+    'bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy"; bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "pbcopy"'
 
-# window activity status style
-tmux_conf_theme_window_status_activity_fg='default'
-tmux_conf_theme_window_status_activity_bg='default'
-tmux_conf_theme_window_status_activity_attr='underscore'
+# -- Session Management --------------------------------------------------------
 
-# window bell status style
-tmux_conf_theme_window_status_bell_fg='#fabd2f'         # yellow
-tmux_conf_theme_window_status_bell_bg='#282828'
-tmux_conf_theme_window_status_bell_attr='blink,bold'
+# Session creation and management
+bind S command-prompt -p "New Session:" "new-session -A -s '%%'"
+bind K confirm-before 'kill-session'
 
-# window last status style
-tmux_conf_theme_window_status_last_fg='#928374'         # light blue
-tmux_conf_theme_window_status_last_bg='default'
-tmux_conf_theme_window_status_last_attr='none'
+# -- Minimal, Clean Appearance -------------------------------------------------
 
-# status left/right sections separators
-tmux_conf_theme_left_separator_main=''
-tmux_conf_theme_left_separator_sub='|'
-tmux_conf_theme_right_separator_main=''
-tmux_conf_theme_right_separator_sub='|'
-tmux_conf_theme_left_separator_main=''  # /!\ you don't need to install powerline
-tmux_conf_theme_left_separator_sub=''   #   you only need fonts patched with
-tmux_conf_theme_right_separator_main='' #   powerline symbols or the standalone
-tmux_conf_theme_right_separator_sub=''  #   PowerlineSymbols.otf font
+# Status bar - simple and unobtrusive
+set -g status-position bottom
+set -g status-justify left
 
-# status left/right content:
-#   - separate main sections with '|'
-#   - separate subsections with ','
-#   - built-in variables are:
-#     - #{battery_bar}
-#     - #{battery_percentage}
-#     - #{battery_status}
-#     - #{battery_vbar}
-#     - #{circled_session_name}
-#     - #{hostname}
-#     - #{hostname_ssh}
-#     - #{pairing}
-#     - #{prefix}
-#     - #{root}
-#     - #{uptime_d}
-#     - #{uptime_h}
-#     - #{uptime_m}
-#     - #{uptime_s}
-#     - #{username}
-#     - #{username_ssh}
-tmux_conf_theme_status_left=' ❐ #S | ↑#{?uptime_d, #{uptime_d}d,}#{?uptime_h, #{uptime_h}h,}#{?uptime_m, #{uptime_m}m,} '
-tmux_conf_theme_status_right=' #{prefix} #{pairing} %I:%M %p | #{username}#{root} | #{hostname} '
+# Use terminal default colors to avoid conflicts
+set -g status-style 'bg=default,fg=default'
+set -g status-left-length 20
+set -g status-right-length 50
 
-# status left style
-tmux_conf_theme_status_left_fg='#282828,#282828,#e4e4e4'  # black, white , white
-tmux_conf_theme_status_left_bg='#8ec07c,#b16286,#00afff'  # green, pink, white blue
-tmux_conf_theme_status_left_attr='bold,none,none'
+# Simple status format
+set -g status-left '#[bold][#S] '
+set -g status-right ' %H:%M %d-%b'
 
-# status right style
-tmux_conf_theme_status_right_fg='#282828,#282828,#282828' # light gray, white, black
-tmux_conf_theme_status_right_bg='#928374,#b8bb26,#fabd2f' # gray, red, lime
-tmux_conf_theme_status_right_attr='none,none,bold'
+# Window status - minimal
+setw -g window-status-format ' #I:#W '
+setw -g window-status-current-format ' #I:#W '
+setw -g window-status-current-style 'bold'
 
-# pairing indicator
-tmux_conf_theme_pairing='👓'          # U+1F453
-tmux_conf_theme_pairing_fg='none'
-tmux_conf_theme_pairing_bg='none'
-tmux_conf_theme_pairing_attr='none'
+# Pane borders - subtle
+set -g pane-border-style 'fg=brightblack'
+set -g pane-active-border-style 'fg=blue'
 
-# prefix indicator
-tmux_conf_theme_prefix='⌨'            # U+2328
-tmux_conf_theme_prefix_fg='none'
-tmux_conf_theme_prefix_bg='none'
-tmux_conf_theme_prefix_attr='none'
+# Message style - clean
+set -g message-style 'bg=default,fg=default,bold'
+set -g message-command-style 'bg=default,fg=default,bold'
 
-# root indicator
-tmux_conf_theme_root='!'
-tmux_conf_theme_root_fg='none'
-tmux_conf_theme_root_bg='none'
-tmux_conf_theme_root_attr='bold,blink'
+# Mode style for copy mode
+set -g mode-style 'bg=blue,fg=black'
 
-# battery bar symbols
-tmux_conf_battery_bar_symbol_full='◼'
-tmux_conf_battery_bar_symbol_empty='◻'
-#tmux_conf_battery_bar_symbol_full='♥'
-#tmux_conf_battery_bar_symbol_empty='·'
-
-# battery bar length (in number of symbols), possible values are:
-#   - auto
-#   - a number, e.g. 5
-tmux_conf_battery_bar_length='auto'
-
-# battery bar palette, possible values are:
-#   - gradient (default)
-#   - heat
-#   - 'colour_full_fg,colour_empty_fg,colour_bg'
-tmux_conf_battery_bar_palette='gradient'
-#tmux_conf_battery_bar_palette='#d70000,#e4e4e4,#000000'   # red, white, black
-
-# battery vbar palette, possible values are:
-#   - gradient (default)
-#   - heat
-#   - 'colour_low,colour_half,colour_full'
-tmux_conf_battery_vbar_palette='gradient'
-#tmux_conf_battery_vbar_palette='#d70000,#ff5f00,#5fff00'  # red, orange, green
-
-# symbols used to indicate whether battery is charging or discharging
-tmux_conf_battery_status_charging='⚡'     # U+26A1
-tmux_conf_battery_status_discharging='🔋'  # U+1F50B
-
-# clock style
-tmux_conf_theme_clock_colour='#00afff'  # light blue
-tmux_conf_theme_clock_style='24'
-
-
-# ------------------------------------------------------------------------------
-# this is the place to override or undo settings
-
-# increase history size
-#set -g history-limit 10000
-
-# force Vi mode
-#   really you should export VISUAL or EDITOR environment variable, see manual
-#set -g status-keys vi
-#set -g mode-keys vi
-
-# move status line to top
-#set -g status-position top
-
-
-set -sg repeat-time 500                   # default repeat timeout
+# No window activity notifications (reduces clutter)
+setw -g monitor-activity off
+set -g visual-activity off

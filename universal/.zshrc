@@ -42,6 +42,7 @@ case `uname` in
         export JAVA_HOME_17_X64=$(/usr/libexec/java_home -v 17)
         export PATH=$PATH:/Applications/Sublime\ Merge.app/Contents/SharedSupport/bin
         export PATH="$PATH:$HOME/.bin"
+        export PATH="$PATH:$HOME/.local/bin"
         # Guilded commands
         source $HOME/GitHub/guilded/guilded/guilded_profile.sh
         cd $HOME
@@ -78,6 +79,11 @@ esac
 
 if [ -f ~/.aliases ]; then
     . ~/.aliases
+fi
+
+# Load tmux sessionizer functions
+if [ -f ~/.tmux-sessionizer ]; then
+    . ~/.tmux-sessionizer
 fi
 
 aliasNvm

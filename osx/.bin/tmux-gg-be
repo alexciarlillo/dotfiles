@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Tmux equivalent of gg-be WezTerm script
+# Creates a 3-pane layout: gdsdev (top), ssdev (middle), terminal (bottom)
+
+# Source the workspace helper
+source ~/.dotfiles/universal/.tmux-workspace-helper
+
+# Create workspace (window or session)
+WINDOW=$(tmux_create_workspace "gg-be")
+SESSION_NAME="gg-be" # Used for attach if outside tmux
+
+# Start with the first pane (will become terminal pane at bottom)
+tmux send-keys -t $WINDOW 'gg' Enter
+
+# Split to create middle pane - 33% from top (this pushes original to bottom)
+tmux split-window -t $WINDOW -v -p 67
+# Now we have: pane 0 (top), pane 1 (bottom 67%)
+
+# Set up the middle pane (ssdev)
+tmux send-keys -t $WINDOW.1 'gg' Enter
+tmux send-keys -t $WINDOW.1 'clear' Enter
+tmux send-keys -t $WINDOW.1 'ssdev ' # Leave command ready
+
+# Split the bottom pane to create the actual bottom pane - 50% of remaining space
+tmux split-window -t $WINDOW.1 -v -p 50
+# Now we have: pane 0 (top gdsdev), pane 1 (middle ssdev), pane 2 (bottom terminal)
+
+# Set up the top pane (gdsdev)
+tmux send-keys -t $WINDOW.2 'gg' Enter
+tmux send-keys -t $WINDOW.2 'clear' Enter
+tmux send-keys -t $WINDOW.2 'gdsdev ' # Leave command ready but not executed
+
+# Focus on the top pane (gdsdev)
+tmux select-pane -t $WINDOW.1
+
+# Attach to session if we're outside tmux
+tmux_attach_if_outside "$SESSION_NAME"
+

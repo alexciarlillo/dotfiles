@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Tmux workspace helper - Common functionality for all workspace scripts
+# Usage: source this file and call tmux_create_workspace "window-name" "session-name"
+# 
+# Behavior:
+# - Outside tmux: Creates new session or attaches to existing one
+# - Inside tmux: Creates NEW WINDOW in current session and switches to it
+
+tmux_create_workspace() {
+    local window_name="$1"
+    local session_name="${2:-$window_name}"
+    
+    # Check if we're already in a tmux session
+    if [ -n "$TMUX" ]; then
+        # We're inside tmux, create a new window in current session and switch to it
+        local current_session=$(tmux display-message -p '#S')
+        tmux new-window -n "$window_name"
+        echo "$current_session:$window_name"  # Return session:window for proper targeting
+    else
+        # We're outside tmux, create new session or attach to existing one
+        if tmux has-session -t "$session_name" 2>/dev/null; then
+            echo "Session $session_name already exists. Attaching..." >&2
+            tmux attach-session -t "$session_name"
+            exit 0
+        fi
+        
+        # Create new session
+        tmux new-session -d -s "$session_name" -n "$window_name"
+        echo "$session_name:$window_name"  # Return session:window for outside tmux
+    fi
+}
+
+tmux_attach_if_outside() {
+    local session_name="$1"
+    
+    # If we created a new session (not inside tmux), attach to it
+    if [ -z "$TMUX" ]; then
+        tmux attach-session -t "$session_name"
+    fi
+}
