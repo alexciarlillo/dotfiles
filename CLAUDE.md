@@ -38,7 +38,7 @@ The Makefile uses GNU Stow with the following pattern:
 ### Terminal & Shell Setup
 - **WezTerm**: `universal/.wezterm.lua` - Modern terminal with custom keybindings
 - **Zsh**: `universal/.zshrc` with aliases in `universal/.aliases`
-- **Tmux**: `universal/.tmux.conf` and `universal/.tmux.conf.user`
+- **Tmux**: `universal/.tmux.conf` and `universal/.config/tmux/tmux.conf.user`
 
 ### Editor Configuration  
 - **Neovim**: Complete LazyVim setup in `universal/.config/nvim/`

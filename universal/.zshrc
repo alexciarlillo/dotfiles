@@ -43,6 +43,7 @@ case `uname` in
         export PATH=$PATH:/Applications/Sublime\ Merge.app/Contents/SharedSupport/bin
         export PATH="$PATH:$HOME/.bin"
         export PATH="$PATH:$HOME/.local/bin"
+        export PATH="$PATH:$HOME/.dotnet/tools"
         # Guilded commands
         source $HOME/GitHub/guilded/guilded/guilded_profile.sh
         cd $HOME

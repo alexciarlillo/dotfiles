@@ -27,6 +27,9 @@ config.window_padding = {
 
 config.window_decorations = "RESIZE"
 
+-- Enable extended key support for tmux/nvim C-i vs Tab distinction
+config.enable_kitty_keyboard = true
+
 -- COMMENTED OUT: Let tmux handle all leader-based commands
 -- config.leader = { key = "Space", mods = "CMD|SHIFT", timeout_milliseconds = 1500 }
 

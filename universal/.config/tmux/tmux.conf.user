@@ -7,6 +7,10 @@
 set-option -sa terminal-overrides ",xterm*:Tc"
 set -g default-terminal "tmux-256color"
 
+# Enable extended key mode for better key distinction (C-i vs Tab, etc.)
+set -s extended-keys always
+set -as terminal-features 'xterm*:extkeys'
+
 # Fast command sequences and focus events
 set -s escape-time 0
 set -s focus-events on
@@ -28,8 +32,6 @@ setw -g aggressive-resize on
 set -g prefix2 C-Space
 bind C-Space send-prefix -2
 
-# Clear screen and scrollback (Leader+C for clear, C = clear)
-bind C send-keys C-l \; run 'sleep 0.05 && tmux clear-history'
 
 # Split panes (like WezTerm Leader+s/v)
 bind s split-window -v -c '#{pane_current_path}'
@@ -114,7 +116,7 @@ if-shell 'command -v reattach-to-user-namespace >/dev/null' \
 
 # Session creation and management
 bind S command-prompt -p "New Session:" "new-session -A -s '%%'"
-bind K confirm-before 'kill-session'
+bind X confirm-before 'kill-session'
 
 # -- Minimal, Clean Appearance -------------------------------------------------
 
