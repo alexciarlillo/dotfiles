@@ -1,0 +1,148 @@
+RBLX_NAME=aciarlillo
+
+# The git commands assume you have a gco alias already set up for git checkout
+
+rnb() {
+    gco -b "$RBLX_NAME/$1"
+}
+
+rpb() {
+  if git show-ref --verify --quiet refs/heads/master; then
+      gco master
+      git pull origin master
+  elif git show-ref --verify --quiet refs/heads/main; then
+      gco main
+      git pull origin main
+  else
+      echo "No master or main branch found."
+      return 1
+  fi
+  
+  rnb "$1"
+}
+
+rpull() {
+  local current_branch=$(git rev-parse --abbrev-ref HEAD)
+  local upstream_primary_branch=""
+
+  if git show-ref --verify --quiet refs/heads/master; then
+      upstream_primary_branch="master"
+  elif git show-ref --verify --quiet refs/heads/main; then
+      upstream_primary_branch="main"
+  else
+      echo "No master or main branch found."
+      return 1
+  fi
+
+  if [ "$current_branch" = "$upstream_primary_branch" ]; then
+      git pull --tags
+  else
+      git pull --tags --rebase origin "$upstream_primary_branch"
+  fi
+}
+
+# Change directory to any roblox repo with completions
+rbx() {
+    local base_dir="$HOME/GitHub/roblox"
+    
+    # If no argument, go to base directory
+    if [ -z "$1" ]; then
+        cd "$base_dir"
+        return
+    fi
+    
+    local target_dir="$base_dir/$1"
+    
+    # Check if directory exists
+    if [ ! -d "$target_dir" ]; then
+        echo "Directory not found: $target_dir"
+        return 1
+    fi
+    
+    # If project subdirectory exists, go there instead
+    # This is useful if you have nested the repo inside another folder to keep
+    # things like AGENTS.md or other coding assistant configs at the top level
+    if [ -d "$target_dir/project" ]; then
+        cd "$target_dir/project"
+    else
+        cd "$target_dir"
+    fi
+}
+
+# Completion function
+_rbx() {
+    local base_dir="$HOME/GitHub/roblox"
+    local -a subdirs
+    
+    # Get all subdirectories (only directories, not files)
+    subdirs=(${base_dir}/*(/N:t))
+    
+    _describe 'roblox repositories' subdirs
+}
+
+# Register the completion
+compdef _rbx rbx
+
+# Roblox WebApps specific locations
+RBLX_WEB_APPS_DIR="$HOME/GitHub/roblox/web-frontend/project/WebApps"
+RBLX_WEB_APPS_JEST_CONFIG="$RBLX_WEB_APPS_DIR/Roblox.App.Configuration/jest/jest-test.config.js"
+
+# This will run jest from the top level WebApps directory, but
+# convert any relative paths to absolute paths based on the current directory 
+# so that tests can be run from any directory.
+rbx-jest() {
+    local current_dir="$(pwd)"
+    local -a abs_args
+
+    # Convert relative paths to absolute
+    for arg in "$@"; do
+        # If it's a flag (starts with -), keep as-is
+        if [[ "$arg" =~ ^- ]]; then
+            abs_args+=("$arg")
+        # If already absolute, keep as-is
+        elif [[ "$arg" = /* ]]; then
+            abs_args+=("$arg")
+        # Otherwise, make it absolute from current directory
+        else
+            abs_args+=("$current_dir/$arg")
+        fi
+    done
+
+    (cd "$RBLX_WEB_APPS_DIR" && npm run jest-test "${abs_args[@]}") 
+}
+
+rbx-jest-dev() {
+    local current_dir="$(pwd)"
+    local -a abs_args
+
+    # Convert relative paths to absolute
+    for arg in "$@"; do
+        # If it's a flag (starts with -), keep as-is
+        if [[ "$arg" =~ ^- ]]; then
+            abs_args+=("$arg")
+        # If already absolute, keep as-is
+        elif [[ "$arg" = /* ]]; then
+            abs_args+=("$arg")
+        # Otherwise, make it absolute from current directory
+        else
+            abs_args+=("$current_dir/$arg")
+        fi
+    done
+
+ # if jest-dev.config.js exists in the current directory, use that instead of the default
+    if [ -f "$current_dir/jest-dev.config.js" ]; then
+        abs_args+=("--config" "$current_dir/jest-dev.config.js")
+    else
+        echo "No jest-dev.config.js found in current directory, using default."
+    fi  
+
+    (cd "$RBLX_WEB_APPS_DIR" && npx jest "${abs_args[@]}") 
+}
+
+# This will run eslint from the WebApps directory with the proper config and use 
+# the correct node version and run the version of eslint installed in WebApps.
+rbx-lint() {
+    nvm use 14
+    npx --prefix "$RBLX_WEB_APPS_DIR" eslint -c "$RBLX_WEB_APPS_DIR/.eslintrc.js" "$@"
+}
+

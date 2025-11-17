@@ -1,12 +1,41 @@
+# general
+alias notes="cd ~/Documents/Alex\'s\ Vault/"
+
 # git
 alias nah="git reset --hard && git clean -df"
 alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias wip="git add . && git commit -m 'wip'"
 alias gs="git status"
-alias vim="nvim"
 
-# rblx
-alias rblx="cd ~/GitHub/roblox/"
-alias rblx-cnp="cd ~/GitHub/roblox/channel-notif-preferences/"
-alias rblx-groups="cd ~/GitHub/roblox/groups/"
+gprb() {
+ # check if origin has master or main branch and set upstream accordingly
+ # then if we are on master or main branch, pull from upstream
+ # else pull and rebase from origin the upstream branch
+  local branch=$(git rev-parse --abbrev-ref HEAD)
+  local upstream_primary_branch=""
+  
+  if git show-ref --verify --quiet refs/heads/master; then
+    upstream_primary_branch="master"
+  elif git show-ref --verify --quiet refs/heads/main; then
+    upstream_primary_branch="main"
+  else
+    echo "No master or main branch found."
+    return 1
+  fi
+
+  if [ "$branch" = "master" ] || [ "$branch" = "main" ]; then
+    git pull --ff-only origin "$upstream_primary_branch"
+  else
+    git pull --rebase origin "$upstream_primary_branch"
+  fi
+}
+
+gstashpull() {
+  git stash push -m "auto-stash-$(date +%s)"
+  git pull --rebase
+  git stash pop
+}
+
+# nvim
+alias vim="nvim"
 

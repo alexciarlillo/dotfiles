@@ -6,7 +6,7 @@ return {
     name = "catppuccin",
     vscode = true,
     opts = {
-      flavour = "frappe",
+      flavour = "mocha",
       integrations = {
         alpha = true,
         cmp = true,

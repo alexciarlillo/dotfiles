@@ -9,7 +9,7 @@
 	keepBackup = false
 
 [core]
-	excludesfile = /home/ciarlill/.gitignore_global
+	excludesfile = /Users/alex/.gitignore_global
 	precomposeUnicode = true
 
 [alias]

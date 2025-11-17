@@ -1,4 +1,4 @@
-DOTFILES="${HOME}/.dotfiles"
+DOTFILES=${HOME}/.dotfiles
 
 
 osx: universal-dots osx-dots

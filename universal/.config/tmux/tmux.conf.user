@@ -90,7 +90,7 @@ bind -T resize Escape switch-client -T root
 # Pane layout management - equalize panes
 bind = select-layout even-horizontal
 bind + select-layout even-vertical
-bind Space select-layout tiled
+bind Space next-layout
 
 # -- Mouse and Clipboard -------------------------------------------------------
 
@@ -122,7 +122,7 @@ bind X confirm-before 'kill-session'
 
 # Status bar - simple and unobtrusive
 set -g status-position top
-set -g status-justify left
+set -g status-justify centre
 
 # Use terminal default colors to avoid conflicts
 set -g status-style 'bg=default,fg=default'
