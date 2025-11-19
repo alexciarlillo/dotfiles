@@ -30,3 +30,9 @@
 	helper = /usr/local/share/gcm-core/git-credential-manager
 [credential "https://dev.azure.com"]
 	useHttpPath = true
+[maintenance]
+	repo = /Users/alex/.config/zsh/znap
+	repo = /Users/alex/.config/zsh/lukechilds/zsh-nvm
+	repo = /Users/alex/.config/zsh/ohmyzsh/ohmyzsh
+	repo = /Users/alex/.config/zsh/zsh-users/zsh-autosuggestions
+	repo = /Users/alex/.config/zsh/zsh-users/zsh-syntax-highlighting

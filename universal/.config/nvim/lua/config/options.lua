@@ -7,6 +7,8 @@ vim.opt.swapfile = false
 vim.opt.clipboard = "unnamedplus"
 vim.opt.autoindent = false
 vim.opt.smartindent = false
+vim.opt.winboder = "rounded"
+
 vim.g.ai_cmp = false
 vim.g.lazyvim_eslint_auto_format = true
 

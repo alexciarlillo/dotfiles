@@ -1,4 +1,4 @@
-focus_window = function()
+local focus_window = function()
   local window = require("window-picker").pick_window()
   vim.api.nvim_set_current_win(window)
 end

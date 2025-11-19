@@ -156,6 +156,11 @@ run = 'move-node-to-workspace x'
 if.app-id = 'com.bambulab.bambu-studio'
 run = 'layout floating'
 
+
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = 'layout floating'
+
 [[on-window-detected]]
 if.app-id = 'com.apple.Preview'
 run = ['layout floating', 'move-node-to-workspace w']
