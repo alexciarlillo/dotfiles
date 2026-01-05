@@ -70,12 +70,11 @@ return {
           -- register the formatter with LazyVim
           LazyVim.format.register(formatter)
 
-          require("lazyvim.util").lsp.on_attach(function(client)
-            if client.name == "eslint" then
-              client.server_capabilities.documentFormattingProvider = true
-            elseif client.name == "tsserver" then
-              client.server_capabilities.documentFormattingProvider = false
-            end
+          Snacks.util.lsp.on({ name = "eslint" }, function(buffer, client)
+            client.server_capabilities.documentFormattingProvider = true
+          end)
+          Snacks.util.lsp.on({ name = "tsserver" }, function(buffer, client)
+            client.server_capabilities.documentFormattingProvider = false
           end)
         end,
       },

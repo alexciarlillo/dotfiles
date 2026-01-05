@@ -1,17 +1,15 @@
 RBLX_NAME=aciarlillo
 
-# The git commands assume you have a gco alias already set up for git checkout
-
 rnb() {
-    gco -b "$RBLX_NAME/$1"
+    git checkout -b "$RBLX_NAME/$1"
 }
 
 rpb() {
   if git show-ref --verify --quiet refs/heads/master; then
-      gco master
+      git checkout master
       git pull origin master
   elif git show-ref --verify --quiet refs/heads/main; then
-      gco main
+      git checkout main
       git pull origin main
   else
       echo "No master or main branch found."
@@ -50,6 +48,7 @@ rbx() {
         cd "$base_dir"
         return
     fi
+ 
     
     local target_dir="$base_dir/$1"
     
@@ -59,11 +58,24 @@ rbx() {
         return 1
     fi
     
-    # If project subdirectory exists, go there instead
-    # This is useful if you have nested the repo inside another folder to keep
-    # things like AGENTS.md or other coding assistant configs at the top level
-    if [ -d "$target_dir/project" ]; then
-        cd "$target_dir/project"
+    # Take a second argument to a git worktree path if provided
+    if [ -n "$2" ]; then
+        worktree_dir="$target_dir/worktrees/$2"
+
+        # Change to the target directory if it exists
+        if [ -d "$worktree_dir" ]; then
+            cd "$worktree_dir"
+            return
+        else
+            echo "Worktree not found: $worktree_dir, defaulting to main repo."
+        fi
+    fi
+
+    # If master subdirectory exists, go there, if main exists go there otherwise go to the root
+    if [ -d "$target_dir/master" ]; then
+        cd "$target_dir/master"
+    elif [ -d "$target_dir/main" ]; then
+        cd "$target_dir/main"
     else
         cd "$target_dir"
     fi

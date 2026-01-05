@@ -6,6 +6,7 @@ alias nah="git reset --hard && git clean -df"
 alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias wip="git add . && git commit -m 'wip'"
 alias gs="git status"
+alias gco="git checkout"
 
 gprb() {
  # check if origin has master or main branch and set upstream accordingly

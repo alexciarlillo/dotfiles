@@ -4,8 +4,12 @@
 
 source ~/.config/zsh/znap/znap.zsh
 # install oh-my-zsh
-znap source ohmyzsh/ohmyzsh 
+znap source ohmyzsh/ohmyzsh
 znap source ohmyzsh/ohmyzsh plugins/git
+
+# Disable shared history across terminals
+unsetopt share_history
+setopt inc_append_history
 
 ZSH_AUTOSUGGEST_STRATEGY=( history )
 znap source zsh-users/zsh-autosuggestions
