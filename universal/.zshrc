@@ -93,6 +93,9 @@ fi
 znap eval starship 'starship init zsh'
 znap prompt
 
+# Custom completions for dco and dcc wrappers
+fpath=(~/.config/zsh/completions $fpath)
+
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
 fpath=(/Users/alex/.docker/completions $fpath)
 # autoload -Uz compinit

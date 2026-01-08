@@ -1,0 +1,75 @@
+#compdef dcc
+
+# Completion function for dcc (docker compose wrapper for core-compose.yml)
+# Provides service name completion from core-compose.yml
+
+_dcc() {
+    local curcontext="$curcontext" state line
+    typeset -A opt_args
+
+    # Get services from core-compose.yml
+    local services
+    if [[ -f core-compose.yml ]]; then
+        # Extract service names using grep and awk (fallback if yq not available)
+        if command -v yq &>/dev/null; then
+            services=(${(f)"$(yq eval '.services | keys | .[]' core-compose.yml 2>/dev/null)"})
+        else
+            # Fallback: parse with grep/awk
+            services=(${(f)"$(grep -E '^\s{2}[a-zA-Z0-9_-]+:' core-compose.yml | awk '{print $1}' | tr -d ':')"})
+        fi
+    fi
+
+    # Docker compose commands that typically take service names
+    local -a service_commands
+    service_commands=(
+        'up:Create and start containers'
+        'down:Stop and remove containers'
+        'start:Start services'
+        'stop:Stop services'
+        'restart:Restart services'
+        'ps:List containers'
+        'logs:View output from containers'
+        'exec:Execute a command in a running container'
+        'run:Run a one-off command'
+        'rm:Remove stopped containers'
+        'pull:Pull service images'
+        'build:Build or rebuild services'
+        'kill:Kill containers'
+        'pause:Pause services'
+        'unpause:Unpause services'
+        'top:Display running processes'
+    )
+
+    # All docker compose commands
+    local -a all_commands
+    all_commands=(
+        $service_commands
+        'config:Validate and view the Compose file'
+        'create:Create services'
+        'events:Receive real time events'
+        'images:List images'
+        'port:Print public port'
+        'version:Show version information'
+    )
+
+    _arguments -C \
+        '1: :->command' \
+        '*: :->args'
+
+    case $state in
+        command)
+            _describe -t commands 'docker compose command' all_commands
+            ;;
+        args)
+            case $line[1] in
+                up|down|start|stop|restart|ps|logs|exec|run|rm|pull|build|kill|pause|unpause|top)
+                    if [[ ${#services[@]} -gt 0 ]]; then
+                        _describe -t services 'docker compose service' services
+                    fi
+                    ;;
+            esac
+            ;;
+    esac
+}
+
+_dcc "$@"
