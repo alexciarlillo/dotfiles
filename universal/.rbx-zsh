@@ -1,22 +1,22 @@
 RBLX_NAME=aciarlillo
 
 rnb() {
-    git checkout -b "$RBLX_NAME/$1"
+    git checkout -b "$RBLX_NAME/$1" "$2"
 }
 
 rpb() {
+  local target_branch=""
   if git show-ref --verify --quiet refs/heads/master; then
-      git checkout master
-      git pull origin master
+      target_branch="master"
   elif git show-ref --verify --quiet refs/heads/main; then
-      git checkout main
-      git pull origin main
+      target_branch="main"
   else
       echo "No master or main branch found."
       return 1
   fi
-  
-  rnb "$1"
+
+  git fetch origin "$target_branch" 
+  rnb "$1" "$target_branch"
 }
 
 rpull() {
