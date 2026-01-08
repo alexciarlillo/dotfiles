@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Wrapper for docker compose that intelligently determines the project name
+# Especially useful when working with git worktrees
+
+set -e
+
+# Get the project name from dco-project script
+PROJECT_NAME=$(dco-project)
+
+# Execute docker compose with the project name and all passed arguments
+exec docker compose -p "$PROJECT_NAME" "$@"

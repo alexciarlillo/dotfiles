@@ -34,7 +34,6 @@ eval "$(pyenv init - zsh)"
 case `uname` in
     Darwin)
         export PATH="$PATH:$HOME/.nvm/current/bin"
-        export PATH="$PATH:$HOME/.bin"
         export PATH="$PATH:$HOME/.local/bin"
         export PATH="$PATH:$HOME/.dotnet/tools"
         export RBX_LOCAL_NUGET_FEED=/Users/${USER}/.rbx/LocalNuGetRepo

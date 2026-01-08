@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Outputs the docker compose project name
+# This is the single source of truth for project name logic
+
+set -e
+
+# Check if we're in a git repository
+if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    # Not in a git repo, use current directory name as fallback
+    basename "$(pwd)"
+    exit 0
+fi
+
+# Try to get the repo name from the origin remote URL
+# This works consistently for both regular repos and worktrees
+origin_url=$(git config --get remote.origin.url 2>/dev/null || echo "")
+
+if [[ -n "$origin_url" ]]; then
+    # Extract repo name from URL (handles both SSH and HTTPS)
+    # git@github.com:user/repo.git -> repo
+    # https://github.com/user/repo.git -> repo
+    repo_name=$(basename "$origin_url" .git)
+    echo "$repo_name"
+else
+    # No origin remote, fallback to top-level directory name
+    top_level=$(git rev-parse --show-toplevel)
+    basename "$top_level"
+fi

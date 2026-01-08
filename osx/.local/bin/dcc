@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Wrapper for docker compose using core-compose.yml
+# Uses dco to get the correct project name
+
+set -e
+
+# Execute dco with core-compose.yml and all passed arguments
+exec dco -f core-compose.yml "$@"
