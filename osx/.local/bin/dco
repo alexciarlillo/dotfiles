@@ -1,12 +1,45 @@
 #!/bin/bash
 
 # Wrapper for docker compose that intelligently determines the project name
+# and automatically sets up port mappings from .ports file
 # Especially useful when working with git worktrees
 
 set -e
 
 # Get the project name from dco-project script
 PROJECT_NAME=$(dco-project)
+
+# Function to load port mappings from .ports file
+load_port_mappings() {
+    local ports_file=".ports"
+
+    # Check if .ports file exists
+    if [[ ! -f "$ports_file" ]]; then
+        return 0
+    fi
+
+    # Check if jq is available
+    if ! command -v jq &> /dev/null; then
+        echo "Warning: jq not found, skipping .ports file processing" >&2
+        return 0
+    fi
+
+    # Parse .ports file and export environment variables
+    while IFS= read -r line; do
+        if [[ -n "$line" ]]; then
+            export "$line"
+        fi
+    done < <(jq -r '
+        to_entries[] |
+        .key as $service |
+        .value |
+        to_entries[] |
+        ($service | gsub("-"; "_") | ascii_upcase) + "_PORT_" + ((.key + 1) | tostring) + "=" + (.value | tostring) + ":"
+    ' "$ports_file")
+}
+
+# Load port mappings from .ports file if it exists
+load_port_mappings
 
 # Execute docker compose with the project name and all passed arguments
 exec docker compose -p "$PROJECT_NAME" "$@"
