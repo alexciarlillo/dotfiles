@@ -1,0 +1,127 @@
+#!/usr/bin/env bash
+# LICENSE: unlicense. This is free and unencumbered software released into the public domain.
+# Sync gitignored files and node_modules between git worktrees
+
+set -euo pipefail
+
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+YELLOW="\033[0;33m"
+CLEAR="\033[0m"
+
+function die {
+    printf '%b%s%b\n' "$RED" "$1" "$CLEAR" >&2
+    exit 1
+}
+
+function warn {
+    printf '%b%s%b\n' "$YELLOW" "$1" "$CLEAR" >&2
+}
+
+function success {
+    printf '%b%s%b\n' "$GREEN" "$1" "$CLEAR"
+}
+
+# Copy using copy-on-write if possible
+function cp_cow {
+    if ! /bin/cp -Rc "$1" "$2" 2>/dev/null; then
+        if ! /bin/cp -R --reflink "$1" "$2" 2>/dev/null; then
+            if ! /bin/cp -R "$1" "$2" 2>/dev/null; then
+                warn "Unable to copy $1 to $2"
+                return 1
+            fi
+        fi
+    fi
+    return 0
+}
+
+function usage {
+    cat <<EOF
+Usage: worktree-sync <source-dir> <dest-dir>
+
+Sync gitignored files and node_modules from source worktree to destination worktree.
+Both directories must exist.
+
+Arguments:
+  source-dir    Source worktree directory (typically main/master)
+  dest-dir      Destination worktree directory
+
+Examples:
+  worktree-sync . ../worktrees/feature-branch
+  worktree-sync ~/project ../worktrees/my-feature
+EOF
+    exit 1
+}
+
+# Validate arguments
+if [ $# -ne 2 ]; then
+    usage
+fi
+
+SOURCE_DIR="$1"
+DEST_DIR="$2"
+
+# Validate source directory exists
+if [ ! -d "$SOURCE_DIR" ]; then
+    die "Source directory does not exist: $SOURCE_DIR"
+fi
+
+# Validate destination directory exists
+if [ ! -d "$DEST_DIR" ]; then
+    die "Destination directory does not exist: $DEST_DIR"
+fi
+
+# Change to source directory
+cd "$SOURCE_DIR" || die "Could not change to source directory: $SOURCE_DIR"
+
+# Validate we're in a git repo
+if ! git rev-parse --git-dir >/dev/null 2>&1; then
+    die "Source directory is not a git repository: $SOURCE_DIR"
+fi
+
+echo "Syncing files from $(pwd) to $DEST_DIR"
+
+# Copy node_modules if it exists
+if [ -d "node_modules" ]; then
+    echo "Copying node_modules..."
+    if cp_cow node_modules "$DEST_DIR/node_modules"; then
+        success "✓ Copied node_modules"
+    fi
+fi
+
+# Get list of gitignored files (excluding directories and node_modules)
+# We use git status --ignored to find ignored files
+echo "Finding gitignored files..."
+copied_count=0
+
+# Use git ls-files to find ignored files
+# --others shows untracked files, --ignored shows ignored files, --exclude-standard uses standard ignore rules
+while IFS= read -r file; do
+    # Skip node_modules (we already copied it as a whole)
+    if [[ "$file" == node_modules/* ]] || [[ "$file" == "node_modules" ]]; then
+        continue
+    fi
+
+    # Skip if it's a directory
+    if [ -d "$file" ]; then
+        continue
+    fi
+
+    # Create parent directory in destination if it doesn't exist
+    dest_file="$DEST_DIR/$file"
+    dest_parent=$(dirname "$dest_file")
+    mkdir -p "$dest_parent"
+
+    # Copy the file
+    if cp_cow "$file" "$dest_file"; then
+        ((copied_count++))
+    fi
+done < <(git ls-files --others --ignored --exclude-standard)
+
+if [ $copied_count -gt 0 ]; then
+    success "✓ Copied $copied_count gitignored file(s)"
+else
+    echo "No additional gitignored files to copy"
+fi
+
+success "Sync complete!"

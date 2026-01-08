@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+# LICENSE: unlicense. This is free and unencumbered software released into the public domain.
+# Create git worktrees with automatic file syncing
+
+set -euo pipefail
+
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+YELLOW="\033[0;33m"
+CLEAR="\033[0m"
+
+function die {
+    printf '%b%s%b\n' "$RED" "$1" "$CLEAR" >&2
+    exit 1
+}
+
+function warn {
+    printf '%b%s%b\n' "$YELLOW" "$1" "$CLEAR" >&2
+}
+
+function success {
+    printf '%b%s%b\n' "$GREEN" "$1" "$CLEAR"
+}
+
+function usage {
+    cat <<EOF
+Usage: worktree <branch-name>
+
+Create a git worktree in ../worktrees/<branch-name> and sync files from main/master.
+
+Requirements:
+  - Must be run from main or master branch
+  - ../worktrees directory must exist
+  - Must be in a git repository
+
+The script will:
+  1. Create a new worktree (or use existing if already created)
+  2. Sync node_modules and gitignored files using worktree-sync
+
+Arguments:
+  branch-name   Name of the branch for the worktree
+
+Examples:
+  worktree feature/new-ui
+  worktree bugfix-123
+EOF
+    exit 1
+}
+
+# Check for help flag or no arguments
+if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    usage
+fi
+
+BRANCH_NAME="$1"
+
+# Validate we're in a git repository
+if ! git rev-parse --git-dir >/dev/null 2>&1; then
+    die "Not in a git repository"
+fi
+
+# Get current branch
+CURRENT_BRANCH=$(git branch --show-current)
+
+# Validate we're on main or master
+if [ "$CURRENT_BRANCH" != "main" ] && [ "$CURRENT_BRANCH" != "master" ]; then
+    die "Must be on main or master branch (currently on: $CURRENT_BRANCH)"
+fi
+
+# Get the root of the git repository
+GIT_ROOT=$(git rev-parse --show-toplevel)
+
+# Validate ../worktrees exists
+WORKTREES_DIR="$(dirname "$GIT_ROOT")/worktrees"
+if [ ! -d "$WORKTREES_DIR" ]; then
+    die "../worktrees directory does not exist. Create it first: mkdir $WORKTREES_DIR"
+fi
+
+# Replace slashes with hyphens for directory name
+WORKTREE_DIR_NAME="${BRANCH_NAME//\//-}"
+WORKTREE_PATH="$WORKTREES_DIR/$WORKTREE_DIR_NAME"
+
+# Check if worktree already exists
+if git worktree list | grep -q "$WORKTREE_PATH"; then
+    warn "Worktree already exists at: $WORKTREE_PATH"
+    echo "Syncing files to existing worktree..."
+else
+    echo "Creating worktree for branch: $BRANCH_NAME"
+
+    # Check if branch exists locally
+    if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
+        # Branch exists locally
+        if ! git worktree add "$WORKTREE_PATH" "$BRANCH_NAME"; then
+            die "Failed to create worktree"
+        fi
+    # Check if branch exists on remote
+    elif git show-ref --verify --quiet "refs/remotes/origin/$BRANCH_NAME"; then
+        # Branch exists on remote
+        if ! git worktree add "$WORKTREE_PATH" "$BRANCH_NAME"; then
+            die "Failed to create worktree"
+        fi
+    else
+        # Create new branch
+        if ! git worktree add -b "$BRANCH_NAME" "$WORKTREE_PATH"; then
+            die "Failed to create worktree with new branch"
+        fi
+    fi
+
+    success "✓ Created worktree at: $WORKTREE_PATH"
+fi
+
+# Find worktree-sync script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+WORKTREE_SYNC="$SCRIPT_DIR/worktree-sync"
+
+if [ ! -f "$WORKTREE_SYNC" ]; then
+    die "worktree-sync script not found at: $WORKTREE_SYNC"
+fi
+
+# Sync files from current directory to worktree
+echo ""
+if ! "$WORKTREE_SYNC" "$GIT_ROOT" "$WORKTREE_PATH"; then
+    die "Failed to sync files to worktree"
+fi
+
+echo ""
+success "Worktree ready at: $WORKTREE_PATH"
+echo ""
+echo "To switch to the worktree:"
+echo "  cd $WORKTREE_PATH"
