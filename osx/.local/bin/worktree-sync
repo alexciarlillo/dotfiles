@@ -95,6 +95,12 @@ while IFS= read -r nm_dir; do
   dest_parent=$(dirname "$dest_nm")
   mkdir -p "$dest_parent"
 
+  # Remove existing node_modules to ensure clean sync
+  if [ -d "$dest_nm" ]; then
+    echo "Removing existing $rel_path..."
+    rm -rf "$dest_nm"
+  fi
+
   echo "Copying $rel_path..."
   if cp_cow "$nm_dir" "$dest_nm"; then
     ((node_modules_count++))

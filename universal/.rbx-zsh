@@ -29,11 +29,12 @@ rpr() {
         DESCRIPTION=$(echo "$BRANCH_DESC" | tr '-' ' ')
     else
         # 3. Fall back to first commit message
-        DESCRIPTION=$(git log origin/main..HEAD --format=%s | tail -1)
+        local main_branch=$(get_main_branch) || return 1
+        DESCRIPTION=$(git log "origin/$main_branch..HEAD" --format=%s | tail -1)
     fi
     
     TITLE="$PREFIX: $DESCRIPTION"
-    gh pr create --title "$TITLE" -T pull_request_template.md -w
+    gh pr create --title "$TITLE" -w
 }
 
 rnb() {

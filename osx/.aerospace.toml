@@ -128,7 +128,7 @@ backspace = ['close-all-windows-but-current', 'mode main']
 
 [[on-window-detected]]
 if.app-id = 'com.spotify.client'
-run = ['move-node-to-workspace a']
+run = ['move-node-to-workspace v']
 
 [[on-window-detected]]
 if.app-id = 'com.tinyspeck.slackmacgap'
@@ -140,6 +140,10 @@ run = 'move-node-to-workspace e'
 
 [[on-window-detected]]
 if.app-id = 'com.flexibits.fantastical2.mac'
+run = 'move-node-to-workspace e'
+
+[[on-window-detected]]
+if.app-id = 'com.rambox'
 run = 'move-node-to-workspace e'
 
 [[on-window-detected]]
@@ -156,4 +160,20 @@ run = 'layout floating'
 
 [[on-window-detected]]
 if.app-id = 'com.apple.Preview'
-run = ['layout floating', 'move-node-to-workspace w']
+run = ['layout floating']
+
+[[on-window-detected]]
+if.app-id = 'org.whispersystems.signal-desktop'
+run = 'move-node-to-workspace q'
+
+[[on-window-detected]]
+if.app-id = 'com.hnc.Discord'
+run = 'move-node-to-workspace q'
+
+[[on-window-detected]]
+if.app-id = 'com.anthropic.claudefordesktop'
+run = 'move-node-to-workspace g'
+
+[[on-window-detected]]
+if.app-id = 'md.obsidian'
+run = 'move-node-to-workspace t'

@@ -26,27 +26,6 @@ else
   exit 0
 fi
 
-if [[ $num_monitors -eq 1 ]]; then
-  # move obsidian to workspace G
-  # window id is the first column of the output
-  obsidian_id=$(aerospace list-windows --all | grep "Obsidian" | awk '{print $1}')
-  aerospace move-node-to-workspace --window-id $obsidian_id g
-
-  # move Claude to workspace G as well
-  claude_id=$(aerospace list-windows --all | grep "Claude" | awk '{print $1}')
-  aerospace move-node-to-workspace --window-id $claude_id g
-else
-
-  # move obsidian to workspace T
-  # window id is the first column of the output
-  obsidian_id=$(aerospace list-windows --all | grep "Obsidian" | awk '{print $1}')
-  aerospace move-node-to-workspace --window-id $obsidian_id t
-
-  # move Claude to workspace T as well
-  claude_id=$(aerospace list-windows --all | grep "Claude" | awk '{print $1}')
-  aerospace move-node-to-workspace --window-id $claude_id t
-fi
-
 # iterate over each monitor
 for i in $(seq 1 $num_monitors); do
   aerospace focus-monitor $i
@@ -67,6 +46,9 @@ for i in $(seq 1 $num_monitors); do
   done
 done
 
+obsidian_id=$(aerospace list-windows --all | grep "Obsidian" | awk '{print $1}')
+signal_id=$(aerospace list-windows --all | grep "Signal" | awk '{print $1}')
+
 # finally set each monitor to default workspace
 if [[ $num_monitors -eq 1 ]]; then
   aerospace focus-monitor 1
@@ -75,11 +57,12 @@ else
   aerospace focus-monitor 1
   aerospace workspace q
 
+  aerospace move --window-id $signal_id down
+
   aerospace focus-monitor 3
   aerospace workspace t
 
   # fixup workspace T
-  aerospace layout h_accordion
   aerospace move --window-id $obsidian_id down
 
   aerospace focus-monitor 2
