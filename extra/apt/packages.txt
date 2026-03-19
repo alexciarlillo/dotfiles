@@ -1,0 +1,11 @@
+build-essential
+git
+curl
+wget
+stow
+ripgrep
+fd-find
+tmux
+neovim
+vim
+zsh

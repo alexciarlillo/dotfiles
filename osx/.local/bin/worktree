@@ -26,11 +26,9 @@ function usage {
     cat <<EOF
 Usage: worktree <branch-name>
 
-Create a git worktree in ../worktrees/<branch-name> and sync files from main/master.
+Create a git worktree inside the repo's top-level directory.
 
 Requirements:
-  - Must be run from main or master branch
-  - ../worktrees directory must exist
   - Must be in a git repository
 
 The script will:
@@ -41,8 +39,8 @@ Arguments:
   branch-name   Name of the branch for the worktree
 
 Examples:
-  worktree feature/new-ui
-  worktree bugfix-123
+  worktree feature/new-ui    # creates <repo>/feature-new-ui/
+  worktree bugfix-123        # creates <repo>/bugfix-123/
 EOF
     exit 1
 }
@@ -59,26 +57,13 @@ if ! git rev-parse --git-dir >/dev/null 2>&1; then
     die "Not in a git repository"
 fi
 
-# Get current branch
-CURRENT_BRANCH=$(git branch --show-current)
-
-# Validate we're on main or master
-if [ "$CURRENT_BRANCH" != "main" ] && [ "$CURRENT_BRANCH" != "master" ]; then
-    die "Must be on main or master branch (currently on: $CURRENT_BRANCH)"
-fi
-
-# Get the root of the git repository
+# Get the root of the current worktree and the repo's top-level directory
 GIT_ROOT=$(git rev-parse --show-toplevel)
-
-# Validate ../worktrees exists
-WORKTREES_DIR="$(dirname "$GIT_ROOT")/worktrees"
-if [ ! -d "$WORKTREES_DIR" ]; then
-    die "../worktrees directory does not exist. Create it first: mkdir $WORKTREES_DIR"
-fi
+PARENT_DIR="$(dirname "$GIT_ROOT")"
 
 # Replace slashes with hyphens for directory name
 WORKTREE_DIR_NAME="${BRANCH_NAME//\//-}"
-WORKTREE_PATH="$WORKTREES_DIR/$WORKTREE_DIR_NAME"
+WORKTREE_PATH="$PARENT_DIR/$WORKTREE_DIR_NAME"
 
 # Check if worktree already exists
 if git worktree list | grep -q "$WORKTREE_PATH"; then

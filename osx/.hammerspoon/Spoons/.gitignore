@@ -1,0 +1,3 @@
+# ignore all files in the Spoons directory except the .gitignore
+*
+!.gitignore

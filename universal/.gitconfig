@@ -2,37 +2,58 @@
 	name = Alex Ciarlillo
 	email = alex.ciarlillo@gmail.com
 
-[push]
-	default = current
-
-[mergetool]
-	keepBackup = false
-
-[core]
-	excludesfile = /Users/alex/.gitignore_global
-	precomposeUnicode = true
-
 [alias]
-    ca = commit --amend --reuse-message=HEAD
-    # adapted from https://github.com/not-an-aardvark/git-delete-squashed
-    delete-squashed = "!f() { local targetBranch=${1:-master} && git checkout -q $targetBranch && git branch --merged | grep -v \"\\*\" | xargs -n 1 git branch -d && git for-each-ref refs/heads/ \"--format=%(refname:short)\" | while read branch; do mergeBase=$(git merge-base $targetBranch $branch) && [[ $(git cherry $targetBranch $(git commit-tree $(git rev-parse $branch^{tree}) -p $mergeBase -m _)) == \"-\"* ]] && git branch -D $branch; done; }; f"
-    echo-squashed = "!f() { local targetBranch=${1:-master} && git checkout -q $targetBranch && git branch --merged | grep -v \"\\*\" | xargs -n 1 git branch -d && git for-each-ref refs/heads/ \"--format=%(refname:short)\" | while read branch; do mergeBase=$(git merge-base $targetBranch $branch) && [[ $(git cherry $targetBranch $(git commit-tree $(git rev-parse $branch^{tree}) -p $mergeBase -m _)) == \"-\"* ]] && echo git branch -D $branch; done; }; f"
+  ca = commit --amend --reuse-message=HEAD
 
 [url "ssh://git@github.com/"]
 	insteadOf = https://github.com/
+  
 [filter "lfs"]
 	process = git-lfs filter-process
 	required = true
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
+
 [credential]
 	helper = 
 	helper = /usr/local/share/gcm-core/git-credential-manager
+
 [credential "https://dev.azure.com"]
 	useHttpPath = true
-[maintenance]
-	repo = /Users/alex/.config/zsh/znap
-	repo = /Users/alex/.config/zsh/lukechilds/zsh-nvm
-	repo = /Users/alex/.config/zsh/ohmyzsh/ohmyzsh
-	repo = /Users/alex/.config/zsh/zsh-users/zsh-autosuggestions
-	repo = /Users/alex/.config/zsh/zsh-users/zsh-syntax-highlighting
+
+# https://blog.gitbutler.com/how-git-core-devs-configure-git
+[column]
+  ui = auto
+[branch]
+        sort = -committerdate
+[tag]
+        sort = version:refname
+[init]
+        defaultBranch = main
+[diff]
+        algorithm = histogram
+        colorMoved = plain
+        mnemonicPrefix = true
+        renames = true
+[push]
+        default = simple
+        autoSetupRemote = true
+        followTags = true
+[fetch]
+        prune = true
+        pruneTags = true
+        all = true
+[help]
+        autocorrect = prompt
+[commit]
+        verbose = true
+[rerere]
+        enabled = true
+        autoupdate = true
+[core]
+	excludesfile = /Users/alex/.gitignore_global
+	precomposeUnicode = true
+[rebase]
+        autoSquash = true
+        autoStash = true
+        updateRefs = true

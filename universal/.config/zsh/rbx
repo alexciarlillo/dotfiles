@@ -1,8 +1,10 @@
 RBLX_NAME=aciarlillo
 local rbx_base_dir="$HOME/GitHub/roblox"
 
+hash -d rbx="$rbx_base_dir"
+
 # Roblox WebApps specific locations
-RBLX_WEB_APPS_DIR="$HOME/GitHub/roblox/web-frontend/project/WebApps"
+RBLX_WEB_APPS_DIR="$rbx_base_dir/web-frontend/project/WebApps"
 RBLX_WEB_APPS_JEST_CONFIG="$RBLX_WEB_APPS_DIR/Roblox.App.Configuration/jest/jest-test.config.js"
 
 rpr() {
@@ -64,13 +66,13 @@ update_main_branch() {
   
   if [ -z "$master_worktree" ]; then
     echo "No worktree found with $target_branch checked out."
-    return 1
+    git fetch origin "$target_branch" && git checkout "$target_branch" && git reset --hard "origin/$target_branch"
+  else
+    local original_dir=$(pwd)
+    cd "$master_worktree" || return 1
+
+    git fetch origin "$target_branch" && git checkout "$target_branch" && git reset --hard "origin/$target_branch" && cd "$original_dir"
   fi
-
-  local original_dir=$(pwd)
-  cd "$master_worktree" || return 1
-
-  git fetch origin "$target_branch" && git checkout "$target_branch" && git reset --hard "origin/$target_branch" && cd "$original_dir"
 }
 
 rpb() {
@@ -118,7 +120,7 @@ rbx() {
     
     # Take a second argument to a git worktree path if provided
     if [ -n "$2" ]; then
-        worktree_dir="$target_dir/worktrees/$2"
+        worktree_dir="$target_dir/$2"
 
         # Change to the target directory if it exists
         if [ -d "$worktree_dir" ]; then

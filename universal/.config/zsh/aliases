@@ -1,0 +1,14 @@
+# general
+hash -d vault="~/Documents/Alex\'s\ Vault/"
+
+# nvim
+alias vim="nvim"
+
+# ls
+alias ls='lsd'
+alias l='lsd -l'
+alias la='lsd -a'
+alias lla='lsd -la'
+alias ll='lsd -la'
+alias lt='lsd --tree'
+

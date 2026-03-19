@@ -47,8 +47,8 @@ Arguments:
   dest-dir      Destination worktree directory
 
 Examples:
-  worktree-sync . ../worktrees/feature-branch
-  worktree-sync ~/project ../worktrees/my-feature
+  worktree-sync . ../feature-branch
+  worktree-sync ~/project ../my-feature
 EOF
   exit 1
 }

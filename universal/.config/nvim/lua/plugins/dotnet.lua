@@ -7,7 +7,7 @@ return {
     config = function()
       require("easy-dotnet").setup({
         lsp = {
-          enabled = false,
+          enabled = true,
         },
         csproj_mappings = true,
         test_runner = {

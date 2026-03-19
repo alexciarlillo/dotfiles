@@ -1,0 +1,90 @@
+
+alias nah="git reset --hard && git clean -df"
+alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+alias wip="git add . && git commit -m 'wip'"
+alias gs="git status"
+alias gco="git checkout"
+
+gprb() {
+ # check if origin has master or main branch and set upstream accordingly
+ # then if we are on master or main branch, pull from upstream
+ # else pull and rebase from origin the upstream branch
+  local branch=$(git rev-parse --abbrev-ref HEAD)
+  local upstream_primary_branch=""
+  
+  if git show-ref --verify --quiet refs/heads/master; then
+    upstream_primary_branch="master"
+  elif git show-ref --verify --quiet refs/heads/main; then
+    upstream_primary_branch="main"
+  else
+    echo "No master or main branch found."
+    return 1
+  fi
+
+  if [ "$branch" = "master" ] || [ "$branch" = "main" ]; then
+    git pull --ff-only origin "$upstream_primary_branch"
+  else
+    git pull --rebase origin "$upstream_primary_branch"
+  fi
+}
+
+gstashpull() {
+  git stash push -m "auto-stash-$(date +%s)"
+  git pull --rebase
+  git stash pop
+}
+
+
+# worktree navigation
+wt() {
+    local target_folder="$1"
+    local mode="${2:-}"
+
+    if [ -z "$target_folder" ]; then
+        echo "Usage: wt <folder> [.]" >&2
+        echo "  wt <folder>    jump to root of worktree" >&2
+        echo "  wt <folder> .  jump to same relative path in worktree" >&2
+        return 1
+    fi
+
+    if ! git rev-parse --git-dir >/dev/null 2>&1; then
+        echo "Not in a git repository" >&2
+        return 1
+    fi
+
+    local target_path
+    target_path=$(git worktree list | awk '{print $1}' | while read -r wt_path; do
+        if [ "$(basename "$wt_path")" = "$target_folder" ]; then
+            echo "$wt_path"
+            break
+        fi
+    done)
+
+    if [ -z "$target_path" ]; then
+        echo "No worktree found with folder name: $target_folder" >&2
+        return 1
+    fi
+
+    local dest="$target_path"
+    if [ "$mode" = "." ]; then
+        local git_root
+        git_root=$(git rev-parse --show-toplevel)
+        local rel_path="${PWD#$git_root}"
+        rel_path="${rel_path#/}"
+        if [ -n "$rel_path" ]; then
+            dest="$target_path/$rel_path"
+            if [ ! -d "$dest" ]; then
+                echo "Directory does not exist in target worktree: $rel_path" >&2
+                return 1
+            fi
+        fi
+    fi
+
+    cd "$dest" || return 1
+}
+
+_wt_completion() {
+    reply=($(git worktree list 2>/dev/null | awk '{print $1}' | while read -r wt_path; do basename "$wt_path"; done))
+}
+compctl -K _wt_completion wt
+
