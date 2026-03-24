@@ -127,18 +127,11 @@ rbx() {
             cd "$worktree_dir"
             return
         else
-            echo "Worktree not found: $worktree_dir, defaulting to main repo."
+            echo "Worktree not found: $worktree_dir, defaulting to top level project directory."
         fi
     fi
 
-    # If master subdirectory exists, go there, if main exists go there otherwise go to the root
-    if [ -d "$target_dir/master" ]; then
-        cd "$target_dir/master"
-    elif [ -d "$target_dir/main" ]; then
-        cd "$target_dir/main"
-    else
-        cd "$target_dir"
-    fi
+    cd "$target_dir"
 }
 
 # Completion function

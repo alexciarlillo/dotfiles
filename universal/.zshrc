@@ -61,18 +61,13 @@ if [ -f ~/.config/zsh/git ]; then
     . ~/.config/zsh/git
 fi
 
+# tmux helpers and functions
+if [ -f ~/.config/zsh/tmux ]; then
+    . ~/.config/zsh/tmux
+fi
+
 znap eval starship 'starship init zsh'
 znap prompt
-
-# Load tmux sessionizer functions
-if [ -f ~/.config/tmux/tmux-sessionizer ]; then
-    . ~/.config/tmux/tmux-sessionizer
-fi
-
-# Load tmux workspace helper functions
-if [ -f ~/.config/tmux/tmux-workspace-helper ]; then
-    . ~/.config/tmux/tmux-workspace-helper
-fi
 
 
 # Custom completions for dco and dcc wrappers

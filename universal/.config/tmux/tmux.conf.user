@@ -46,6 +46,8 @@ bind w confirm-before -p "kill-window #W? (y/n)" kill-window
 # Close pane (like WezTerm Leader+d)  
 bind d confirm-before -p "kill-pane #P? (y/n)" kill-pane
 
+bind x detach
+
 # Pane navigation - Leader + hjkl (vim-style, always reliable)
 bind h select-pane -L
 bind j select-pane -D
