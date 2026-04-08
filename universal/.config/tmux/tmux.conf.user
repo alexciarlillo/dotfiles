@@ -136,8 +136,8 @@ set -g status-left '#[bold][#S] '
 set -g status-right ' %H:%M %d-%b'
 
 # Window status - minimal
-setw -g window-status-format ' #I:#W '
-setw -g window-status-current-format ' #I:#W '
+setw -g window-status-format ' #I:#{?window_zoomed_flag,[#W],#W} '
+setw -g window-status-current-format ' #I:#{?window_zoomed_flag,[#W],#W} '
 setw -g window-status-current-style 'bold'
 
 # Pane borders - subtle

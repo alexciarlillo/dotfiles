@@ -61,30 +61,52 @@ update_main_branch() {
 
   echo "Updating $target_branch to match origin/$target_branch..."
 
+  git fetch origin "$target_branch" || return 1
+
   # Find the worktree where master/main is checked out
   local master_worktree=$(git worktree list --porcelain | grep "branch refs/heads/$target_branch" -B 2 | head -1 | cut -d' ' -f2)
-  
-  if [ -z "$master_worktree" ]; then
-    echo "No worktree found with $target_branch checked out."
-    git fetch origin "$target_branch" && git checkout "$target_branch" && git reset --hard "origin/$target_branch"
-  else
-    local original_dir=$(pwd)
-    cd "$master_worktree" || return 1
 
-    git fetch origin "$target_branch" && git checkout "$target_branch" && git reset --hard "origin/$target_branch" && cd "$original_dir"
+  if [ -n "$master_worktree" ]; then
+    git -C "$master_worktree" reset --hard "origin/$target_branch"
+  else
+    git branch -f "$target_branch" "origin/$target_branch" 2>/dev/null || {
+      echo "No worktree found with $target_branch checked out and unable to force-update branch."
+      return 1
+    }
   fi
 }
 
 rpb() {
-  local target_branch=""
+  if [ -z "$1" ]; then
+    echo "Usage: rpb <branch-suffix>"
+    echo "Creates a new worktree with branch $RBLX_NAME/<branch-suffix>"
+    return 1
+  fi
 
+  if [ ! -d ".bare" ]; then
+    echo "Error: must be run from the root of a bare worktree repo (no .bare directory found)."
+    echo "See clone-for-wt for setting up a repo in this format."
+    return 1
+  fi
+
+  local target_branch=""
   target_branch=$(get_main_branch) || return 1
 
-  # Update master worktree to exactly match origin
   update_main_branch || return 1
-  
-  # Create new branch from updated master
-  rnb "$1" "$target_branch"
+
+  local branch_name="$RBLX_NAME/$1"
+  local worktree_dir_name="${1//\//-}"
+  local worktree_path="$(pwd)/$worktree_dir_name"
+
+  if [ -d "$worktree_path" ]; then
+    echo "Worktree directory already exists: $worktree_path"
+    return 1
+  fi
+
+  git worktree add -b "$branch_name" "$worktree_path" "$target_branch" || return 1
+
+  echo "Worktree created at: $worktree_path (branch: $branch_name)"
+  cd "$worktree_path"
 }
 
 rpull() {

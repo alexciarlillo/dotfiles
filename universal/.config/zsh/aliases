@@ -1,5 +1,6 @@
 # general
-hash -d vault="~/Documents/Alex\'s\ Vault/"
+hash -d vault="$HOME/Documents/Alex's Vault/"
+hash -d agent="$HOME/GitHub/roblox/.agent-meta/"
 
 # nvim
 alias vim="nvim"

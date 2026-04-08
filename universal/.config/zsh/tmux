@@ -1,10 +1,11 @@
-# Start the dual-session setup
+# Start the session setup
 twork-init() {
-  tmux new-session -d -s edit
-  tmux new-session -d -s shell
+  tmux new-session -d -s edit # Edit session (neovim, etc.)
+  tmux new-session -d -s agent # agent session (agents)
+  tmux new-session -d -s adhoc # Adhoc session (misc tasks)
   # Set the sync hook
   tmux set-hook -t edit after-select-window \
-    'run-shell "tmux select-window -t shell:#{window_name} 2>/dev/null"'
+    'run-shell "tmux select-window -t agent:#{window_name} 2>/dev/null"'
 }
 
 # Create a new project (paired windows in both sessions)
@@ -12,8 +13,8 @@ twork-new() {
   local dir="${2:-$(pwd)}"
   local name="${1:-$(basename "$dir")}"
   tmux new-window -t edit -n "$name" -c "$dir"
-  tmux new-window -t shell -n "$name" -c "$dir"
-  tmux split-window -t shell:"$name" -v -c "$dir"
+  tmux new-window -t agent -n "$name" -c "$dir"
+  # tmux split-window -t shell:"$name" -v -c "$dir"
   # Switch edit to the new project (shell follows via hook)
   tmux select-window -t edit:"$name"
 }
@@ -22,10 +23,25 @@ twork-new() {
 twork-close() {
   local name="${1:-$(tmux display-message -t edit -p '#{window_name}')}"
   tmux kill-window -t "edit:$name" 2>/dev/null
-  tmux kill-window -t "shell:$name" 2>/dev/null
+  tmux kill-window -t "agent:$name" 2>/dev/null
 }
 
 # List active projects
 twork-ls() {
   tmux list-windows -t edit -F '#{window_name}'
+}
+
+# Attach to the edit session
+twork-edit() {
+  tmux attach-session -t edit
+}
+
+# Attach to the shell session
+twork-shell() {
+  tmux attach-session -t shell
+} 
+
+# Attach to the adhoc session
+twork-adhoc() {
+  tmux attach-session -t adhoc
 }

@@ -4,6 +4,7 @@
 
 [alias]
   ca = commit --amend --reuse-message=HEAD
+	clone-wt = "!sh $HOME/.local/bin/clone-for-wt"
 
 [url "ssh://git@github.com/"]
 	insteadOf = https://github.com/
@@ -53,6 +54,8 @@
 [core]
 	excludesfile = /Users/alex/.gitignore_global
 	precomposeUnicode = true
+	untrackedCache = true
+	fsmonitor = true
 [rebase]
         autoSquash = true
         autoStash = true
