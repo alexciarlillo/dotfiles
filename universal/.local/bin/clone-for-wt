@@ -46,4 +46,5 @@ git fetch origin
 
 primary_branch=$(get_main_branch)
 
+git branch -d "$primary_branch"
 git worktree add "$primary_branch" "$primary_branch"
