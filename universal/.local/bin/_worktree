@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+YELLOW="\033[0;33m"
+CLEAR="\033[0m"
+
+die() {
+  printf '%b%s%b\n' "$RED" "$1" "$CLEAR" >&2
+  exit 1
+}
+
+warn() {
+  printf '%b%s%b\n' "$YELLOW" "$1" "$CLEAR" >&2
+}
+
+info() {
+  printf '%s\n' "$1" >&2
+}
+
+success() {
+  printf '%b%s%b\n' "$GREEN" "$1" "$CLEAR" >&2
+}
+
+get_primary_branch() {
+  if git show-ref --verify --quiet refs/remotes/origin/master; then
+    echo "master"
+  elif git show-ref --verify --quiet refs/remotes/origin/main; then
+    echo "main"
+  else
+    die "Could not determine primary branch (no origin/master or origin/main)"
+  fi
+}
+
+usage() {
+  cat <<EOF
+Usage: worktree <branch-name>
+
+Add a git worktree for the given branch in a bare repo setup (created by clone-for-wt).
+
+Must be run from the repo root directory containing .bare/ and .git file.
+
+The script will:
+  1. Fetch the latest refs from origin
+  2. If the branch exists on origin, check it out as a tracking worktree
+  3. If it doesn't exist, create a new local branch based on the primary branch
+
+Examples:
+  worktree feature/new-ui    # creates ./feature-new-ui/
+  worktree bugfix-123        # creates ./bugfix-123/
+EOF
+  exit 1
+}
+
+if [ $# -eq 0 ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  usage
+fi
+
+BRANCH_NAME="$1"
+
+# Validate we're in a bare repo worktree root (has .bare dir and .git file)
+if [ ! -d ".bare" ] || [ ! -f ".git" ]; then
+  die "Not in a bare repo worktree root (expected .bare/ directory and .git file). Run this from the repo root created by clone-for-wt."
+fi
+
+WORKTREE_DIR="${BRANCH_NAME//\//-}"
+
+if [ -d "$WORKTREE_DIR" ]; then
+  warn "Worktree directory already exists: $WORKTREE_DIR"
+  echo "$WORKTREE_DIR"
+  exit 0
+fi
+
+info "Fetching from origin..."
+git fetch origin >&2
+
+if git show-ref --verify --quiet "refs/remotes/origin/$BRANCH_NAME"; then
+  info "Branch '$BRANCH_NAME' found on origin, checking out..."
+  git worktree add "$WORKTREE_DIR" "$BRANCH_NAME" >&2
+else
+  PRIMARY=$(get_primary_branch)
+  info "Branch '$BRANCH_NAME' not found on origin, creating from $PRIMARY..."
+  git worktree add -b "$BRANCH_NAME" "$WORKTREE_DIR" "origin/$PRIMARY" >&2
+fi
+
+success "Worktree ready: $WORKTREE_DIR"
+echo "$WORKTREE_DIR"
