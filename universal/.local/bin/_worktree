@@ -35,7 +35,9 @@ get_primary_branch() {
 
 usage() {
   cat <<EOF
-Usage: worktree <branch-name>
+This is meant to be called from the 'worktree' wrapper script, not directly.
+
+Usage: _worktree <branch-name>
 
 Add a git worktree for the given branch in a bare repo setup (created by clone-for-wt).
 
@@ -47,8 +49,8 @@ The script will:
   3. If it doesn't exist, create a new local branch based on the primary branch
 
 Examples:
-  worktree feature/new-ui    # creates ./feature-new-ui/
-  worktree bugfix-123        # creates ./bugfix-123/
+  _worktree feature/new-ui    # creates ./feature-new-ui/
+  _worktree bugfix-123        # creates ./bugfix-123/
 EOF
   exit 1
 }
