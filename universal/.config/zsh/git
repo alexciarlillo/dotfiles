@@ -34,4 +34,7 @@ gstashpull() {
   git stash pop
 }
 
-
+worktree() {
+  local dir
+  dir=$(_worktree "$@") && cd "$dir"
+}
