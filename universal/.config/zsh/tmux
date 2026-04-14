@@ -9,9 +9,20 @@ twork-init() {
 }
 
 # Create a new project (paired windows in both sessions)
+# Usage: twork-new [<path>]  or  twork-new <name> <path>
 twork-new() {
-  local dir="${2:-$(pwd)}"
-  local name="${1:-$(basename "$dir")}"
+  local name dir
+  if [[ -n "$2" ]]; then
+    name="$1"
+    dir="$2"
+  elif [[ -n "$1" ]]; then
+    dir="$1"
+    name="$(basename "$dir")"
+  else
+    dir="$(pwd)"
+    name="$(basename "$dir")"
+  fi
+  dir="${dir:a}"
   tmux new-window -t edit -n "$name" -c "$dir"
   tmux new-window -t agent -n "$name" -c "$dir"
   # tmux split-window -t shell:"$name" -v -c "$dir"

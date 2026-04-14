@@ -83,7 +83,9 @@ if git show-ref --verify --quiet "refs/remotes/origin/$BRANCH_NAME"; then
 else
   PRIMARY=$(get_primary_branch)
   info "Branch '$BRANCH_NAME' not found on origin, creating from $PRIMARY..."
-  git worktree add -b "$BRANCH_NAME" "$WORKTREE_DIR" "origin/$PRIMARY" >&2
+  git worktree add --no-track -b "$BRANCH_NAME" "$WORKTREE_DIR" "origin/$PRIMARY" >&2
+  git -C "$WORKTREE_DIR" config "branch.$BRANCH_NAME.remote" origin >&2
+  git -C "$WORKTREE_DIR" config "branch.$BRANCH_NAME.merge" "refs/heads/$BRANCH_NAME" >&2
 fi
 
 success "Worktree ready: $WORKTREE_DIR"
