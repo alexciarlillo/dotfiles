@@ -38,3 +38,7 @@ worktree() {
   local dir
   dir=$(_worktree "$@") && cd "$dir"
 }
+
+worktree-rm() {
+  _worktree-rm "$@"
+}
