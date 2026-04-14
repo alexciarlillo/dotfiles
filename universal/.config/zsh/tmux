@@ -32,9 +32,18 @@ twork-new() {
 
 # Close a project (both windows)
 twork-close() {
-  local name="${1:-$(tmux display-message -t edit -p '#{window_name}')}"
-  tmux kill-window -t "edit:$name" 2>/dev/null
-  tmux kill-window -t "agent:$name" 2>/dev/null
+  local current_session
+  current_session="$(tmux display-message -p '#{session_name}')"
+  local name="${1:-$(tmux display-message -p '#{window_name}')}"
+  # Kill the other session's window first, then our own, so the shell
+  # survives long enough to issue both commands.
+  if [[ "$current_session" == "agent" ]]; then
+    tmux kill-window -t "edit:$name" 2>/dev/null
+    tmux kill-window -t "agent:$name" 2>/dev/null
+  else
+    tmux kill-window -t "agent:$name" 2>/dev/null
+    tmux kill-window -t "edit:$name" 2>/dev/null
+  fi
 }
 
 # List active projects
