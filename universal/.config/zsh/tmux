@@ -65,3 +65,32 @@ twork-shell() {
 twork-adhoc() {
   tmux attach-session -t adhoc
 }
+
+# Sync the current pane's working directory to the matching window in the
+# paired session (edit <-> agent). Optionally pass a window name; defaults
+# to the current window.
+twork-sync() {
+  local current_session
+  current_session="$(tmux display-message -p '#{session_name}')"
+
+  local target_session
+  if [[ "$current_session" == "edit" ]]; then
+    target_session="agent"
+  elif [[ "$current_session" == "agent" ]]; then
+    target_session="edit"
+  else
+    echo "twork-sync: must be run from the edit or agent session" >&2
+    return 1
+  fi
+
+  local win="${1:-$(tmux display-message -p '#{window_name}')}"
+  local dir
+  dir="$(tmux display-message -p '#{pane_current_path}')"
+
+  if ! tmux select-window -t "$target_session:$win" 2>/dev/null; then
+    echo "twork-sync: no window '$win' in session '$target_session'" >&2
+    return 1
+  fi
+
+  tmux send-keys -t "$target_session:$win" "cd ${(q)dir}" Enter
+}
