@@ -39,10 +39,6 @@ rpr() {
     gh pr create --title "$TITLE" -w
 }
 
-rnb() {
-    git checkout -b "$RBLX_NAME/$1" "$2"
-}
-
 get_main_branch() {
   if git show-ref --verify --quiet refs/heads/master; then
       echo "master"
@@ -74,39 +70,6 @@ update_main_branch() {
       return 1
     }
   fi
-}
-
-rpb() {
-  if [ -z "$1" ]; then
-    echo "Usage: rpb <branch-suffix>"
-    echo "Creates a new worktree with branch $RBLX_NAME/<branch-suffix>"
-    return 1
-  fi
-
-  if [ ! -d ".bare" ]; then
-    echo "Error: must be run from the root of a bare worktree repo (no .bare directory found)."
-    echo "See clone-for-wt for setting up a repo in this format."
-    return 1
-  fi
-
-  local target_branch=""
-  target_branch=$(get_main_branch) || return 1
-
-  update_main_branch || return 1
-
-  local branch_name="$RBLX_NAME/$1"
-  local worktree_dir_name="${1//\//-}"
-  local worktree_path="$(pwd)/$worktree_dir_name"
-
-  if [ -d "$worktree_path" ]; then
-    echo "Worktree directory already exists: $worktree_path"
-    return 1
-  fi
-
-  git worktree add -b "$branch_name" "$worktree_path" "$target_branch" || return 1
-
-  echo "Worktree created at: $worktree_path (branch: $branch_name)"
-  cd "$worktree_path"
 }
 
 rpull() {

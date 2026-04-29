@@ -71,6 +71,17 @@ fi
 
 WORKTREE_DIR="${INPUT//\//-}"
 
+# If directory not found and RBX_GITHUB_USER is set, try stripping the user prefix
+if [ ! -d "$WORKTREE_DIR" ] && [ -n "${RBX_GITHUB_USER:-}" ]; then
+  STRIPPED="${INPUT#"$RBX_GITHUB_USER/"}"
+  if [ "$STRIPPED" != "$INPUT" ]; then
+    CANDIDATE="${STRIPPED//\//-}"
+    if [ -d "$CANDIDATE" ]; then
+      WORKTREE_DIR="$CANDIDATE"
+    fi
+  fi
+fi
+
 if [ ! -d "$WORKTREE_DIR" ]; then
   die "Worktree directory not found: $WORKTREE_DIR"
 fi

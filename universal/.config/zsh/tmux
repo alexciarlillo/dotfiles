@@ -3,9 +3,9 @@ twork-init() {
   tmux new-session -d -s edit # Edit session (neovim, etc.)
   tmux new-session -d -s agent # agent session (agents)
   tmux new-session -d -s adhoc # Adhoc session (misc tasks)
-  # Set the sync hook
+  # Set the sync hooks — switching windows in edit also switches in agent & adhoc
   tmux set-hook -t edit after-select-window \
-    'run-shell "tmux select-window -t agent:#{window_name} 2>/dev/null"'
+    'run-shell "tmux select-window -t agent:#{window_name} 2>/dev/null; tmux select-window -t adhoc:#{window_name} 2>/dev/null"'
 }
 
 # Create a new project (paired windows in both sessions)
@@ -25,8 +25,8 @@ twork-new() {
   dir="${dir:a}"
   tmux new-window -t edit -n "$name" -c "$dir"
   tmux new-window -t agent -n "$name" -c "$dir"
-  # tmux split-window -t shell:"$name" -v -c "$dir"
-  # Switch edit to the new project (shell follows via hook)
+  tmux new-window -t adhoc -n "$name" -c "$dir"
+  # Switch edit to the new project (agent & adhoc follow via hook)
   tmux select-window -t edit:"$name"
 }
 
@@ -37,12 +37,18 @@ twork-close() {
   local name="${1:-$(tmux display-message -p '#{window_name}')}"
   # Kill the other session's window first, then our own, so the shell
   # survives long enough to issue both commands.
-  if [[ "$current_session" == "agent" ]]; then
+  if [[ "$current_session" == "edit" ]]; then
+    tmux kill-window -t "agent:$name" 2>/dev/null
+    tmux kill-window -t "adhoc:$name" 2>/dev/null
     tmux kill-window -t "edit:$name" 2>/dev/null
+  elif [[ "$current_session" == "agent" ]]; then
+    tmux kill-window -t "edit:$name" 2>/dev/null
+    tmux kill-window -t "adhoc:$name" 2>/dev/null
     tmux kill-window -t "agent:$name" 2>/dev/null
   else
-    tmux kill-window -t "agent:$name" 2>/dev/null
     tmux kill-window -t "edit:$name" 2>/dev/null
+    tmux kill-window -t "agent:$name" 2>/dev/null
+    tmux kill-window -t "adhoc:$name" 2>/dev/null
   fi
 }
 
@@ -56,9 +62,9 @@ twork-edit() {
   tmux attach-session -t edit
 }
 
-# Attach to the shell session
-twork-shell() {
-  tmux attach-session -t shell
+# Attach to the agent session
+twork-agent() {
+  tmux attach-session -t agent
 } 
 
 # Attach to the adhoc session
@@ -73,13 +79,15 @@ twork-sync() {
   local current_session
   current_session="$(tmux display-message -p '#{session_name}')"
 
-  local target_session
+  local -a target_sessions
   if [[ "$current_session" == "edit" ]]; then
-    target_session="agent"
+    target_sessions=(agent adhoc)
   elif [[ "$current_session" == "agent" ]]; then
-    target_session="edit"
+    target_sessions=(edit adhoc)
+  elif [[ "$current_session" == "adhoc" ]]; then
+    target_sessions=(edit agent)
   else
-    echo "twork-sync: must be run from the edit or agent session" >&2
+    echo "twork-sync: must be run from the edit, agent, or adhoc session" >&2
     return 1
   fi
 
@@ -87,10 +95,10 @@ twork-sync() {
   local dir
   dir="$(tmux display-message -p '#{pane_current_path}')"
 
-  if ! tmux select-window -t "$target_session:$win" 2>/dev/null; then
-    echo "twork-sync: no window '$win' in session '$target_session'" >&2
-    return 1
-  fi
-
-  tmux send-keys -t "$target_session:$win" "cd ${(q)dir}" Enter
+  local ts
+  for ts in "${target_sessions[@]}"; do
+    if tmux select-window -t "$ts:$win" 2>/dev/null; then
+      tmux send-keys -t "$ts:$win" "cd ${(q)dir}" Enter
+    fi
+  done
 }

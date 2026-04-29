@@ -1,6 +1,6 @@
 [user]
 	name = Alex Ciarlillo
-	email = alex.ciarlillo@gmail.com
+	email = aciarlillo@roblox.com
 
 [alias]
   ca = commit --amend --reuse-message=HEAD

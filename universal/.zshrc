@@ -38,6 +38,7 @@ case `uname` in
         # Roblox utilities 
         source $HOME/.config/zsh/rbx
         export RBX_LOCAL_NUGET_FEED=/Users/${USER}/.rbx/LocalNuGetRepo
+        export RBX_GITHUB_USER=aciarlillo
         # nvm
         [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"
     ;;

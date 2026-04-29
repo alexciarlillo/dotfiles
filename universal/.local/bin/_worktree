@@ -66,6 +66,10 @@ if [ ! -d ".bare" ] || [ ! -f ".git" ]; then
   die "Not in a bare repo worktree root (expected .bare/ directory and .git file). Run this from the repo root created by clone-for-wt."
 fi
 
+is_roblox_repo() {
+  git remote get-url origin 2>/dev/null | grep -qiE "roblox|rbx"
+}
+
 WORKTREE_DIR="${BRANCH_NAME//\//-}"
 
 if [ -d "$WORKTREE_DIR" ]; then
@@ -77,10 +81,27 @@ fi
 info "Fetching from origin..."
 git fetch origin >&2
 
+# For Roblox repos, also check for the prefixed branch on origin
+PREFIXED_BRANCH=""
+if [ -n "${RBX_GITHUB_USER:-}" ] && is_roblox_repo && [[ "$BRANCH_NAME" != "$RBX_GITHUB_USER/"* ]]; then
+  PREFIXED_BRANCH="$RBX_GITHUB_USER/$BRANCH_NAME"
+fi
+
 if git show-ref --verify --quiet "refs/remotes/origin/$BRANCH_NAME"; then
   info "Branch '$BRANCH_NAME' found on origin, checking out..."
   git worktree add "$WORKTREE_DIR" "$BRANCH_NAME" >&2
+elif [ -n "$PREFIXED_BRANCH" ] && git show-ref --verify --quiet "refs/remotes/origin/$PREFIXED_BRANCH"; then
+  info "Branch '$PREFIXED_BRANCH' found on origin, checking out..."
+  git worktree add "$WORKTREE_DIR" "$PREFIXED_BRANCH" >&2
 else
+  # For new branches in Roblox repos, prepend RBX_GITHUB_USER to the branch name
+  if [ -n "${RBX_GITHUB_USER:-}" ] && is_roblox_repo; then
+    if [[ "$BRANCH_NAME" != "$RBX_GITHUB_USER/"* ]]; then
+      BRANCH_NAME="$RBX_GITHUB_USER/$BRANCH_NAME"
+      info "Roblox repo detected, prefixing branch: $BRANCH_NAME"
+    fi
+  fi
+
   PRIMARY=$(get_primary_branch)
   info "Branch '$BRANCH_NAME' not found on origin, creating from $PRIMARY..."
   git worktree add --no-track -b "$BRANCH_NAME" "$WORKTREE_DIR" "origin/$PRIMARY" >&2
