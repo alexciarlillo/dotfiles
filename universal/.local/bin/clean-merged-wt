@@ -139,7 +139,7 @@ collect_hubs() {
 
 branch_upstream_track() {
   local branch="$1"
-  git for-each-ref --format='%(upstream:track)' -- "refs/heads/$branch" | head -n1
+  git for-each-ref --format='%(upstream:track,nobracket)' -- "refs/heads/$branch" | head -n1
 }
 
 branch_is_merged_into_origin_primary() {
