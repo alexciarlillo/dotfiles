@@ -5,6 +5,7 @@
 [alias]
   ca = commit --amend --reuse-message=HEAD
 	clone-wt = "!sh $HOME/.local/bin/clone-for-wt"
+	clean-wt = "!sh $HOME/.local/bin/clean-merged-wt"
 
 [url "ssh://git@github.com/"]
 	insteadOf = https://github.com/

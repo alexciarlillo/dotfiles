@@ -1,9 +1,11 @@
 # Start the session setup
 twork-init() {
-  tmux new-session -d -s edit # Edit session (neovim, etc.)
-  tmux new-session -d -s agent # agent session (agents)
-  tmux new-session -d -s adhoc # Adhoc session (misc tasks)
-  # Set the sync hooks — switching windows in edit also switches in agent & adhoc
+  tmux new-session -d -s edit -n home # Edit session (neovim, etc.)
+  tmux new-session -d -s agent -n home # agent session (agents)
+  tmux new-session -d -s adhoc -n home # Adhoc session (misc tasks)
+  # Switching windows in edit also switches in agent & adhoc.
+  # run-shell expands #{window_name} before the shell runs; select-window -t
+  # does not expand formats in its target. Missing windows are silently ignored.
   tmux set-hook -t edit after-select-window \
     'run-shell "tmux select-window -t agent:#{window_name} 2>/dev/null; tmux select-window -t adhoc:#{window_name} 2>/dev/null"'
 }
@@ -23,11 +25,9 @@ twork-new() {
     name="$(basename "$dir")"
   fi
   dir="${dir:a}"
-  tmux new-window -t edit -n "$name" -c "$dir"
-  tmux new-window -t agent -n "$name" -c "$dir"
   tmux new-window -t adhoc -n "$name" -c "$dir"
-  # Switch edit to the new project (agent & adhoc follow via hook)
-  tmux select-window -t edit:"$name"
+  tmux new-window -t agent -n "$name" -c "$dir"
+  tmux new-window -t edit -n "$name" -c "$dir"
 }
 
 # Close a project (both windows)

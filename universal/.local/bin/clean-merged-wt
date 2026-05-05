@@ -1,0 +1,307 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+YELLOW="\033[0;33m"
+CLEAR="\033[0m"
+
+die() {
+  printf '%b%s%b\n' "$RED" "$1" "$CLEAR" >&2
+  exit 1
+}
+
+warn() {
+  printf '%b%s%b\n' "$YELLOW" "$1" "$CLEAR" >&2
+}
+
+info() {
+  printf '%s\n' "$1" >&2
+}
+
+success() {
+  printf '%b%s%b\n' "$GREEN" "$1" "$CLEAR" >&2
+}
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+usage() {
+  cat <<EOF
+Remove local worktrees whose branches look "done" — either merged into origin's primary branch or
+whose remote tracking branch disappeared after pruning (squash merges + deleting the PR branch).
+
+Intended for the bare-hub layout from clone-for-wt (directory with .bare/ and sibling worktrees).
+
+You can run this from:
+
+  • A hub directory (contains .bare/ and .git pointing at it): only that hub is cleaned; or
+
+  • A parent directory holding one hub per subdirectory (each child has .bare/ + .git): every hub is cleaned.
+
+Removal criteria (any one is enough, after fetching unless -q):
+
+  • The branch tip is reachable from origin/<main>|origin/<master>, i.e. "git branch --merged origin/<primary>";
+
+  • Or Git reports the branch's upstream as "gone": the remote-tracking ref was dropped by
+    "fetch --prune" because origin no longer has that branch (usual when you squash-merge and
+    delete the branch).
+
+Branches with no upstream and not merged locally are skipped (typically never-pushed locals).
+
+Limitation: if someone deletes the remote branch without merging, upstream is still "gone" and this
+script would remove that worktree too — use dry-run when unsure.
+
+Options:
+  -n, --dry-run   Show what would be removed; make no changes
+  -f, --force     Force-remove worktrees and delete branches even with local changes / unmerged reflog-wise
+                  (same spirit as _worktree-rm -f)
+  -q, --no-fetch  Skip "git fetch origin --prune" before comparing (use stale refs; may miss freshly deleted remotes)
+
+If no directory argument is given, the current directory is used as the hub or parent-of-hubs.
+
+Examples:
+  _worktree-cleanup-merged ~/src              # scan ~/src/repo-a, ~/src/repo-b, ...
+  _worktree-cleanup-merged -n ~/src/my-repo   # dry-run inside or pointing at one hub
+
+EOF
+  exit "${1:-0}"
+}
+
+LONG_FETCH=1
+DRY_RUN=0
+FORCE=0
+POSITIONAL=()
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -n | --dry-run) DRY_RUN=1 ;;
+    -f | --force) FORCE=1 ;;
+    -q | --no-fetch) LONG_FETCH=0 ;;
+    -h | --help) usage 0 ;;
+    --)
+      shift
+      POSITIONAL+=("$@")
+      break
+      ;;
+    -*)
+      die "Unknown option: $1 (try -h)"
+      ;;
+    *)
+      POSITIONAL+=("$1")
+      ;;
+  esac
+  shift
+done
+
+if ((${#POSITIONAL[@]} > 0)); then
+  set -- "${POSITIONAL[@]}"
+else
+  set --
+fi
+
+TARGET_ROOT="${1:-.}"
+TARGET_ROOT="$(cd "$TARGET_ROOT" && pwd -P)"
+
+is_hub_dir() {
+  [ -d "$1/.bare" ] && [ -f "$1/.git" ]
+}
+
+get_primary_branch() {
+  if git show-ref --verify --quiet refs/remotes/origin/master; then
+    echo "master"
+  elif git show-ref --verify --quiet refs/remotes/origin/main; then
+    echo "main"
+  else
+    return 1
+  fi
+}
+
+collect_hubs() {
+  local root="$1"
+  if is_hub_dir "$root"; then
+    echo "$root"
+    return 0
+  fi
+  local found=0
+  local d base
+  for d in "$root"/*/ ; do
+    [ -e "$d" ] || continue
+    base="${d%/}"
+    if is_hub_dir "$base"; then
+      printf '%s\n' "$base"
+      found=1
+    fi
+  done
+  if [ "$found" -eq 0 ]; then
+    return 1
+  fi
+}
+
+branch_upstream_track() {
+  local branch="$1"
+  git for-each-ref --format='%(upstream:track)' -- "refs/heads/$branch" | head -n1
+}
+
+branch_is_merged_into_origin_primary() {
+  local branch="$1" primary="$2"
+  git branch --merged "origin/$primary" --format='%(refname:short)' |
+    grep -qxF -- "$branch"
+}
+
+# Prints one line describing why we remove ("merged"|"upstream-gone") to stdout;
+# exits 0 if we should remove, 1 otherwise.
+cleanup_reason_or_skip() {
+  local branch="$1" primary="$2"
+  local track
+
+  if branch_is_merged_into_origin_primary "$branch" "$primary"; then
+    printf '%s\n' merged
+    return 0
+  fi
+
+  track="$(branch_upstream_track "$branch")"
+  if [ "$track" = "gone" ]; then
+    printf '%s\n' upstream-gone
+    return 0
+  fi
+
+  return 1
+}
+
+cleanup_one_hub() {
+  local hub="$1"
+  local hub_rp primary wt_path wt_branch wt_dir wt_arg
+
+  hub_rp="$(cd "$hub" && pwd -P)"
+  (
+    cd "$hub"
+
+    primary="$(get_primary_branch)" ||
+      die "[$hub_rp] Could not determine primary branch (no origin/master or origin/main)"
+
+    if [ "${LONG_FETCH}" -eq 1 ]; then
+      info "[$hub_rp] Fetching origin (--prune)..."
+      git fetch origin --prune >&2 || die "[$hub_rp] git fetch origin --prune failed"
+
+      primary="$(get_primary_branch)" ||
+        die "[$hub_rp] Could not determine primary branch after fetch"
+    fi
+
+    local path=""
+    local branch=""
+    flush_worktree() {
+      if [ -z "$path" ]; then
+        branch=""
+        return 0
+      fi
+      wt_path="$path"
+      wt_branch="${branch}"
+
+      path=""
+      branch=""
+
+      if [ -z "${wt_branch}" ]; then
+        info "[$hub_rp] Skip (detached HEAD): ${wt_path}"
+        return 0
+      fi
+
+      if [ "${wt_branch}" = "${primary}" ]; then
+        return 0
+      fi
+
+      if ! wt_real="$(cd "$wt_path" 2>/dev/null && pwd -P)"; then
+        warn "[$hub_rp] Skip (missing path?): ${wt_path}"
+        return 0
+      fi
+
+      case "$wt_real" in
+        "$hub_rp" | "$hub_rp"/*) ;;
+        *)
+          warn "[$hub_rp] Skip (outside hub): ${wt_real}"
+          return 0
+          ;;
+      esac
+
+      wt_dir="${wt_real##*/}"
+
+      if [ "$wt_real" = "$hub_rp" ]; then
+        warn "[$hub_rp] Skip (worktree at hub root?): ${wt_real}"
+        return 0
+      fi
+
+      local why
+      if ! why="$(cleanup_reason_or_skip "$wt_branch" "$primary")"; then
+        info "[$hub_rp] Leave (not eligible — not merged into origin/$primary and upstream not gone): [$wt_branch] $wt_dir"
+        return 0
+      fi
+
+      wt_arg="${wt_dir}"
+      case "$why" in
+        merged)
+          info "[$hub_rp] Remove worktree (branch merged into origin/$primary): [$wt_branch] $wt_arg"
+          ;;
+        upstream-gone)
+          info "[$hub_rp] Remove worktree (upstream gone / remote branch removed): [$wt_branch] $wt_arg"
+          ;;
+        *)
+          die "[$hub_rp] Internal error: unexpected cleanup reason: $why"
+          ;;
+      esac
+
+      if [ "$DRY_RUN" -eq 1 ]; then
+        return 0
+      fi
+
+      if [ "$FORCE" -eq 1 ]; then
+        "${SCRIPT_DIR}/_worktree-rm" -f "$wt_arg" >&2 ||
+          warn "[$hub_rp] _worktree-rm failed for: $wt_arg"
+      else
+        "${SCRIPT_DIR}/_worktree-rm" "$wt_arg" >&2 ||
+          warn "[$hub_rp] _worktree-rm failed for: $wt_arg"
+      fi
+    }
+
+    local line pref rest wt_list_out
+    wt_list_out="$(git worktree list --porcelain 2>/dev/null || true)"
+    while IFS= read -r line || [ -n "$line" ]; do
+      if [ -z "$line" ]; then
+        flush_worktree
+        continue
+      fi
+      pref="${line%% *}"
+      rest="${line#"$pref"}"
+      rest="${rest# }"
+      case "$pref" in
+        worktree)
+          flush_worktree
+          path="$rest"
+          ;;
+        branch)
+          branch="${rest#refs/heads/}"
+          ;;
+      esac
+    done <<< "$wt_list_out"
+
+    flush_worktree
+  )
+
+  success "[$hub_rp] Cleanup pass done."
+}
+
+hub_list=""
+if hub_list="$(collect_hubs "$TARGET_ROOT")"; then
+  :
+else
+  die "No clone-for-wt hubs found under: $TARGET_ROOT (expected .bare/ + .git, or immediate child dirs with that layout)"
+fi
+
+merged_label="cleanup merged worktrees (dry-run)" 
+[ "$DRY_RUN" -eq 0 ] && merged_label="cleanup merged worktrees"
+
+while IFS= read -r hub; do
+  [ -z "$hub" ] && continue
+  info "═══ $merged_label: $(basename "$hub") ═══"
+  cleanup_one_hub "$hub"
+done <<< "$hub_list"
+
+success "All hubs processed."

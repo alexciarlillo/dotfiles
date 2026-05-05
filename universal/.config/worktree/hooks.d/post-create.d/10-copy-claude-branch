@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+src="$REPO_ROOT/CLAUDE.branch.md"
+dst="$WORKTREE_DIR/CLAUDE.local.md"
+
+[ -f "$src" ] || exit 0
+
+cp "$src" "$dst"
+echo "Copied $(basename "$src") -> $(basename "$dst")"

@@ -70,6 +70,32 @@ is_roblox_repo() {
   git remote get-url origin 2>/dev/null | grep -qiE "roblox|rbx"
 }
 
+run_post_create_hooks() {
+  local worktree_dir="$1"
+  local branch_name="$2"
+  local repo_root
+  repo_root="$(pwd)"
+
+  local -a hook_dirs=(
+    ".worktree-hooks/post-create.d"
+    "${XDG_CONFIG_HOME:-$HOME/.config}/worktree/hooks.d/post-create.d"
+  )
+
+  for dir in "${hook_dirs[@]}"; do
+    [ -d "$dir" ] || continue
+    for hook in "$dir"/*; do
+      [ -x "$hook" ] || continue
+      info "Running post-create hook: $hook"
+      WORKTREE_DIR="$repo_root/$worktree_dir" \
+        BRANCH_NAME="$branch_name" \
+        BARE_DIR="$repo_root/.bare" \
+        REPO_ROOT="$repo_root" \
+        PRIMARY_BRANCH="$(get_primary_branch)" \
+        "$hook" >&2 || warn "Hook failed: $hook (continuing)"
+    done
+  done
+}
+
 WORKTREE_DIR="${BRANCH_NAME//\//-}"
 
 if [ -d "$WORKTREE_DIR" ]; then
@@ -108,6 +134,8 @@ else
   git -C "$WORKTREE_DIR" config "branch.$BRANCH_NAME.remote" origin >&2
   git -C "$WORKTREE_DIR" config "branch.$BRANCH_NAME.merge" "refs/heads/$BRANCH_NAME" >&2
 fi
+
+run_post_create_hooks "$WORKTREE_DIR" "$BRANCH_NAME"
 
 success "Worktree ready: $WORKTREE_DIR"
 echo "$WORKTREE_DIR"
