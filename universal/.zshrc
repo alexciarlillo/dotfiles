@@ -2,6 +2,10 @@
 [[ -r ~/.config/zsh/znap ]] ||
     git clone --depth 1 -- https://github.com/marlonrichert/zsh-snap.git ~/.config/zsh/znap
 
+# Custom completions must be on fpath before compinit runs (via znap/oh-my-zsh)
+fpath=(~/.config/zsh/completions $fpath)
+[[ -d /Users/alex/.docker/completions ]] && fpath=(/Users/alex/.docker/completions $fpath)
+
 source ~/.config/zsh/znap/znap.zsh
 # install oh-my-zsh
 znap source ohmyzsh/ohmyzsh
@@ -71,12 +75,6 @@ znap eval starship 'starship init zsh'
 znap prompt
 
 
-# Custom completions for dco and dcc wrappers
-fpath=(~/.config/zsh/completions $fpath)
-
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/alex/.docker/completions $fpath)
-# autoload -Uz compinit
-# compinit
-# End of Docker CLI completions
+# Custom completions and Docker CLI completions are loaded near the top,
+# before znap/oh-my-zsh runs compinit.
 

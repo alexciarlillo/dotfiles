@@ -1,0 +1,30 @@
+#compdef change-wt
+
+_change-wt() {
+    local -a worktrees
+    local line wt_path bare
+    wt_path=""
+    bare=false
+
+    while IFS= read -r line; do
+        case "$line" in
+            "worktree "*) wt_path="${line#worktree }"; bare=false ;;
+            "bare") bare=true ;;
+            "")
+                if ! $bare && [[ -n "$wt_path" ]]; then
+                    worktrees+=("${wt_path##*/}")
+                fi
+                wt_path=""
+                bare=false
+                ;;
+        esac
+    done < <(git worktree list --porcelain 2>/dev/null; printf '\n')
+
+    if (( ${#worktrees[@]} == 0 )); then
+        return 1
+    fi
+
+    _describe 'worktree' worktrees
+}
+
+_change-wt "$@"
