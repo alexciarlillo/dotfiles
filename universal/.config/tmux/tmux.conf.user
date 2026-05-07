@@ -154,3 +154,10 @@ set -g mode-style 'bg=blue,fg=black'
 # No window activity notifications (reduces clutter)
 setw -g monitor-activity off
 set -g visual-activity off
+
+# Bell-based notifications: Claude hook writes BEL to panes when a run stops
+# or needs input. Flag flips the window-status entry red until focused.
+setw -g monitor-bell on
+set -g bell-action other
+set -g visual-bell off
+setw -g window-status-bell-style 'fg=red,reverse,bold'

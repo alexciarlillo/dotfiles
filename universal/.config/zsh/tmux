@@ -8,6 +8,12 @@ twork-init() {
   # does not expand formats in its target. Missing windows are silently ignored.
   tmux set-hook -t edit after-select-window \
     'run-shell "tmux select-window -t agent:#{window_name} 2>/dev/null; tmux select-window -t adhoc:#{window_name} 2>/dev/null"'
+  # Clear the "?" needs-input indicator across paired windows when the user
+  # focuses one. Appended (-a) so the edit session keeps its window-sync hook.
+  for s in edit agent adhoc; do
+    tmux set-hook -at "$s" after-select-window \
+      'run-shell "~/.claude/hooks/tmux-clear-indicator.sh"'
+  done
 }
 
 # Create a new project (paired windows in both sessions)
