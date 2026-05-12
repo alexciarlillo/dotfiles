@@ -2,6 +2,11 @@
 
 A running log of things I've updated or fixed. Newest first.
 
+## 2026-05-12
+
+- Replaced `difi.nvim` with `diffview.nvim` (`universal/.config/nvim/lua/plugins/diffview.lua`). Added `<leader>gd` / `<leader>gD` to toggle Diffview (current index vs HEAD, and `origin/HEAD...HEAD`) in `universal/.config/nvim/lua/plugins/snacks.lua`.
+- Enabled the `lazyvim.plugins.extras.editor.snacks_picker` extra and switched `easy-dotnet.nvim`'s picker from `fzf` to `snacks`. The old `fzf.lua` plugin spec is parked as `fzf.lua.bak` in case I want to restore custom fzf-lua actions later.
+
 ## 2026-05-07
 
 - Added `README.md` and this `CHANGELOG.md`.
