@@ -54,7 +54,7 @@ return {
           vim.cmd("vsplit")
           vim.cmd("term " .. command)
         end,
-        picker = "fzf",
+        picker = "snacks",
         background_scanning = true,
       })
     end,
