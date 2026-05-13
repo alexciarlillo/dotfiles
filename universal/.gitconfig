@@ -57,7 +57,23 @@
 	precomposeUnicode = true
 	untrackedCache = true
 	fsmonitor = true
+  pager = delta
 [rebase]
         autoSquash = true
         autoStash = true
         updateRefs = true
+
+[include]
+  path = ~/.config/delta/themes/catppuccin.gitconfig
+
+[interactive]
+  diffFilter = delta --color-only
+
+[delta]
+  features = catppuccin-mocha
+  navigate = true
+  line-numbers-left-format = ""
+  line-numbers-right-format = "│ "
+
+[merge]
+  conflictstyle = zdiff3

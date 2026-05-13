@@ -1,2 +1,10 @@
 os:
   shellFunctionsFile: ~/.zshrc
+
+gui:
+  sidePanelWidth: 0.25
+
+git:
+  pagers:
+    - pager: delta --dark --paging=never
+    - pager: delta --dark --paging=never -s

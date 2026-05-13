@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+[ "$(basename "$REPO_ROOT")" = "web-frontend" ] || exit 0
+
+webapps_dir="$WORKTREE_DIR/WebApps"
+[ -d "$webapps_dir" ] || {
+  echo "web-frontend: WebApps/ not found in worktree, skipping" >&2
+  exit 0
+}
+
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+# shellcheck source=/dev/null
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+cd "$webapps_dir"
+
+nvm use 14
+npm ci
+git reset --hard
+
+echo "web-frontend: npm ci complete in WebApps/"
