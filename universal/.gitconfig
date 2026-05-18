@@ -77,3 +77,6 @@
 
 [merge]
   conflictstyle = zdiff3
+[credential "https://github.rbx.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
