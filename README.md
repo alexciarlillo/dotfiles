@@ -1,6 +1,6 @@
 # dotfiles
 
-Personal cross-platform dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/) and a `Makefile`. Primary target is macOS; Linux is kept working for occasional use.
+Personal cross-platform dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/) and a `bootstrap.sh` script. Primary target is macOS; Linux/devspaces supported via the same script. Compatible with [Coder devspaces dotfiles](https://docs.github.com/en/codespaces/setting-your-user-preferences/personalizing-github-codespaces-for-your-account#dotfiles).
 
 This README is the cheat sheet for what to do when I sit down at a new (or another) machine.
 
@@ -13,23 +13,28 @@ This README is the cheat sheet for what to do when I sit down at a new (or anoth
 ```bash
 git clone git@github.com:alexciarlillo/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-make init            # brew bundle (macOS) or apt install (Linux)
-make osx             # or: make linux
+./bootstrap.sh       # installs packages + stows configs (detects macOS/Linux)
 ```
 
-On macOS, `make osx` also downloads Hammerspoon Spoons listed in `extra/hammerspoon/spoon-zip-urls`.
-
 Per-machine Claude setup: merge the `hooks` block from [`universal/.claude/README.md`](universal/.claude/README.md) into `~/.claude/settings.json` (that file is intentionally not stowed).
+
+### Coder devspaces
+
+Point your devspace dotfiles setting at this repo. Coder clones it to `/home/coder/.config/coderv2/dotfiles` and runs `bootstrap.sh` automatically. It backs up the existing `~/.zshrc` to `~/.zshrc.bak` before stowing.
 
 ### Pulling latest changes on an existing machine
 
 ```bash
 cd ~/.dotfiles
 git pull
-make osx             # or: make linux
+./bootstrap.sh       # re-stows configs + installs any new packages
 ```
 
-`make osx` / `make linux` re-run `stow --restow` — safe to run repeatedly, just refreshes symlinks. If I added new Brew/apt packages, also `make init`.
+To re-link configs without reinstalling packages:
+
+```bash
+./bootstrap.sh dots
+```
 
 ### Changing a config and sharing it
 
@@ -38,7 +43,7 @@ make osx             # or: make linux
    ```bash
    cd ~/.dotfiles && git add -A && git commit -m "describe the change" && git push
    ```
-3. On the other machine: `git pull && make osx` (or `make linux`).
+3. On the other machine: `git pull && ./bootstrap.sh`
 4. Note what changed in [`CHANGELOG.md`](CHANGELOG.md).
 
 ---
@@ -47,13 +52,13 @@ make osx             # or: make linux
 
 ```
 dotfiles/
-  universal/   Cross-platform configs — stowed into ~
-  osx/         macOS-only (AeroSpace, Hammerspoon, Sublime) — stowed into ~
-  linux/       Linux-only (i3, polybar, compton, kitty) — stowed into ~
-  extra/       NOT stowed — used by Makefile targets
-    homebrew/  Brewfile
-    apt/       packages.txt
-    hammerspoon/ spoon-zip-urls (fetched during `make osx`)
+  bootstrap.sh  Entry point — detects OS, installs packages, stows configs
+  universal/    Cross-platform configs — stowed into ~
+  osx/          macOS-only (AeroSpace, Hammerspoon, Sublime) — stowed into ~
+  linux/        Linux-only (i3, polybar, compton) — stowed into ~
+  extra/        NOT stowed — used by bootstrap.sh
+    homebrew/   Brewfile
+    apt/        packages.txt
 ```
 
 The directory layout inside `universal/` / `osx/` / `linux/` mirrors `$HOME`. So `universal/.config/nvim/init.lua` ends up at `~/.config/nvim/init.lua`.
@@ -84,11 +89,11 @@ Per-package `.stow-local-ignore` files keep things like `.DS_Store` and `.local/
 ### macOS window management
 
 - **AeroSpace** (`osx/.aerospace.toml`) — tiling WM with workspace keybindings
-- **Hammerspoon** (`osx/.hammerspoon/`) — window manipulation and automation. Spoons are fetched by the Makefile
+- **Hammerspoon** (`osx/.hammerspoon/`) — window manipulation and automation
 
 ### Linux desktop
 
-- **i3**, **polybar**, **compton**, **dunst**, **kitty**, **feh** — under `linux/.config/`
+- **i3**, **polybar**, **compton**, **dunst** — under `linux/.config/`
 
 ### Claude Code
 
@@ -118,15 +123,15 @@ Claude hooks (`universal/.claude/hooks/notify-tmux.sh`) annotate window names wi
 ### A new dotfile
 
 1. Drop it into `universal/` (or `osx/` / `linux/`) at the path it should have under `$HOME`. E.g. `~/.config/foo/bar.toml` → `universal/.config/foo/bar.toml`.
-2. `make osx` (or `make linux`) — Stow creates the symlink.
+2. `./bootstrap.sh dots` — Stow creates the symlink.
 3. Commit and push.
 
-If an app rewrites its config on launch (clobbers symlinks), put the source of truth in `extra/` and add a copy step to the Makefile instead of stowing it.
+If an app rewrites its config on launch (clobbers symlinks), put the source of truth in `extra/` and add a copy step to `bootstrap.sh` instead of stowing it.
 
 ### A new package
 
-- **macOS**: edit `extra/homebrew/Brewfile`, then `make init` (or `brew bundle --file=extra/homebrew/Brewfile`).
-- **Linux**: edit `extra/apt/packages.txt`, then `make init`.
+- **macOS**: edit `extra/homebrew/Brewfile`, then `./bootstrap.sh`.
+- **Linux**: edit `extra/apt/packages.txt`, then `./bootstrap.sh`.
 
 ### Unstowing a removed file
 
@@ -150,10 +155,9 @@ stow --delete --target="$HOME" --dir="$PWD" universal
 
 | I want to...                  | Run                                                     |
 | ----------------------------- | ------------------------------------------------------- |
-| Set up a brand new machine    | `make init && make osx`                                 |
-| Pull latest changes           | `git pull && make osx`                                  |
-| Re-link configs after editing | `make osx`                                              |
-| Install newly-added packages  | `make init`                                             |
+| Set up a brand new machine    | `./bootstrap.sh`                                        |
+| Pull latest changes           | `git pull && ./bootstrap.sh`                            |
+| Re-link configs after editing | `./bootstrap.sh dots`                                   |
 | Unstow a removed file         | `stow --delete --target="$HOME" --dir="$PWD" universal` |
 
 ---
