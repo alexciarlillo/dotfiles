@@ -3,16 +3,20 @@ twork-init() {
   tmux new-session -d -s edit -n home # Edit session (neovim, etc.)
   tmux new-session -d -s agent -n home # agent session (agents)
   tmux new-session -d -s adhoc -n home # Adhoc session (misc tasks)
-  # Switching windows in edit also switches in agent & adhoc.
-  # run-shell expands #{window_name} before the shell runs; select-window -t
-  # does not expand formats in its target. Missing windows are silently ignored.
+  # Switching windows in any session mirrors the selection to the other two.
+  # Uses @twork_syncing as a server-side reentrant guard set inside run-shell
+  # so cascaded hooks see it before their if-shell evaluates.
   tmux set-hook -t edit after-select-window \
-    'run-shell "tmux select-window -t agent:#{window_name} 2>/dev/null; tmux select-window -t adhoc:#{window_name} 2>/dev/null"'
+    'if-shell -F "#{@twork_syncing}" "" "run-shell \"tmux set -g @twork_syncing 1 && tmux select-window -t agent:#{window_name} 2>/dev/null && tmux select-window -t adhoc:#{window_name} 2>/dev/null ; tmux set -gu @twork_syncing\""'
+  tmux set-hook -t agent after-select-window \
+    'if-shell -F "#{@twork_syncing}" "" "run-shell \"tmux set -g @twork_syncing 1 && tmux select-window -t edit:#{window_name} 2>/dev/null && tmux select-window -t adhoc:#{window_name} 2>/dev/null ; tmux set -gu @twork_syncing\""'
+  tmux set-hook -t adhoc after-select-window \
+    'if-shell -F "#{@twork_syncing}" "" "run-shell \"tmux set -g @twork_syncing 1 && tmux select-window -t edit:#{window_name} 2>/dev/null && tmux select-window -t agent:#{window_name} 2>/dev/null ; tmux set -gu @twork_syncing\""'
   # Clear the "?" needs-input indicator across paired windows when the user
-  # focuses one. Appended (-a) so the edit session keeps its window-sync hook.
+  # focuses one. Appended (-a) so each session keeps its window-sync hook.
   for s in edit agent adhoc; do
     tmux set-hook -at "$s" after-select-window \
-      'run-shell "~/.claude/hooks/tmux-clear-indicator.sh"'
+      'run-shell -b "~/.claude/hooks/tmux-clear-indicator.sh"'
   done
 }
 
@@ -103,8 +107,6 @@ twork-sync() {
 
   local ts
   for ts in "${target_sessions[@]}"; do
-    if tmux select-window -t "$ts:$win" 2>/dev/null; then
-      tmux send-keys -t "$ts:$win" "cd ${(q)dir}" Enter
-    fi
+    tmux send-keys -t "$ts:$win" "cd ${(q)dir}" Enter 2>/dev/null
   done
 }

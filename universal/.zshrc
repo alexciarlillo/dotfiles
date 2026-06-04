@@ -30,6 +30,9 @@ export NVM_LAZY_LOAD=true
 # ripgrep config
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 
+# agents 
+export AGENT_HANDOFF_DIR="$HOME/agents/handoffs"
+
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init - zsh)"

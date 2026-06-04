@@ -1,2 +1,4 @@
 .vscode
 .php_cs
+
+**/.claude/settings.local.json

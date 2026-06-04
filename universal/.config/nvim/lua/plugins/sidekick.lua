@@ -1,12 +1,15 @@
 return {
   {
-    "folke/sidekick.nvim",
+    -- "folke/sidekick.nvim",
+    "alexciarlillo/sidekick.nvim",
+    branch = "feat/absolute-paths",
     opts = {
       cli = {
         mux = {
           backend = "tmux",
           enabled = true,
         },
+        absolute_paths = true,
       },
       nes = {
         enabled = false,
