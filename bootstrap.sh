@@ -52,7 +52,9 @@ setup_zsh_from_bash() {
 }
 
 universal_dots() {
-  mv ~/.zshrc ~/.zshrc.bak 2>/dev/null || true
+  if [[ -f ~/.zshrc && ! -L ~/.zshrc ]]; then
+    mv ~/.zshrc ~/.zshrc.bak
+  fi
 
   # If .gitconfig exists and isn't already our symlink, preserve it as .gitconfig.local
   if [[ -f ~/.gitconfig && ! -L ~/.gitconfig ]]; then
