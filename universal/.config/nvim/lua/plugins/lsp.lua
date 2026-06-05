@@ -57,6 +57,19 @@ return {
             },
           },
         },
+        clangd = {
+          cmd = {
+            "clangd",
+            "--background-index",
+            "--clang-tidy",
+            "--header-insertion=iwyu",
+            "--completion-style=detailed",
+            "--function-arg-placeholders",
+            "--fallback-style=llvm",
+            "--query-driver=~/GitHub/roblox/game-engine/master/Client/dependencies/clang/gnu/bin/clang++",
+            "--compile-commands-dir=-/GitHub/roblox/game-engine/master/buck-out",
+          },
+        },
       },
       setup = {
         eslint = function()
