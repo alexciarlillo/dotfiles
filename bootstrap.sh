@@ -35,8 +35,10 @@ hammerspoon_spoons() {
   mkdir -p "$spoons_dir"
   while IFS= read -r url; do
     [[ -z "$url" ]] && continue
-    local filename
+    local filename spoon_name
     filename="$(basename "$url")"
+    spoon_name="${filename%.zip}"
+    [[ -d "$spoons_dir/$spoon_name" ]] && continue
     curl -sSL -o "$spoons_dir/$filename" "$url"
     unzip -qo "$spoons_dir/$filename" -d "$spoons_dir/"
     rm "$spoons_dir/$filename"
@@ -58,12 +60,10 @@ universal_dots() {
 
   # If .gitconfig exists and isn't already our symlink, preserve it as .gitconfig.local
   if [[ -f ~/.gitconfig && ! -L ~/.gitconfig ]]; then
-    if [[ -f ~/.gitconfig.local ]]; then
-      # Merge existing .gitconfig into .gitconfig.local
-      echo "" >>~/.gitconfig.local
-      cat ~/.gitconfig >>~/.gitconfig.local
-    else
+    if [[ ! -f ~/.gitconfig.local ]]; then
       mv ~/.gitconfig ~/.gitconfig.local
+    else
+      rm ~/.gitconfig
     fi
   fi
 
