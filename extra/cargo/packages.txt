@@ -6,4 +6,3 @@ git-delta
 lsd
 ripgrep
 starship
-yazi-fm
