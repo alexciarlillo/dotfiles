@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(rg:*)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "mcp__excalidraw__create_element",
+      "mcp__excalidraw__get_resource",
+      "Bash(chmod:*)",
+      "Bash(tmux capture-pane:*)",
+      "Bash(tmux list-windows:*)",
+      "Edit(file_path:CHANGELOG.md)",
+      "Edit(file_path:README.md)",
+      "Write(file_path:CHANGELOG.md)",
+      "Write(file_path:README.md)"
+    ],
+    "deny": []
+  }
+}
