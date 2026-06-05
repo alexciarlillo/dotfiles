@@ -59,6 +59,7 @@ dotfiles/
   extra/        NOT stowed — used by bootstrap.sh
     homebrew/   Brewfile
     apt/        packages.txt
+    cargo/      packages.txt
 ```
 
 The directory layout inside `universal/` / `osx/` / `linux/` mirrors `$HOME`. So `universal/.config/nvim/init.lua` ends up at `~/.config/nvim/init.lua`.
@@ -132,6 +133,7 @@ If an app rewrites its config on launch (clobbers symlinks), put the source of t
 
 - **macOS**: edit `extra/homebrew/Brewfile`, then `./bootstrap.sh`.
 - **Linux**: edit `extra/apt/packages.txt`, then `./bootstrap.sh`.
+- **Cargo (both)**: edit `extra/cargo/packages.txt`, then `./bootstrap.sh`.
 
 ### Unstowing a removed file
 

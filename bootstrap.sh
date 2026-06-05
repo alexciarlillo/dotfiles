@@ -19,8 +19,52 @@ linux_init() {
   xargs -a "$DOTFILES/extra/apt/packages.txt" sudo apt-get install -y
 }
 
+cargo_init() {
+  if ! command -v cargo &>/dev/null; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    # shellcheck disable=SC1091
+    source "$HOME/.cargo/env"
+  fi
+  xargs -a "$DOTFILES/extra/cargo/packages.txt" cargo install
+}
+
+hammerspoon_spoons() {
+  local spoons_dir="$DOTFILES/osx/.hammerspoon/Spoons"
+  local urls_file="$DOTFILES/extra/hammerspoon/spoon-zip-urls"
+  [[ ! -f "$urls_file" ]] && return 0
+  mkdir -p "$spoons_dir"
+  while IFS= read -r url; do
+    [[ -z "$url" ]] && continue
+    local filename
+    filename="$(basename "$url")"
+    curl -sSL -o "$spoons_dir/$filename" "$url"
+    unzip -qo "$spoons_dir/$filename" -d "$spoons_dir/"
+    rm "$spoons_dir/$filename"
+  done <"$urls_file"
+}
+
+setup_zsh_from_bash() {
+  if command -v zsh &>/dev/null && [[ -f ~/.bashrc ]]; then
+    if ! grep -q "exec /bin/zsh" ~/.bashrc; then
+      printf '\nexport SHELL=/bin/zsh\nexec /bin/zsh -l\n' >>~/.bashrc
+    fi
+  fi
+}
+
 universal_dots() {
   mv ~/.zshrc ~/.zshrc.bak 2>/dev/null || true
+
+  # If .gitconfig exists and isn't already our symlink, preserve it as .gitconfig.local
+  if [[ -f ~/.gitconfig && ! -L ~/.gitconfig ]]; then
+    if [[ -f ~/.gitconfig.local ]]; then
+      # Merge existing .gitconfig into .gitconfig.local
+      echo "" >>~/.gitconfig.local
+      cat ~/.gitconfig >>~/.gitconfig.local
+    else
+      mv ~/.gitconfig ~/.gitconfig.local
+    fi
+  fi
+
   stow --restow --ignore ".DS_Store" --target="$HOME" --dir="$DOTFILES" universal
 }
 
@@ -38,11 +82,15 @@ main() {
   case "$uname_s" in
   Darwin)
     [[ "${1:-}" != "dots" ]] && osx_init
+    [[ "${1:-}" != "dots" ]] && cargo_init
     universal_dots
+    hammerspoon_spoons
     osx_dots
     ;;
   Linux)
     [[ "${1:-}" != "dots" ]] && linux_init
+    [[ "${1:-}" != "dots" ]] && cargo_init
+    setup_zsh_from_bash
     universal_dots
     ;;
   *)

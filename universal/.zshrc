@@ -7,6 +7,7 @@ fpath=(~/.config/zsh/completions $fpath)
 [[ -d /Users/alex/.docker/completions ]] && fpath=(/Users/alex/.docker/completions $fpath)
 
 source ~/.config/zsh/znap/znap.zsh
+
 # install oh-my-zsh
 znap source ohmyzsh/ohmyzsh
 znap source ohmyzsh/ohmyzsh plugins/git
@@ -30,34 +31,37 @@ export NVM_LAZY_LOAD=true
 # ripgrep config
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 
-# agents 
+# agents
 export AGENT_HANDOFF_DIR="$HOME/agents/handoffs"
+[[ ! -d "$AGENT_HANDOFF_DIR" ]] && mkdir -p "$AGENT_HANDOFF_DIR"
 
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init - zsh)"
+# universal path exports
+export PATH="$PATH:$HOME/.local/bin"
 
 case `uname` in
     Darwin)
-        export PATH="$PATH:$HOME/.nvm/current/bin"
-        export PATH="$PATH:$HOME/.local/bin"
         export PATH="$PATH:$HOME/.dotnet/tools"
         # Roblox utilities 
         source $HOME/.config/zsh/rbx
         export RBX_LOCAL_NUGET_FEED=/Users/${USER}/.rbx/LocalNuGetRepo
         export RBX_GITHUB_USER=aciarlillo
         # nvm
+        export PATH="$PATH:$HOME/.nvm/current/bin"
         [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"
     ;;
     Linux)
-        # Linux specific config
         export TERM=xterm-256color
         export EDITOR="vim"
-        export GIT_SSH=/usr/bin/ssh
-
-        export PATH="$PATH:$HOME/.local/bin"
+        export PATH="$PATH:$HOME/.cargo/bin"
     ;;
 esac
+
+# python :(
+if [[ -d "$HOME/.pyenv" ]]; then
+  export PYENV_ROOT="$HOME/.pyenv"
+  [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init - zsh)"
+fi
 
 # aliases
 if [ -f ~/.config/zsh/aliases ]; then
@@ -75,8 +79,6 @@ if [ -f ~/.config/zsh/tmux ]; then
 fi
 
 znap eval starship 'starship init zsh'
-znap prompt
-
 
 # Custom completions and Docker CLI completions are loaded near the top,
 # before znap/oh-my-zsh runs compinit.

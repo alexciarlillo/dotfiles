@@ -1,27 +1,16 @@
-[user]
-	name = Alex Ciarlillo
-	email = aciarlillo@roblox.com
-
 [alias]
   ca = commit --amend --reuse-message=HEAD
 	clone-wt = "!sh $HOME/.local/bin/clone-for-wt"
 	clean-wt = "!sh $HOME/.local/bin/clean-merged-wt"
 
-[url "ssh://git@github.com/"]
-	insteadOf = https://github.com/
-  
 [filter "lfs"]
 	process = git-lfs filter-process
 	required = true
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 
-[credential]
-	helper = 
-	helper = /usr/local/share/gcm-core/git-credential-manager
-
-[credential "https://dev.azure.com"]
-	useHttpPath = true
+[url "https://"]
+    insteadOf = git://
 
 # https://blog.gitbutler.com/how-git-core-devs-configure-git
 [column]
@@ -53,7 +42,7 @@
         enabled = true
         autoupdate = true
 [core]
-	excludesfile = /Users/alex/.gitignore_global
+	excludesfile = ~/.gitignore_global
 	precomposeUnicode = true
 	untrackedCache = true
 	fsmonitor = true
@@ -65,6 +54,7 @@
 
 [include]
   path = ~/.config/delta/themes/catppuccin.gitconfig
+  path = ~/.gitconfig.local
 
 [interactive]
   diffFilter = delta --color-only
@@ -77,6 +67,3 @@
 
 [merge]
   conflictstyle = zdiff3
-[credential "https://github.rbx.com"]
-	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential

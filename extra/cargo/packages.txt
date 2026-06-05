@@ -1,0 +1,9 @@
+bat
+cargo-edit
+cargo-update
+cargo-watch
+git-delta
+lsd
+ripgrep
+starship
+yazi-fm

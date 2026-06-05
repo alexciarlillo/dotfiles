@@ -13,25 +13,20 @@ This is a personal dotfiles repository using GNU Stow for symlink management. Th
 
 ## Setup Commands
 
-Install dotfiles on macOS:
+Full bootstrap (installs packages + stows configs):
 ```bash
-make osx
+./bootstrap.sh
 ```
 
-Install dotfiles on Linux:
+Re-link configs only (skip package installation):
 ```bash
-make linux
+./bootstrap.sh dots
 ```
 
-Install Homebrew packages:
-```bash
-make homebrew
-```
-
-The Makefile uses GNU Stow with the following pattern:
-- `DOTFILES` environment variable points to `${HOME}/.dotfiles`
-- Stow restows files ignoring `.DS_Store` files
-- Universal dotfiles are installed for both platforms
+The bootstrap script detects the OS and:
+- Installs platform packages (Homebrew on macOS, apt on Linux)
+- Installs cargo packages from `extra/cargo/packages.txt`
+- Stows universal and platform-specific configs via GNU Stow
 
 ## Key Configuration Structure
 
