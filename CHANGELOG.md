@@ -2,6 +2,18 @@
 
 A running log of things I've updated or fixed. Newest first.
 
+## 2026-06-05
+
+- Removed the `Makefile` — all functionality consolidated into `bootstrap.sh` as the single entry point.
+- Added cargo package management: `extra/cargo/packages.txt` lists crates to install; `bootstrap.sh` installs rustup if needed and runs `cargo install` for each.
+- Moved Hammerspoon spoon downloads from the Makefile into `bootstrap.sh`.
+- Formalized `.gitconfig.local` pattern: `[user]` block removed from the stowed `.gitconfig`; bootstrap now migrates an existing non-symlinked `.gitconfig` into `.gitconfig.local` to preserve per-machine identity and credentials.
+- Added `[url "https://"] insteadOf = git://` to `.gitconfig` for environments that block the git protocol.
+- Made pyenv initialization in `.zshrc` conditional on `~/.pyenv` existing.
+- Added `setup_zsh_from_bash` to bootstrap: appends `exec /bin/zsh -l` to `.bashrc` on Linux if zsh is installed.
+- Agent handoff directory (`$HOME/agents/handoffs`) is now created automatically in `.zshrc` if missing.
+- Added Edit/Write permissions for `CHANGELOG.md` and `README.md` in `.claude/settings.local.json` so the pre-commit hook agent can update them.
+
 ## 2026-05-12
 
 - Replaced `difi.nvim` with `diffview.nvim` (`universal/.config/nvim/lua/plugins/diffview.lua`). Added `<leader>gd` / `<leader>gD` to toggle Diffview (current index vs HEAD, and `origin/HEAD...HEAD`) in `universal/.config/nvim/lua/plugins/snacks.lua`.
