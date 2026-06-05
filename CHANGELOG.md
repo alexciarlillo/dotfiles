@@ -4,6 +4,11 @@ A running log of things I've updated or fixed. Newest first.
 
 ## 2026-06-05
 
+- Added a worktree post-create hook (`universal/.config/worktree/hooks.d/post-create.d/30-game-engine`) that bootstraps game engine worktrees with a local `.clangd` config.
+- Unignored `universal/.claude/` and checked in hook scripts (`notify-tmux.sh`, `tmux-clear-indicator.sh`), rules, and a handoff skill.
+- Fixed clangd LSP config in Neovim — corrected `compilationDatabasePath` and query driver settings.
+- Removed the Obsidian plugin (`lua/plugins/obsidian.lua`); added clangd language server setup to `lsp.lua`.
+- Removed `yazi` from `extra/cargo/packages.txt`.
 - Removed the `Makefile` — all functionality consolidated into `bootstrap.sh` as the single entry point.
 - Added cargo package management: `extra/cargo/packages.txt` lists crates to install; `bootstrap.sh` installs rustup if needed and runs `cargo install` for each.
 - Moved Hammerspoon spoon downloads from the Makefile into `bootstrap.sh`.
