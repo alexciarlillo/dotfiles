@@ -52,9 +52,9 @@ EOF
 FORCE=false
 while getopts "fh" opt; do
   case $opt in
-    f) FORCE=true ;;
-    h) usage ;;
-    *) usage ;;
+  f) FORCE=true ;;
+  h) usage ;;
+  *) usage ;;
   esac
 done
 shift $((OPTIND - 1))
@@ -71,9 +71,9 @@ fi
 
 WORKTREE_DIR="${INPUT//\//-}"
 
-# If directory not found and RBX_GITHUB_USER is set, try stripping the user prefix
-if [ ! -d "$WORKTREE_DIR" ] && [ -n "${RBX_GITHUB_USER:-}" ]; then
-  STRIPPED="${INPUT#"$RBX_GITHUB_USER/"}"
+# If directory not found and RBLX_USER is set, try stripping the user prefix
+if [ ! -d "$WORKTREE_DIR" ] && [ -n "${RBLX_USER:-}" ]; then
+  STRIPPED="${INPUT#"$RBLX_USER/"}"
   if [ "$STRIPPED" != "$INPUT" ]; then
     CANDIDATE="${STRIPPED//\//-}"
     if [ -d "$CANDIDATE" ]; then

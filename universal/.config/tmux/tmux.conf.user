@@ -100,7 +100,7 @@ bind Space next-layout
 set -g mouse on
 
 # Clipboard integration for macOS
-set -g set-clipboard on
+set -s set-clipboard on
 # Only use reattach-to-user-namespace if it's installed
 if-shell 'command -v reattach-to-user-namespace >/dev/null' \
     'set-option -g default-command "reattach-to-user-namespace -l $SHELL"'
@@ -119,6 +119,10 @@ if-shell 'command -v reattach-to-user-namespace >/dev/null' \
 # Session creation and management
 bind S command-prompt -p "New Session:" "new-session -A -s '%%'"
 bind X confirm-before 'kill-session'
+
+# Fuzzy session switcher in a floating popup (needs fzf on PATH).
+# Overrides gpakosz's C-f find-session command-prompt (sourced earlier).
+bind C-f display-popup -E -w 60% -h 50% "~/.local/bin/tmux-session-popup"
 
 # -- Minimal, Clean Appearance -------------------------------------------------
 
@@ -139,6 +143,9 @@ set -g status-right ' %H:%M %d-%b'
 setw -g window-status-format ' #I:#{?window_zoomed_flag,[#W],#W} '
 setw -g window-status-current-format ' #I:#{?window_zoomed_flag,[#W],#W} '
 setw -g window-status-current-style 'bg=blue,fg=black,bold'
+
+setw -g window-style 'bg=default'
+setw -g window-active-style 'bg=default'
 
 # Pane borders - subtle
 set -g pane-border-style 'fg=brightblack'
@@ -161,3 +168,22 @@ setw -g monitor-bell on
 set -g bell-action other
 set -g visual-bell off
 setw -g window-status-bell-style 'fg=red,reverse,bold'
+
+# -- Plugins (TPM) -------------------------------------------------------------
+# TPM and all plugins live under the XDG path (~/.config/tmux/plugins). TPM only
+# auto-detects XDG when ~/.config/tmux/tmux.conf exists, but our entry point is
+# ~/.tmux.conf, so set the path explicitly. Use $HOME (TPM expands it); avoid ~.
+set-environment -g TMUX_PLUGIN_MANAGER_PATH "$HOME/.config/tmux/plugins/"
+
+# Use the space-separated @tpm_plugins list, NOT `set -g @plugin`: gpakosz's
+# ~/.tmux.conf sources this file through an `if-shell`, and TPM's @plugin
+# discovery only parses files reached by a bare `source`/`source-file` line,
+# so @plugin entries here are invisible to it. @tpm_plugins is read from tmux
+# server options instead, which works no matter how the file was sourced.
+
+set -g @tpm_plugins 'alexciarlillo/tmux-agent-mgr'
+
+
+
+# Initialize TPM -- keep this line at the very bottom of the file.
+run '$HOME/.config/tmux/plugins/tpm/tpm'

@@ -1,0 +1,87 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__mcp-gateway-artifactory",
+      "mcp__mcp-gateway-elasticsearch",
+      "mcp__mcp-gateway-gcalendar",
+      "mcp__mcp-gateway-gdrive_write",
+      "mcp__mcp-gateway-glean",
+      "mcp__mcp-gateway-grafana",
+      "mcp__mcp-gateway-logs",
+      "mcp__mcp-gateway-mosaic_mds",
+      "mcp__mcp-gateway-slack",
+      "mcp__mcp-gateway-sourcegraph",
+      "mcp__mcp-gateway-gdrive",
+      "mcp__mcp-gateway-gmail"
+    ]
+  },
+  "model": "claude-opus-4-8[1m]",
+  "hooks": {
+    "WorktreeCreate": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.local/bin/_worktree-hook-create"
+          }
+        ]
+      }
+    ],
+    "WorktreeRemove": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.local/bin/_worktree-hook-remove"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify-tmux.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify-tmux.sh"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify-tmux.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "clangd-lsp@claude-plugins-official": true,
+    "tmux-agent-mgr@alexciarlillo": true
+  },
+  "extraKnownMarketplaces": {
+    "alexciarlillo": {
+      "source": {
+        "source": "github",
+        "repo": "alexciarlillo/tmux-agent-mgr"
+      }
+    }
+  },
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "high",
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark"
+}

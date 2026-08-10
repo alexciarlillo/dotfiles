@@ -19,7 +19,7 @@ return {
         markdown = true,
         help = true,
       },
-      copilot_node_command = "/Users/alex/.nvm/versions/node/v22.18.0/bin/node",
+      copilot_node_command = vim.fn.expand("$HOME") .. "/.nvm/versions/node/v22.18.0/bin/node",
     },
   },
 }

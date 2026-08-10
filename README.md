@@ -16,7 +16,7 @@ cd ~/.dotfiles
 ./bootstrap.sh       # installs packages + stows configs (detects macOS/Linux)
 ```
 
-Per-machine Claude setup: merge the `hooks` block from [`universal/.claude/README.md`](universal/.claude/README.md) into `~/.claude/settings.json` (that file is intentionally not stowed).
+Claude Code config (`~/.claude/settings.json`, hooks, rules) is now stowed from `universal/.claude/`. Claude writes `settings.json` itself on first run, so if a real (non-symlink) copy already exists, `bootstrap.sh` moves it to `settings.json.bak` before linking ours. Machine-local overrides go in the unstowed `~/.claude/settings.local.json`.
 
 ### Coder devspaces
 
@@ -54,12 +54,15 @@ To re-link configs without reinstalling packages:
 dotfiles/
   bootstrap.sh  Entry point — detects OS, installs packages, stows configs
   universal/    Cross-platform configs — stowed into ~
-  osx/          macOS-only (AeroSpace, Hammerspoon, Sublime) — stowed into ~
-  linux/        Linux-only (i3, polybar, compton) — stowed into ~
+  rblx/         Work-specific configs — stowed into ~ (lifts out for private repo)
+  osx/          macOS-only (AeroSpace, Hammerspoon) — stowed into ~
+  linux/        Linux-only (currently just a .stow-local-ignore) — stowed into ~
   extra/        NOT stowed — used by bootstrap.sh
     homebrew/   Brewfile
     apt/        packages.txt
     cargo/      packages.txt
+    hammerspoon/  spoon zip URLs
+    rblx/       optional work-machine setup hook (setup.sh)
 ```
 
 The directory layout inside `universal/` / `osx/` / `linux/` mirrors `$HOME`. So `universal/.config/nvim/init.lua` ends up at `~/.config/nvim/init.lua`.
@@ -72,9 +75,12 @@ Per-package `.stow-local-ignore` files keep things like `.DS_Store` and `.local/
 
 ### Shell & terminal
 
-- **Zsh** (`universal/.zshrc`, `universal/.config/zsh/`) — aliases, `twork-*` tmux helpers, Vault helpers, worktree helpers
+- **Zsh** — two-file setup:
+  - `universal/.zshenv` — exports visible to all shells (PATH, NVM, pyenv, agent dirs). Sources `~/.config/zsh/env.d/*.zsh` for private exports.
+  - `universal/.zshrc` — interactive-only (plugins, aliases, starship). Sources `~/.config/zsh/interactive.d/*.zsh` for private functions.
+  - `universal/.config/zsh/` — aliases, git helpers, tmux helpers (public); `env.d/` and `interactive.d/` for drop-in private configs.
 - **WezTerm** (`universal/.wezterm.lua`) — primary terminal
-- **Tmux** (`universal/.tmux.conf`, `universal/.config/tmux/tmux.conf.user`) — prefix `C-Space`, vim-style pane nav, bell-based notifications
+- **Tmux** (`universal/.tmux.conf`, `universal/.config/tmux/tmux.conf.user`) — prefix `C-Space`, vim-style pane nav, bell-based notifications. Plugins are managed with [TPM](https://github.com/tmux-plugins/tpm) (bootstrapped by `bootstrap.sh`, installed under `~/.config/tmux/plugins/`, gitignored); declared via `@tpm_plugins`. Includes `hiroppy/tmux-agent-sidebar`.
 
 ### Editor
 
@@ -91,14 +97,21 @@ Per-package `.stow-local-ignore` files keep things like `.DS_Store` and `.local/
 
 - **AeroSpace** (`osx/.aerospace.toml`) — tiling WM with workspace keybindings
 - **Hammerspoon** (`osx/.hammerspoon/`) — window manipulation and automation
+- **neru** (`universal/.config/neru/config.toml`) — modal keyboard-navigation overlay
 
 ### Linux desktop
 
-- **i3**, **polybar**, **compton**, **dunst** — under `linux/.config/`
+The old i3/polybar/compton/dunst desktop configs were retired; `linux/` currently holds only its `.stow-local-ignore`. Linux/devspace use now leans on the shared `universal/` shell + terminal configs.
 
 ### Claude Code
 
-`universal/.claude/` — hook scripts that surface Claude state in the tmux window name and ring the terminal bell. See [`universal/.claude/README.md`](universal/.claude/README.md). `~/.claude/settings.json` is per-machine and not stowed.
+`universal/.claude/` is stowed into `~/.claude/`:
+
+- `settings.json` — thinking/effort defaults, plugins, and hook wiring (see the note in [Brand new machine](#brand-new-machine); machine-local overrides go in the unstowed `settings.local.json`).
+- `hooks/` — `notify-tmux.sh` surfaces Claude state in the tmux window name and rings the terminal bell.
+- `rules/`, `skills/` — shared agent rules and skills.
+
+Worktree hooks (`universal/.local/bin/_worktree-hook-{create,remove}`) are wired via `WorktreeCreate`/`WorktreeRemove` so Claude's worktrees follow my bare-hub layout. See [`universal/.claude/README.md`](universal/.claude/README.md).
 
 ---
 
@@ -148,7 +161,7 @@ stow --delete --target="$HOME" --dir="$PWD" universal
 ## Conventions
 
 - Cross-platform stuff → `universal/`. Platform-specific (WM, GUI app, hardware) → `osx/` or `linux/`.
-- Per-machine state (`~/.claude/settings.json`, shell history, secrets) stays out of the repo.
+- Per-machine state (`~/.claude/settings.local.json`, shell history, secrets, `.gitconfig.local`) stays out of the repo.
 - Changes are tracked in [`CHANGELOG.md`](CHANGELOG.md) — just a running log, not formal releases.
 
 ---

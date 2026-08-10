@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# agent-sync — bidirectionally sync ~/agents with coder-engine via Unison.
+# Safe unattended (launchd): quiet no-op when the remote is unreachable.
+set -euo pipefail
+
+export PATH="/opt/homebrew/bin:$HOME/.local/bin:$PATH"
+
+REMOTE_HOST="coder-engine"
+PROFILE="agents"
+LOCK_DIR="/tmp/agent-sync.lock"
+LOG="$HOME/.local/state/agent-sync.log"
+
+mkdir -p "$(dirname "$LOG")"
+log() { printf '%s agent-sync: %s\n' "$(date '+%Y-%m-%dT%H:%M:%S')" "$1" >>"$LOG"; }
+
+command -v unison >/dev/null 2>&1 || { log "unison not on PATH"; exit 0; }
+
+# Overlap guard (mkdir is atomic; macOS has no flock).
+if ! mkdir "$LOCK_DIR" 2>/dev/null; then log "run in progress; skip"; exit 0; fi
+trap 'rmdir "$LOCK_DIR" 2>/dev/null || true' EXIT
+
+# Off-VPN / host down => quiet success so launchd doesn't flag failures.
+if ! ssh -o BatchMode=yes -o ConnectTimeout=8 "$REMOTE_HOST" true 2>/dev/null; then
+  log "remote $REMOTE_HOST unreachable; skip"; exit 0
+fi
+
+log "sync start"
+if unison "$PROFILE" >>"$LOG" 2>&1; then log "sync ok"; else log "sync failed (exit $?)"; fi
+exit 0

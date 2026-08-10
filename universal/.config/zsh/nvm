@@ -1,0 +1,48 @@
+# nvm handling — sourced from .zshrc (interactive shells only).
+#
+# Everyday node/npm/npx come from ~/.nvm/current/bin, which .zshenv puts on PATH so
+# non-interactive shells (scripts, `zsh -c`, Makefiles) get them too. This file only
+# manages the `nvm` command itself (lazy-loaded) and .nvmrc-driven version switching.
+
+export NVM_DIR="$HOME/.nvm"                  # working dir for installed node versions
+export NVM_SYMLINK_CURRENT=true              # keep ~/.nvm/current stable so it can live on PATH
+
+# Locate nvm.sh. The official curl installer drops it in $NVM_DIR; Homebrew installs it
+# under $HOMEBREW_PREFIX/opt/nvm instead (and leaves $NVM_DIR as a data-only dir).
+_nvm_sh=""
+if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+    _nvm_sh="$NVM_DIR/nvm.sh"
+elif [[ -s "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/nvm/nvm.sh" ]]; then
+    _nvm_sh="${HOMEBREW_PREFIX:-/opt/homebrew}/opt/nvm/nvm.sh"
+fi
+
+if [[ -n "$_nvm_sh" ]]; then
+
+    # Lazy `nvm`: source it only on first call. Everyday node/npm/npx already resolve
+    # from PATH, so the `nvm` command itself is all we defer.
+    nvm() {
+        unset -f nvm
+        source "$_nvm_sh" --no-use
+        nvm "$@"
+    }
+
+    # Auto `nvm use` ONLY when an .nvmrc exists in or above $PWD. Dirs without one never
+    # load nvm, so startup stays fast; the first cd into an .nvmrc tree trips the stub.
+    autoload -U add-zsh-hook
+    _nvmrc_auto_use() {
+        local dir="$PWD" nvmrc=""
+        while [[ "$dir" == /* ]]; do
+            [[ -f "$dir/.nvmrc" ]] && { nvmrc="$dir/.nvmrc"; break; }
+            [[ "$dir" == "/" ]] && break
+            dir="${dir:h}"
+        done
+        [[ -z "$nvmrc" ]] && return
+        # Compare resolved versions so we switch only when needed (and avoid a false
+        # match like ".nvmrc=18" vs "v22.18.0").
+        local want="$(nvm version "$(<"$nvmrc")" 2>/dev/null)"
+        [[ "$want" != "N/A" && "$want" == "$(nvm version 2>/dev/null)" ]] || nvm use 2>/dev/null
+    }
+    add-zsh-hook chpwd _nvmrc_auto_use
+    _nvmrc_auto_use
+
+fi

@@ -9,3 +9,4 @@ tmux
 neovim
 vim
 zsh
+unison

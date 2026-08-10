@@ -1,1 +1,4 @@
 *.zwc
+
+# TPM and all installed tmux plugins are fetched at bootstrap; never commit them.
+plugins/

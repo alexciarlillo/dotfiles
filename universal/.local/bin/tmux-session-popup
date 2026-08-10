@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Fuzzy session switcher, meant to run inside a tmux display-popup.
+# Lists all sessions (current one excluded), previews its windows, and
+# switches the client that spawned the popup to the chosen session.
+set -euo pipefail
+
+if [ -z "${TMUX:-}" ]; then
+    echo "not inside tmux" >&2
+    exit 1
+fi
+
+current="$(tmux display-message -p '#S')"
+
+# One session per line: "<name>\t<windows>w  (attached)". Sort so the most
+# recently active sessions float to the top; drop the current session.
+sessions="$(
+    tmux list-sessions -F '#{session_last_attached}#{?session_attached, *,}\t#{session_name}\t#{session_windows}w#{?session_attached, (attached),}' \
+        | sort -rn \
+        | cut -f2- \
+        | awk -F'\t' -v cur="$current" '$1 != cur'
+)"
+
+if [ -z "$sessions" ]; then
+    echo "no other sessions" >&2
+    exit 0
+fi
+
+selected="$(
+    printf '%s\n' "$sessions" \
+        | fzf --reverse --with-nth=1,2 --delimiter='\t' \
+              --header='switch session' \
+              --preview 'tmux list-windows -t {1} -F "#{window_index}: #{window_name} (#{window_panes}p)"' \
+              --preview-window='right,50%' \
+        | cut -f1
+)"
+
+[ -n "${selected:-}" ] && tmux switch-client -t "$selected"

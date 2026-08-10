@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Claude Code WorktreeRemove hook adapter.
+#
+# Claude invokes this with a JSON object on stdin containing "worktree_path".
+# Output is ignored and failures are non-fatal (logged in debug only), but we
+# still try to leave the repo clean.
+#
+# Routing (by location, since the remove payload has no agent_* fields):
+#   • A worktree that is a direct sibling of .bare/ was created by _worktree as
+#     an intentional feature worktree → remove it with _worktree-rm -f, which
+#     also deletes the local branch.
+#   • Anything else (passthrough subagent worktrees under .claude/worktrees/,
+#     plain-clone worktrees) → plain "git worktree remove --force".
+#
+# Set WORKTREE_HOOK_DEBUG=1 to append each raw payload to ~/.claude/worktree-hook.log.
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+die() {
+  printf 'worktree-hook-remove: %s\n' "$1" >&2
+  exit 1
+}
+
+command -v jq >/dev/null 2>&1 || die "jq is required but not found on PATH"
+
+input="$(cat)"
+
+if [ -n "${WORKTREE_HOOK_DEBUG:-}" ]; then
+  log="$HOME/.claude/worktree-hook.log"
+  mkdir -p "$(dirname "$log")"
+  printf '=== WorktreeRemove %s ===\n%s\n' "$(date '+%Y-%m-%dT%H:%M:%S%z')" "$input" >>"$log"
+fi
+
+worktree_path="$(printf '%s' "$input" | jq -r '.worktree_path // empty' 2>/dev/null || true)"
+[ -n "$worktree_path" ] || die "no worktree_path in payload"
+[ -d "$worktree_path" ] || die "worktree path does not exist: $worktree_path"
+
+common="$(git -C "$worktree_path" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)" ||
+  die "not inside a git repository: $worktree_path"
+root="$(dirname "$common")"
+
+# Feature worktree = a bare-hub worktree living directly under the hub root.
+if [ "$(basename "$common")" = ".bare" ] && [ -f "$root/.git" ] &&
+  [ "$(cd "$worktree_path" && cd .. && pwd -P)" = "$(cd "$root" && pwd -P)" ]; then
+  dir="$(basename "$worktree_path")"
+  (cd "$root" && "$SCRIPT_DIR/_worktree-rm" -f "$dir") >&2
+  exit 0
+fi
+
+git -C "$root" worktree remove --force "$worktree_path" >&2

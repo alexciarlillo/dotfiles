@@ -32,4 +32,9 @@ config.enable_kitty_keyboard = true
 
 config.keys = {}
 
+config.macos_window_background_blur = 0
+config.window_background_opacity = 1.0
+config.max_fps = 120
+config.front_end = "WebGpu"
+
 return config

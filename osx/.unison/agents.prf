@@ -1,0 +1,45 @@
+# Sync ~/agents (agent docs) between this Mac and coder-engine.
+# Invoked as: unison agents
+
+root = /Users/aciarlillo/agents
+root = ssh://coder-engine//home/coder/agents
+
+# Non-interactive (required for launchd)
+batch = true
+
+# True conflicts: newest mtime wins; the loser is preserved via backups below.
+prefer = newer
+times = true
+
+# Don't sync unix perms/ownership across macOS<->Linux (avoids spurious churn).
+perms = 0
+dontchmod = true
+
+# Fail fast & quietly when off-VPN / host down (wrapper also prechecks).
+sshargs = -o BatchMode=yes -o ConnectTimeout=8
+
+# Recoverable copies of anything overwritten or deleted. No backupdir: Unison
+# defaults to each host's own ~/.unison/backup/, which is valid on both macOS
+# and the Linux remote (an absolute path would break on one of them).
+backup = Name *
+backuplocation = central
+maxbackups = 5
+
+# Logging.
+log = true
+logfile = /Users/aciarlillo/.local/state/agent-sync.log
+
+# Junk / volatile per-machine state.
+ignore = Name .DS_Store
+ignore = Name {*.tmp}
+ignore = Name {workspace.json,workspace-mobile.json}
+
+# Stow-managed, versioned in the dotfiles repo (universal/agents) rather than
+# synced. Each machine links these from its own clone, so the dotfiles checkout
+# does not have to live at the same path on both — syncing them would instead
+# compare two symlinks whose targets legitimately differ, conflicting forever.
+# `Path` (not `Name`) so only the workspace root's copies are ignored.
+# NOTE: ignoring a previously-synced path does not delete it; a real file left
+# on either side is backed up to .bak by bootstrap.sh's universal_dots.
+ignore = Path AGENTS.md
+ignore = Path CLAUDE.md

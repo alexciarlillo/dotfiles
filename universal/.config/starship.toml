@@ -1,0 +1,14 @@
+command_timeout = 1000
+
+[aws]
+disabled = true
+
+[directory]
+truncation_length = 3
+
+[custom.wt_dir]
+description = "Show repo-relative path for bare worktree layouts"
+when = """ git rev-parse --git-common-dir 2>/dev/null | grep -q '\\.bare$' """
+command = "starship-dir"
+format = '[$output]($style) '
+style = 'bold cyan'

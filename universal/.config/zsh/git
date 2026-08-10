@@ -4,6 +4,9 @@ alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %
 alias wip="git add . && git commit -m 'wip'"
 alias gs="git status"
 alias gco="git checkout"
+alias gc="git commit"
+alias gcm="git commit -m"
+alias gca="git commit --amend"
 
 worktree() {
   local dir

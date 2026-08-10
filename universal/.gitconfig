@@ -1,7 +1,7 @@
 [alias]
   ca = commit --amend --reuse-message=HEAD
-	clone-wt = "!sh $HOME/.local/bin/clone-for-wt"
-	clean-wt = "!sh $HOME/.local/bin/clean-merged-wt"
+	clone-wt = "!bash $HOME/.local/bin/clone-for-wt"
+	clean-wt = "!bash $HOME/.local/bin/clean-merged-wt"
 
 [filter "lfs"]
 	process = git-lfs filter-process
@@ -45,7 +45,7 @@
 	excludesfile = ~/.gitignore_global
 	precomposeUnicode = true
 	untrackedCache = true
-	fsmonitor = true
+	fsmonitor = false
   pager = delta
 [rebase]
         autoSquash = true
@@ -67,3 +67,27 @@
 
 [merge]
   conflictstyle = zdiff3
+
+# Credentials Should _normally_ be configured via ~/.gitconfig.local
+#[credential "https://github.com"]
+# helper = !/usr/bin/gh auth git-credential
+#[credential "https://github.rbx.com"]
+# helper = !/usr/bin/gh auth git-credential
+#[credential]
+# helper = /usr/local/share/gcm-core/git-credential-manager
+#[credential "https://dev.azure.com"]
+#	useHttpPath = true
+
+# fsmonitor is a per-repo background daemon that only pays off on large repos.
+# Default is off (see [core] above) to avoid a ~1s daemon cold-start on small
+# repos; re-enable it only for the large repos below. Trailing "/" matches all
+# worktrees under a bare (.bare) layout. See universal/.config/git/fsmonitor-on.inc.
+[includeIf "gitdir:~/GitHub/roblox/groups/"]
+	path = ~/.config/git/fsmonitor-on.inc
+[includeIf "gitdir:~/GitHub/roblox/game-engine/"]
+	path = ~/.config/git/fsmonitor-on.inc
+[includeIf "gitdir:~/GitHub/roblox/web-frontend/"]
+	path = ~/.config/git/fsmonitor-on.inc
+[user]
+	email = aciarlillo@roblox.com
+	name = Alexander Ciarlillo

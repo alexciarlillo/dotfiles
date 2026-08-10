@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Claude Code WorktreeCreate hook adapter.
+#
+# Claude invokes this with a JSON object on stdin and expects the absolute path
+# of the created worktree on stdout (exit 0). A non-zero exit aborts creation.
+#
+# Routing:
+#   • Intentional feature worktree (main-session EnterWorktree / --worktree):
+#     the "agent_id"/"agent_type" fields are ABSENT. If we are inside a bare-hub
+#     (clone-for-wt layout: a root holding .bare/ and sibling worktrees) we defer
+#     to _worktree so the result is indistinguishable from a hand-made worktree
+#     (sibling layout, post-create hooks, tracking branch, RBLX_USER prefix).
+#   • Throwaway subagent worktree (isolation: worktree): the agent_* fields are
+#     PRESENT. We do not care where it lives, so we honor Claude's requested
+#     worktree_path with a plain "git worktree add".
+#   • Anything that is not a bare-hub (plain clones, non-bare repos) also falls
+#     back to the plain path so this global hook never breaks other repos.
+#
+# Set WORKTREE_HOOK_DEBUG=1 to append each raw payload to
+# ~/.claude/worktree-hook.log for verifying the real field names in your env.
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+die() {
+  printf 'worktree-hook-create: %s\n' "$1" >&2
+  exit 1
+}
+
+command -v jq >/dev/null 2>&1 || die "jq is required but not found on PATH"
+
+input="$(cat)"
+
+if [ -n "${WORKTREE_HOOK_DEBUG:-}" ]; then
+  log="$HOME/.claude/worktree-hook.log"
+  mkdir -p "$(dirname "$log")"
+  printf '=== WorktreeCreate %s ===\n%s\n' "$(date '+%Y-%m-%dT%H:%M:%S%z')" "$input" >>"$log"
+fi
+
+jqget() { printf '%s' "$input" | jq -r "$1 // empty" 2>/dev/null || true; }
+
+name="$(jqget '.name')"
+source_path="$(jqget '.source_path')"
+worktree_path="$(jqget '.worktree_path')"
+detach="$(jqget '.detach')"
+agent_id="$(jqget '.agent_id')"
+agent_type="$(jqget '.agent_type')"
+
+# The directory we run git from: the repo Claude is worktree-ing from.
+src="${source_path:-$(jqget '.cwd')}"
+src="${src:-$PWD}"
+[ -d "$src" ] || die "source path does not exist: $src"
+
+# Resolve the git common dir; for a bare-hub this is <hub>/.bare, for a normal
+# repo it is <repo>/.git. The repo/hub root is its parent directory.
+common="$(git -C "$src" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)" ||
+  die "not inside a git repository: $src"
+root="$(dirname "$common")"
+
+is_bare_hub=0
+if [ "$(basename "$common")" = ".bare" ] && [ -f "$root/.git" ]; then
+  is_bare_hub=1
+fi
+
+is_subagent=0
+if [ -n "$agent_id" ] || [ -n "$agent_type" ]; then
+  is_subagent=1
+fi
+
+# --- Feature worktree: full hand-made treatment via _worktree ---------------
+if [ "$is_bare_hub" -eq 1 ] && [ "$is_subagent" -eq 0 ]; then
+  [ -n "$name" ] || die "no worktree name provided for feature worktree"
+  rel="$(cd "$root" && "$SCRIPT_DIR/_worktree" "$name")" ||
+    die "_worktree failed for '$name' in $root"
+  printf '%s\n' "$root/$rel"
+  exit 0
+fi
+
+# --- Passthrough: throwaway subagent worktree or non-bare-hub repo ----------
+# Honor Claude's requested path; fall back to a repo-local .claude/worktrees dir.
+target="$worktree_path"
+if [ -z "$target" ]; then
+  [ -n "$name" ] || die "no worktree_path and no name provided"
+  target="$root/.claude/worktrees/$name"
+fi
+
+if [ "$detach" = "true" ]; then
+  git -C "$root" worktree add --detach "$target" HEAD >&2
+elif [ -n "$name" ] && git -C "$root" worktree add -b "$name" "$target" HEAD >&2 2>/dev/null; then
+  :
+else
+  git -C "$root" worktree add --detach "$target" HEAD >&2
+fi
+
+printf '%s\n' "$target"

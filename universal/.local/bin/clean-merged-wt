@@ -38,24 +38,37 @@ You can run this from:
 
   • A parent directory holding one hub per subdirectory (each child has .bare/ + .git): every hub is cleaned.
 
-Removal criteria (any one is enough, after fetching unless -q):
+Confidence ladder (evaluated in order, after fetching unless -q):
 
-  • The branch tip is reachable from origin/<main>|origin/<master>, i.e. "git branch --merged origin/<primary>";
+  CONFIDENT — worktree removed:
+    1. Branch tip reachable from origin/<primary> ("git branch --merged").
+    2. Branch's cumulative diff already in origin/<primary> — a clean squash/rebase merge,
+       detected locally by patch-id (no network). Catches the squash-merge-then-delete flow.
+    3. gh reports a merged PR for the branch (only when upstream is "gone"; auto if gh is
+       installed + authenticated; disable with --no-verify-remote).
 
-  • Or Git reports the branch's upstream as "gone": the remote-tracking ref was dropped by
-    "fetch --prune" because origin no longer has that branch (usual when you squash-merge and
-    delete the branch).
+  RISKY — SKIPPED by default (removed only with --force):
+    4. Upstream is "gone" but the branch's changes were NOT found in origin/<primary>, and gh
+       could not confirm a merge (offline, disabled, or reports no merged PR). This is the
+       abandoned / force-deleted case. The unique-commit count and shortlog are printed so you
+       can see exactly what would be lost.
 
-Branches with no upstream and not merged locally are skipped (typically never-pushed locals).
+  SKIPPED:
+    5. No upstream and not merged (typically never-pushed locals).
 
-Limitation: if someone deletes the remote branch without merging, upstream is still "gone" and this
-script would remove that worktree too — use dry-run when unsure.
+Note: prior to this ladder, "upstream gone" alone removed the worktree unconditionally. That is
+now the RISKY bucket (skip + warn) so abandoned branches are never deleted silently — use --force
+(or the gh tier) to remove them.
 
 Options:
-  -n, --dry-run   Show what would be removed; make no changes
-  -f, --force     Force-remove worktrees and delete branches even with local changes / unmerged reflog-wise
-                  (same spirit as _worktree-rm -f)
-  -q, --no-fetch  Skip "git fetch origin --prune" before comparing (use stale refs; may miss freshly deleted remotes)
+  -n, --dry-run           Show what would be removed; make no changes
+  -f, --force             Force-remove worktrees / delete branches even with local changes, AND
+                          remove RISKY (upstream-gone, unverified) worktrees instead of skipping them
+  -q, --no-fetch          Skip "git fetch origin --prune" before comparing (stale refs; may miss
+                          freshly deleted remotes)
+      --verify-remote     Use gh to confirm PR merge state for upstream-gone branches (default: on
+                          when gh is present)
+      --no-verify-remote  Never call gh; rely on local detection only (offline / sandbox)
 
 If no directory argument is given, the current directory is used as the hub or parent-of-hubs.
 
@@ -70,6 +83,7 @@ EOF
 LONG_FETCH=1
 DRY_RUN=0
 FORCE=0
+VERIFY_REMOTE=1
 POSITIONAL=()
 
 while [ $# -gt 0 ]; do
@@ -77,6 +91,8 @@ while [ $# -gt 0 ]; do
     -n | --dry-run) DRY_RUN=1 ;;
     -f | --force) FORCE=1 ;;
     -q | --no-fetch) LONG_FETCH=0 ;;
+    --verify-remote) VERIFY_REMOTE=1 ;;
+    --no-verify-remote) VERIFY_REMOTE=0 ;;
     -h | --help) usage 0 ;;
     --)
       shift
@@ -148,8 +164,56 @@ branch_is_merged_into_origin_primary() {
     grep -qxF -- "$branch"
 }
 
-# Prints one line describing why we remove ("merged"|"upstream-gone") to stdout;
-# exits 0 if we should remove, 1 otherwise.
+# Content-based merge detection: synthesize what the branch would look like squashed
+# onto its merge-base with origin/<primary>, then ask "git cherry" whether an equivalent
+# patch (same patch-id) already exists in origin/<primary>. Catches squash- and
+# rebase-merges that "git branch --merged" (ancestry-based) cannot see. Local only.
+# Note: only fires on a CLEAN squash — if the merge involved conflict resolution or
+# rebase drift the patch-ids differ and this returns non-zero (falls through to the
+# risky bucket, where the gh tier can still confirm it).
+branch_changes_in_origin_primary() {
+  local branch="$1" primary="$2" base tree squashed
+  base="$(git merge-base "origin/$primary" "$branch" 2>/dev/null)" || return 1
+  tree="$(git rev-parse "$branch^{tree}" 2>/dev/null)" || return 1
+  squashed="$(git commit-tree "$tree" -p "$base" -m squash-probe 2>/dev/null)" || return 1
+  git cherry "origin/$primary" "$squashed" 2>/dev/null | grep -q '^-'
+}
+
+# Detect once per run whether we can ask GitHub. Cached in GH_STATE (empty|yes|no).
+GH_STATE=""
+gh_can_verify() {
+  if [ -z "$GH_STATE" ]; then
+    if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+      GH_STATE="yes"
+    else
+      GH_STATE="no"
+    fi
+  fi
+  [ "$GH_STATE" = "yes" ]
+}
+
+# 0 = a merged PR exists for this head branch; 1 = no merged PR; 2 = gh error/unreachable.
+gh_pr_merged() {
+  local branch="$1" out
+  out="$(gh pr list --state merged --head "$branch" --json number -q '.[0].number' 2>/dev/null)" ||
+    return 2
+  [ -n "$out" ]
+}
+
+# Idea 3: show what a risky removal would cost — commits on the branch that are not
+# individually reachable from origin/<primary>.
+print_stakes() {
+  local branch="$1" primary="$2" n
+  n="$(git rev-list --count "origin/$primary..$branch" 2>/dev/null || echo '?')"
+  warn "    ↳ ${n} commit(s) not individually reachable in origin/${primary}:"
+  git log --oneline --no-decorate -n 20 "origin/$primary..$branch" 2>/dev/null |
+    sed 's/^/        /' >&2 || true
+}
+
+# Prints a reason token to stdout and returns a confidence code:
+#   0 = confident remove   (merged | squash-merged | gh-merged)
+#   2 = risky              (upstream-gone-unverified | gh-abandoned) — skip unless --force
+#   1 = not eligible       (skip; no upstream and not merged)
 cleanup_reason_or_skip() {
   local branch="$1" primary="$2"
   local track
@@ -159,10 +223,32 @@ cleanup_reason_or_skip() {
     return 0
   fi
 
+  if branch_changes_in_origin_primary "$branch" "$primary"; then
+    printf '%s\n' squash-merged
+    return 0
+  fi
+
   track="$(branch_upstream_track "$branch")"
   if [ "$track" = "gone" ]; then
-    printf '%s\n' upstream-gone
-    return 0
+    if [ "$VERIFY_REMOTE" -eq 1 ] && gh_can_verify; then
+      gh_pr_merged "$branch"
+      case $? in
+        0)
+          printf '%s\n' gh-merged
+          return 0
+          ;;
+        1)
+          printf '%s\n' gh-abandoned
+          return 2
+          ;;
+        *)
+          printf '%s\n' upstream-gone-unverified
+          return 2
+          ;;
+      esac
+    fi
+    printf '%s\n' upstream-gone-unverified
+    return 2
   fi
 
   return 1
@@ -229,24 +315,48 @@ cleanup_one_hub() {
         return 0
       fi
 
-      local why
-      if ! why="$(cleanup_reason_or_skip "$wt_branch" "$primary")"; then
+      local why rc
+      why="$(cleanup_reason_or_skip "$wt_branch" "$primary")" && rc=0 || rc=$?
+
+      if [ "$rc" -eq 1 ]; then
         info "[$hub_rp] Leave (not eligible — not merged into origin/$primary and upstream not gone): [$wt_branch] $wt_dir"
         return 0
       fi
 
       wt_arg="${wt_dir}"
-      case "$why" in
-        merged)
-          info "[$hub_rp] Remove worktree (branch merged into origin/$primary): [$wt_branch] $wt_arg"
-          ;;
-        upstream-gone)
-          info "[$hub_rp] Remove worktree (upstream gone / remote branch removed): [$wt_branch] $wt_arg"
-          ;;
-        *)
-          die "[$hub_rp] Internal error: unexpected cleanup reason: $why"
-          ;;
-      esac
+
+      if [ "$rc" -eq 2 ]; then
+        case "$why" in
+          gh-abandoned)
+            warn "[$hub_rp] RISKY: gh reports no merged PR and upstream gone — possibly abandoned: [$wt_branch] $wt_dir"
+            ;;
+          *)
+            warn "[$hub_rp] RISKY: upstream gone but changes NOT found in origin/$primary: [$wt_branch] $wt_dir"
+            ;;
+        esac
+        print_stakes "$wt_branch" "$primary"
+
+        if [ "$FORCE" -ne 1 ]; then
+          warn "[$hub_rp] Skipping (re-run with --force to remove anyway): [$wt_branch] $wt_dir"
+          return 0
+        fi
+        warn "[$hub_rp] --force set: removing risky worktree anyway: [$wt_branch] $wt_dir"
+      else
+        case "$why" in
+          merged)
+            info "[$hub_rp] Remove worktree (branch merged into origin/$primary): [$wt_branch] $wt_arg"
+            ;;
+          squash-merged)
+            info "[$hub_rp] Remove worktree (changes already in origin/$primary — squash/rebase merge): [$wt_branch] $wt_arg"
+            ;;
+          gh-merged)
+            info "[$hub_rp] Remove worktree (PR merged per gh): [$wt_branch] $wt_arg"
+            ;;
+          *)
+            die "[$hub_rp] Internal error: unexpected cleanup reason: $why"
+            ;;
+        esac
+      fi
 
       if [ "$DRY_RUN" -eq 1 ]; then
         return 0

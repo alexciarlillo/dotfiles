@@ -6,3 +6,4 @@ git-delta
 lsd
 ripgrep
 starship
+yazi-build

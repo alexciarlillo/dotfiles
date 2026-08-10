@@ -2,19 +2,26 @@
 [[ -r ~/.config/zsh/znap ]] ||
     git clone --depth 1 -- https://github.com/marlonrichert/zsh-snap.git ~/.config/zsh/znap
 
-# Custom completions must be on fpath before compinit runs (via znap/oh-my-zsh)
+# Custom completions must be on fpath before compinit runs (via znap)
 fpath=(~/.config/zsh/completions $fpath)
-[[ -d /Users/alex/.docker/completions ]] && fpath=(/Users/alex/.docker/completions $fpath)
+[[ -d /Users/$HOME/.docker/completions ]] && fpath=(/Users/$HOME/.docker/completions $fpath)
 
 source ~/.config/zsh/znap/znap.zsh
 
-# install oh-my-zsh
-znap source ohmyzsh/ohmyzsh
-znap source ohmyzsh/ohmyzsh plugins/git
+# --- History ---
+# Set explicitly here: dropping oh-my-zsh removed its lib/history.zsh, which was
+# providing HISTSIZE/SAVEHIST and hist options. Without this we fall back to
+# macOS /etc/zshrc's tiny HISTSIZE=2000/SAVEHIST=1000.
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000        # entries kept in memory
+SAVEHIST=50000        # entries persisted to file
 
-# Disable shared history across terminals
-unsetopt share_history
-setopt inc_append_history
+setopt extended_history       # record timestamps
+setopt inc_append_history     # append each command as it's entered
+setopt hist_ignore_all_dups   # dedupe — better autosuggestions
+setopt hist_ignore_space      # ignore commands starting with a space
+setopt hist_reduce_blanks
+unsetopt share_history        # no live cross-terminal sync; new shells still read the full file at startup
 
 ZSH_AUTOSUGGEST_STRATEGY=( history )
 znap source zsh-users/zsh-autosuggestions
@@ -22,48 +29,15 @@ znap source zsh-users/zsh-autosuggestions
 ZSH_HIGHLIGHT_HIGHLIGHTERS=( main brackets )
 znap source zsh-users/zsh-syntax-highlighting
 
-# load NVM
-export NVM_DIR="$HOME/.nvm"
-export NVM_SYMLINK_CURRENT=true
-export NVM_AUTO_USE=true 
-export NVM_LAZY_LOAD=true
+# agents work-management workspace (research/, plans/, handoffs/)
+[[ -n "$AGENT_WORK_DIR" ]] && mkdir -p "$AGENT_WORK_DIR"/{research,plans,handoffs}
 
-# ripgrep config
-export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
-
-# agents
-export AGENT_HANDOFF_DIR="$HOME/agents/handoffs"
-[[ ! -d "$AGENT_HANDOFF_DIR" ]] && mkdir -p "$AGENT_HANDOFF_DIR"
-
-# universal path exports
-export PATH="$PATH:$HOME/.local/bin"
-
-case `uname` in
-    Darwin)
-        export PATH="$PATH:$HOME/.dotnet/tools"
-        # Roblox utilities 
-        source $HOME/.config/zsh/rbx
-        export RBX_LOCAL_NUGET_FEED=/Users/${USER}/.rbx/LocalNuGetRepo
-        export RBX_GITHUB_USER=aciarlillo
-        # nvm
-        export PATH="$PATH:$HOME/.nvm/current/bin"
-        [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"
-    ;;
-    Linux)
-        export TERM=xterm-256color
-        export EDITOR="vim"
-        export PATH="$PATH:$HOME/.cargo/bin"
-    ;;
-esac
-
-# python :(
+# python (interactive shell init)
 if [[ -d "$HOME/.pyenv" ]]; then
-  export PYENV_ROOT="$HOME/.pyenv"
-  [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-  eval "$(pyenv init - zsh)"
+    eval "$(pyenv init - zsh)"
 fi
 
-# aliases
+# generic aliases
 if [ -f ~/.config/zsh/aliases ]; then
     . ~/.config/zsh/aliases
 fi
@@ -78,8 +52,23 @@ if [ -f ~/.config/zsh/tmux ]; then
     . ~/.config/zsh/tmux
 fi
 
+# nvm (lazy load + .nvmrc auto-use)
+if [ -f ~/.config/zsh/nvm ]; then
+    . ~/.config/zsh/nvm
+fi
+
+# Private interactive shell configs
+if [[ -d "$HOME/.config/zsh/interactive.d" ]]; then
+    for f in "$HOME/.config/zsh/interactive.d"/*.zsh(N); do
+        . "$f"
+    done
+fi
+
 znap eval starship 'starship init zsh'
 
 # Custom completions and Docker CLI completions are loaded near the top,
 # before znap/oh-my-zsh runs compinit.
 
+
+# Added by declawd
+export PATH="$HOME/.local/bin:$PATH"
