@@ -3,6 +3,11 @@ command_timeout = 1000
 [aws]
 disabled = true
 
+# Inside an LXC container systemd writes /run/systemd/container, which starship
+# reports as "Systemd" on every prompt. Always-true, so no signal.
+[container]
+disabled = true
+
 [directory]
 truncation_length = 3
 
