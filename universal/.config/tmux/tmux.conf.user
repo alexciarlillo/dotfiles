@@ -181,9 +181,19 @@ set-environment -g TMUX_PLUGIN_MANAGER_PATH "$HOME/.config/tmux/plugins/"
 # so @plugin entries here are invisible to it. @tpm_plugins is read from tmux
 # server options instead, which works no matter how the file was sourced.
 
-set -g @tpm_plugins 'alexciarlillo/tmux-agent-mgr'
+# continuum must load LAST, so it's the final entry in the list.
+set -g @tpm_plugins 'tmux-plugins/tpm alexciarlillo/tmux-agent-mgr tmux-plugins/tmux-resurrect tmux-plugins/tmux-continuum'
 
+# Persist sessions across reboots (the devspace gets killed overnight).
+# resurrect saves windows/panes/layouts/cwd (+ scrollback) to
+# ~/.local/share/tmux/resurrect/; continuum auto-saves every 10 min and
+# auto-restores when the tmux server starts — so in the morning just run `tmux`.
+# Save/restore manually with `prefix C-s` / `prefix C-r`.
+set -g @resurrect-capture-pane-contents 'on'
+set -g @continuum-save-interval '10'
+set -g @continuum-restore 'on'
 
+set -g @agent_mgr_width '15%'
 
 # Initialize TPM -- keep this line at the very bottom of the file.
 run '$HOME/.config/tmux/plugins/tpm/tpm'

@@ -1,10 +1,5 @@
 # Agent instructions
 
-Agent-agnostic standing instructions — the single source of truth for every agent, and the only
-place these belong. Codex reads this file natively at `~/.agents/AGENTS.md`; Claude Code doesn't, so
-`~/.claude/CLAUDE.md` is a stub that imports it. Add standing instructions here, not in either
-agent's own config. Grow this over time.
-
 ## References
 
 If I ask you to read a reference or file, URL, JIRA ticket, Confluence article or ANY document and you are not able to retrieve it, TELL ME so we can fix the issue. Do not just ignore or work without the reference material.
@@ -19,3 +14,20 @@ Before creating or updating any of these, load the **`agent-docs`** skill for th
 (dirs, metadata block, status vocab, filenames, archive lifecycle) — including when writing one
 adhoc, without going through `research` / `plan` / `handoff` / `pickup`. If a project-specific doc
 skill scopes the area you're working in (e.g. `voice-server-docs`), it wins.
+
+## Code Comments
+
+All code comments should be limited to maximum of 80 characters per line and no more than 3 lines per comment block.
+Avoid references to external documents in code comments.
+Avoid referencing past conversations or decisions in code comments.
+Code comments should be self-contained and explain the "why" behind the code, not just the "what".
+
+## PR Comments
+
+Do not automatically reply to comments when addressing PR feedback unless prompted to do so.
+Do not automatically post comments to PRs you are reviewing unless prompted to do so.
+
+## Code Reviews
+
+All code reviews done using the review-pr or code-review skills should generate a corresponding review document in `$AGENT_WORK_DIR/reviews` with a link to the PR and a summary of the review.
+All references to issues should include links to the relevant locations or commits in the GitHub diff.

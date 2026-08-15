@@ -46,8 +46,8 @@ for i in $(seq 1 $num_monitors); do
   done
 done
 
-obsidian_id=$(aerospace list-windows --all | grep "Obsidian" | awk '{print $1}')
-signal_id=$(aerospace list-windows --all | grep "Signal" | awk '{print $1}')
+#obsidian_id=$(aerospace list-windows --all | grep "Obsidian" | awk '{print $1}')
+#signal_id=$(aerospace list-windows --all | grep "Signal" | awk '{print $1}')
 
 # finally set each monitor to default workspace
 if [[ $num_monitors -eq 1 ]]; then
@@ -57,13 +57,13 @@ else
   aerospace focus-monitor 1
   aerospace workspace q
 
-  aerospace move --window-id $signal_id down
+  #  aerospace move --window-id $signal_id down
 
   aerospace focus-monitor 3
   aerospace workspace t
 
   # fixup workspace T
-  aerospace move --window-id $obsidian_id down
+  #  aerospace move --window-id $obsidian_id down
 
   aerospace focus-monitor 2
   aerospace workspace w

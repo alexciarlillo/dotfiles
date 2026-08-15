@@ -2,7 +2,7 @@ after-login-command = [
 ]
 
 after-startup-command = [
-     'exec-and-forget borders active_color=0xffa6e3a1 inactive_color=0xffa6adc8 width=5.0'
+     'exec-and-forget borders active_color=0xffef9f76 hidpi=on width=8.0'
 ]
 
 # Start AeroSpace at login
@@ -34,10 +34,13 @@ outer.top =        10
 outer.right =      10
 
 [workspace-to-monitor-force-assignment]
-q = [1, 'main', 'built-in'] 
-a = [1, 'main', 'built-in']
-t = [3, 'main', 'built-in']
-g = [3, 'main', 'built-in']
+# q = [1, 'main', 'built-in'] 
+# a = [1, 'main', 'built-in']
+# t = [3, 'main', 'built-in']
+# g = [3, 'main', 'built-in']
+x = [2, 'built-in']
+c = [2, 'built-in']
+v = [2, 'built-in']
 
 [mode.main.binding]
 cmd-h = [] # Disable "hide application"
@@ -77,10 +80,10 @@ alt-f = 'workspace f'
 alt-x = 'workspace x'
 alt-c = 'workspace c'
 alt-v = 'workspace v'
-alt-q = 'workspace q'
-alt-a = 'workspace a'
-alt-t = 'workspace t'
-alt-g = 'workspace g'
+# alt-q = 'workspace q'
+# alt-a = 'workspace a'
+# alt-t = 'workspace t'
+# alt-g = 'workspace g'
 
 cmd-alt-w = ['move-node-to-workspace w', 'workspace w']
 cmd-alt-e = ['move-node-to-workspace e', 'workspace e']
@@ -91,10 +94,10 @@ cmd-alt-f = ['move-node-to-workspace f', 'workspace f']
 cmd-alt-x = ['move-node-to-workspace x', 'workspace x']
 cmd-alt-c = ['move-node-to-workspace c', 'workspace c']
 cmd-alt-v = ['move-node-to-workspace v', 'workspace v']
-cmd-alt-q = ['move-node-to-workspace q', 'workspace q']
-cmd-alt-a = ['move-node-to-workspace a', 'workspace a']
-cmd-alt-t = ['move-node-to-workspace t', 'workspace t']
-cmd-alt-g = ['move-node-to-workspace g', 'workspace g']
+# cmd-alt-q = ['move-node-to-workspace q', 'workspace q']
+# cmd-alt-a = ['move-node-to-workspace a', 'workspace a']
+# cmd-alt-t = ['move-node-to-workspace t', 'workspace t']
+# cmd-alt-g = ['move-node-to-workspace g', 'workspace g']
 
 cmd-alt-shift-w = 'move-node-to-workspace w'
 cmd-alt-shift-e = 'move-node-to-workspace e'
@@ -105,10 +108,10 @@ cmd-alt-shift-f = 'move-node-to-workspace f'
 cmd-alt-shift-x = 'move-node-to-workspace x'
 cmd-alt-shift-c = 'move-node-to-workspace c'
 cmd-alt-shift-v = 'move-node-to-workspace v'
-cmd-alt-shift-q = 'move-node-to-workspace q'
-cmd-alt-shift-a = 'move-node-to-workspace a'
-cmd-alt-shift-t = 'move-node-to-workspace t'
-cmd-alt-shift-g = 'move-node-to-workspace g'
+# cmd-alt-shift-q = 'move-node-to-workspace q'
+# cmd-alt-shift-a = 'move-node-to-workspace a'
+# cmd-alt-shift-t = 'move-node-to-workspace t'
+# cmd-alt-shift-g = 'move-node-to-workspace g'
 
 cmd-ctrl-space = 'mode service'
 
@@ -132,23 +135,11 @@ run = ['move-node-to-workspace v']
 
 [[on-window-detected]]
 if.app-id = 'com.tinyspeck.slackmacgap'
-run = ['move-node-to-workspace t']
+run = ['move-node-to-workspace c']
 
 [[on-window-detected]]
 if.app-id = 'com.todoist.mac.Todoist'
 run = 'move-node-to-workspace e'
-
-[[on-window-detected]]
-if.app-id = 'com.flexibits.fantastical2.mac'
-run = 'move-node-to-workspace e'
-
-[[on-window-detected]]
-if.app-id = 'com.rambox'
-run = 'move-node-to-workspace e'
-
-[[on-window-detected]]
-if.app-id = 'com.tinyapp.TablePlus'
-run = 'move-node-to-workspace c'
 
 [[on-window-detected]]
 if.app-id = 'com.bambulab.bambu-studio'
@@ -164,16 +155,12 @@ run = ['layout floating']
 
 [[on-window-detected]]
 if.app-id = 'org.whispersystems.signal-desktop'
-run = 'move-node-to-workspace q'
+run = 'move-node-to-workspace c'
 
 [[on-window-detected]]
 if.app-id = 'com.hnc.Discord'
-run = 'move-node-to-workspace q'
-
-[[on-window-detected]]
-if.app-id = 'com.anthropic.claudefordesktop'
-run = 'move-node-to-workspace g'
+run = 'move-node-to-workspace c'
 
 [[on-window-detected]]
 if.app-id = 'md.obsidian'
-run = 'move-node-to-workspace t'
+run = 'move-node-to-workspace x'

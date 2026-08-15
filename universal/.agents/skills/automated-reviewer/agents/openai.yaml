@@ -1,0 +1,4 @@
+interface:
+  display_name: "Direct Review Request Documenter"
+  short_description: "Find and document direct PR review requests"
+  default_prompt: "Use $direct-review-request-documenter to find and document my open direct GitHub Enterprise review requests."

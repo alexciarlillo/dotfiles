@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+#
+# backport-public — mirror the canonical (work) dotfiles repo into the public
+# dotfiles repo, excluding rblx/. The canonical repo is the source of truth;
+# this pushes its *committed* state into the public working tree so you can
+# review, commit, and push there.
+#
+# Why git archive + rsync (not a plain rsync of the working tree):
+#   - archive HEAD copies only committed files, so untracked/gitignored junk
+#     (.DS_Store, downloaded Hammerspoon Spoons, local secrets, lock files)
+#     never leaks into the public repo.
+#   - rsync --delete makes the public tree a faithful mirror (removes files
+#     that no longer exist in canonical), while --exclude protects .git.
+#   - stripping rblx/ from the snapshot keeps work configs out permanently.
+#
+# Usage:
+#   backport-public            # stage the mirror in the public repo, then stop
+#   backport-public -m "msg"   # also commit in the public repo (still no push)
+#
+# Overridable via env:
+#   DOTFILES_CANONICAL (default: ~/github/aciarlillo/dotfiles)
+#   DOTFILES_PUBLIC    (default: ~/github/alexciarlillo/dotfiles)
+
+set -euo pipefail
+
+CANON="${DOTFILES_CANONICAL:-$HOME/github/aciarlillo/dotfiles}"
+PUBLIC="${DOTFILES_PUBLIC:-$HOME/github/alexciarlillo/dotfiles}"
+
+commit_msg=""
+if [[ "${1:-}" == "-m" ]]; then
+    commit_msg="${2:-}"
+    [[ -z "$commit_msg" ]] && { echo "error: -m requires a message" >&2; exit 1; }
+fi
+
+for d in "$CANON" "$PUBLIC"; do
+    git -C "$d" rev-parse --git-dir >/dev/null 2>&1 || {
+        echo "error: not a git repo: $d" >&2; exit 1; }
+done
+
+# Warn (don't block) if canonical has uncommitted changes — we backport HEAD.
+if ! git -C "$CANON" diff --quiet || ! git -C "$CANON" diff --cached --quiet; then
+    echo "warning: $CANON has uncommitted changes; backporting committed HEAD only." >&2
+fi
+
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+
+# rblx = work-specific; strip both the top-level stow package and its extra/ hook.
+RBLX_PATHS=(rblx extra/rblx)
+
+git -C "$CANON" archive HEAD | tar -x -C "$tmp"
+for p in "${RBLX_PATHS[@]}"; do
+    rm -rf "${tmp:?}/$p"
+done
+
+rsync -a --delete --exclude='.git/' "$tmp"/ "$PUBLIC"/
+
+git -C "$PUBLIC" add -A
+
+echo "=== staged changes in $PUBLIC ==="
+git -C "$PUBLIC" status --short
+
+if [[ -n "$commit_msg" ]]; then
+    if git -C "$PUBLIC" diff --cached --quiet; then
+        echo "nothing to commit; public repo already matches canonical."
+    else
+        git -C "$PUBLIC" commit -m "$commit_msg"
+        echo "committed. review, then: git -C \"$PUBLIC\" push"
+    fi
+else
+    echo
+    echo "review, then commit & push, e.g.:"
+    echo "  git -C \"$PUBLIC\" diff --cached"
+    echo "  git -C \"$PUBLIC\" commit -m \"backport from canonical\" && git -C \"$PUBLIC\" push"
+fi

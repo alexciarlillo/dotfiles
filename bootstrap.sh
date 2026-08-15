@@ -128,9 +128,13 @@ universal_dots() {
   # leaves a dangling link behind that Claude Code still tries to load. A broken
   # link here is useless regardless of who created it, and this dir (unlike
   # ~/.claude/skills) is not shared with the Roblox skill manager.
+  # `if` (not `cond && rm`) so a false test on the last iteration does not make
+  # the loop — and the function — exit non-zero under `set -e`.
   local rule
   for rule in "$HOME"/.claude/rules/*; do
-    [[ -L "$rule" && ! -e "$rule" ]] && rm "$rule"
+    if [[ -L "$rule" && ! -e "$rule" ]]; then
+      rm "$rule"
+    fi
   done
 }
 
@@ -159,7 +163,9 @@ agents_dots() {
     mkdir -p "$target"
     for skill in "$agents_src/skills"/*/; do
       skill="$(basename "$skill")"
-      [[ -d "$target/$skill" && ! -L "$target/$skill" ]] && rm -rf "${target:?}/$skill"
+      if [[ -d "$target/$skill" && ! -L "$target/$skill" ]]; then
+        rm -rf "${target:?}/$skill"
+      fi
     done
   done
 
