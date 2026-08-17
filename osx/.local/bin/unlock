@@ -33,7 +33,14 @@ for i in $(seq 1 $num_monitors); do
   workspace_ids=$(aerospace list-workspaces --monitor focused)
 
   # iterate over each workspace
+  # for any workspace from a large monitor we want to switch to accordion
+  # when going to a small (single) monitor, and switch back to tiled when going to a large monitor
   for id in $workspace_ids; do
+    # skip if the workspace is the secondary monitor workspace (x,c,v)
+    if [[ $id == "x" || $id == "c" || $id == "v" ]]; then
+      continue
+    fi
+
     aerospace workspace $id
 
     if [[ $num_monitors -eq 1 ]]; then
@@ -55,16 +62,16 @@ if [[ $num_monitors -eq 1 ]]; then
   aerospace workspace w
 else
   aerospace focus-monitor 1
-  aerospace workspace q
+  aerospace workspace w
 
   #  aerospace move --window-id $signal_id down
 
-  aerospace focus-monitor 3
-  aerospace workspace t
+  # aerospace focus-monitor 3
+  # aerospace workspace t
 
   # fixup workspace T
   #  aerospace move --window-id $obsidian_id down
 
   aerospace focus-monitor 2
-  aerospace workspace w
+  aerospace workspace c
 fi
