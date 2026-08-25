@@ -26,6 +26,11 @@ setw -g automatic-rename on
 set -g renumber-windows on
 setw -g aggressive-resize on
 
+# Replace command-based automatic names on newly created windows with a Git
+# branch-derived name. Indexed hooks coexist with hooks installed by plugins.
+set-hook -g 'after-new-window[90]' 'run-shell -b "~/.local/bin/tmux-smart-window-name #{window_id}"'
+set-hook -g 'after-new-session[90]' 'run-shell -b "~/.local/bin/tmux-smart-window-name #{window_id}"'
+
 # -- Keybindings (WezTerm-style) ----------------------------------------------
 
 # Leader key similar to WezTerm (using Ctrl+Space as alternative to Cmd+Shift+Space)
@@ -133,11 +138,13 @@ set -g status-justify centre
 # Use terminal default colors to avoid conflicts
 set -g status-style 'bg=default,fg=default'
 set -g status-left-length 20
-set -g status-right-length 50
+set -g status-right-length 60
 
-# Simple status format
+# Simple status format. The per-host chip (from ~/.config/remotes.conf via
+# remote-badge, shared with the starship prompt) sits next to the clock; it is
+# empty on unmapped hosts.
 set -g status-left '#[bold][#S] '
-set -g status-right ' %H:%M %d-%b'
+set -g status-right '#(~/.local/bin/remote-badge tmux) %H:%M %d-%b'
 
 # Window status - minimal
 setw -g window-status-format ' #I:#{?window_zoomed_flag,[#W],#W} '

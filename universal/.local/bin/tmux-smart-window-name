@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+
+# Give newly created tmux windows concise names derived from their Git branch.
+set -u
+
+# Case conversion, portable to macOS system bash 3.2 (no ${var,,}/${var^^}).
+lc() { printf '%s' "$1" | tr '[:upper:]' '[:lower:]'; }
+uc() { printf '%s' "$1" | tr '[:lower:]' '[:upper:]'; }
+
+repo_name() {
+    local path="$1" common_dir
+
+    common_dir="$(git -C "$path" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)" || return 1
+    case "$(basename "$common_dir")" in
+        .bare|.git) basename "$(dirname "$common_dir")" ;;
+        *) basename "$common_dir" ;;
+    esac
+}
+
+name_from_branch() {
+    local branch="$1" repository="$2" upper token result=""
+    local -a tokens
+
+    if [[ "$(lc "$branch")" == "master" ]]; then
+        printf '%s\n' "$repository"
+        return
+    fi
+
+    upper="$(uc "$branch")"
+    if [[ "$upper" =~ (^|[^A-Z0-9])([A-Z][A-Z0-9]+-[0-9]+)($|[^0-9]) ]] \
+        && [[ "${BASH_REMATCH[2]%%-*}" != "NOJIRA" ]]; then
+        printf '%s\n' "${BASH_REMATCH[2]}"
+        return
+    fi
+
+    branch="${branch//\//-}"
+    branch="${branch//_/-}"
+    IFS=- read -r -a tokens <<<"$branch"
+    for token in "${tokens[@]}"; do
+        case "$(lc "$token")" in
+            aciarlillo|adhoc|feature|nojira|'') continue ;;
+        esac
+        [[ -n "$result" ]] && result+="-"
+        result+="$token"
+    done
+
+    printf '%s\n' "${result:-$repository}"
+}
+
+name_from_path() {
+    local path="$1" branch repository top
+
+    # The worktree layout keeps the bare repository in <repo>/.bare.
+    if [[ -d "$path/.bare" ]] \
+        && [[ "$(git -C "$path/.bare" rev-parse --is-bare-repository 2>/dev/null)" == "true" ]]; then
+        basename "$path"
+        return
+    fi
+
+    if [[ "$(git -C "$path" rev-parse --is-bare-repository 2>/dev/null)" == "true" ]]; then
+        repo_name "$path"
+        return
+    fi
+
+    repository="$(repo_name "$path")" || {
+        basename "$path"
+        return
+    }
+
+    branch="$(git -C "$path" symbolic-ref --quiet --short HEAD 2>/dev/null || true)"
+    if [[ -n "$branch" ]]; then
+        name_from_branch "$branch" "$repository"
+        return
+    fi
+
+    top="$(git -C "$path" rev-parse --show-toplevel 2>/dev/null || true)"
+    basename "${top:-$path}"
+}
+
+if [[ "${1:-}" == "--path" ]]; then
+    name_from_path "${2:?usage: tmux-smart-window-name --path PATH}"
+    exit
+fi
+
+mode=create
+if [[ "${1:-}" == "--update" ]]; then
+    mode=update
+    shift
+fi
+
+target="${1:?usage: tmux-smart-window-name [--update] WINDOW_TARGET}"
+
+# A local automatic-rename=off means the caller deliberately supplied a name
+# (for example, new-window -n). Only windows previously claimed by this script
+# are eligible for later directory-change updates.
+if [[ "$mode" == create ]]; then
+    [[ "$(tmux show-options -Avw -t "$target" automatic-rename 2>/dev/null)" == "on" ]] || exit 0
+else
+    [[ "$(tmux show-options -qvw -t "$target" @smart-window-name 2>/dev/null)" == "on" ]] || exit 0
+fi
+
+path="$(tmux display-message -p -t "$target" '#{pane_current_path}')"
+name="$(name_from_path "$path")"
+if [[ -n "$name" ]]; then
+    tmux set-option -qw -t "$target" @smart-window-name on
+    tmux rename-window -t "$target" "$name"
+fi

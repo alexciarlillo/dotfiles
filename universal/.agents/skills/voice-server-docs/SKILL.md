@@ -42,8 +42,8 @@ ls "$AGENT_WORK_DIR"/{handoffs,plans,research}          # agent workspace — th
 
 ## Voice-specific overrides to the shared conventions
 
-- **Verify against `origin/master`, not local `master`.** The `Last verified:` banner (see
-  `agent-docs`) must be checked against **`origin/master`** — the local `master` worktree can be
+- **Verify against `origin/master`, not local `master`.** The `Last verified:` / `Verified against:`
+  banner (see `agent-docs`) must record **`origin/master`** — the local `master` worktree can be
   thousands of commits stale. Use `git show origin/master:<path>` / `git grep origin/master`.
 - **Graduation folds into `docs/`, then deletes.** `agent-docs` says agent-workspace docs live outside
   git, so you mark a terminal `Status:` and let the user prune. For Voice.Server it's stronger: when a

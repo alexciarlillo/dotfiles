@@ -1,0 +1,127 @@
+#!/bin/sh
+# Resolve the current machine's remote identity from ~/.config/remotes.conf and
+# emit a per-host "chip" for a given consumer. All color logic lives here so
+# starship and tmux share one mapping; neither hardcodes a color, and the
+# terminal background is never touched.
+#
+# Usage: remote-badge <starship|tmux|env|id>
+set -u
+
+CONFIG="${REMOTES_CONFIG:-$HOME/.config/remotes.conf}"
+
+# Trim surrounding whitespace from $1.
+trim() {
+    s="$1"
+    s="${s#"${s%%[![:space:]]*}"}"
+    s="${s%"${s##*[![:space:]]}"}"
+    printf '%s' "$s"
+}
+
+# Find the row for the current machine and set ID/MATCH/DISPLAY/FG/BG. An
+# exported REMOTE_ID selects by id; otherwise the first row whose glob matches
+# `hostname -f` (falling back to `hostname`) wins. Returns 1 when unmapped.
+resolve() {
+    ID=""; MATCH=""; DISPLAY=""; FG=""; BG=""
+    [ -r "$CONFIG" ] || return 1
+
+    fqdn="$(hostname -f 2>/dev/null || hostname 2>/dev/null || echo "")"
+
+    while IFS='|' read -r c_id c_match c_disp c_fg c_bg _rest; do
+        case "$(trim "$c_id")" in ''|'#'*) continue ;; esac
+
+        c_id="$(trim "$c_id")"
+        c_match="$(trim "$c_match")"
+
+        if [ -n "${REMOTE_ID:-}" ]; then
+            [ "$c_id" = "$REMOTE_ID" ] || continue
+        else
+            [ -n "$c_match" ] || continue
+            # shellcheck disable=SC2254
+            case "$fqdn" in $c_match) ;; *) continue ;; esac
+        fi
+
+        ID="$c_id"
+        MATCH="$c_match"
+        DISPLAY="$(trim "$c_disp")"
+        FG="$(trim "$c_fg")"
+        BG="$(trim "$c_bg")"
+        return 0
+    done < "$CONFIG"
+
+    return 1
+}
+
+# Decimal R G B from a #RRGGBB string, on one space-separated line.
+hex_rgb() {
+    h="${1#\#}"
+    printf '%d %d %d' \
+        "$(( 0x$(printf '%s' "$h" | cut -c1-2) ))" \
+        "$(( 0x$(printf '%s' "$h" | cut -c3-4) ))" \
+        "$(( 0x$(printf '%s' "$h" | cut -c5-6) ))"
+}
+
+# Colored chip for starship, as raw truecolor ANSI (starship passes it
+# through). Filled fg-on-bg block when a bg is set, else bold fg text.
+emit_starship() {
+    esc=$(printf '\033')
+    set -- $(hex_rgb "$FG")
+    fg="38;2;$1;$2;$3"
+    if [ -n "$BG" ]; then
+        set -- $(hex_rgb "$BG")
+        printf '%s[%s;48;2;%s;%s;%sm %s %s[0m' \
+            "$esc" "$fg" "$1" "$2" "$3" "$DISPLAY" "$esc"
+    else
+        printf '%s[1;%sm%s%s[0m' "$esc" "$fg" "$DISPLAY" "$esc"
+    fi
+}
+
+# Colored chip for the tmux status bar, using tmux #[...] style directives
+# (re-interpreted from #() output). Reset with #[default].
+emit_tmux() {
+    if [ -n "$BG" ]; then
+        printf '#[fg=%s,bg=%s,bold] %s #[default]' "$FG" "$BG" "$DISPLAY"
+    else
+        printf '#[fg=%s,bold]%s#[default]' "$FG" "$DISPLAY"
+    fi
+}
+
+# Shell exports so other tooling can reference the resolved identity.
+emit_env() {
+    printf 'export REMOTE_ID=%s REMOTE_DISPLAY=%s REMOTE_FG=%s REMOTE_BG=%s\n' \
+        "$ID" "$DISPLAY" "$FG" "$BG"
+}
+
+cmd="${1:-starship}"
+
+case "$cmd" in
+    env)
+        # Always emit, so a stale REMOTE_* is cleared when unmapped.
+        resolve || true
+        emit_env
+        ;;
+    id)
+        resolve || exit 1
+        printf '%s\n' "$ID"
+        ;;
+    starship)
+        # Inside tmux the status bar already shows the chip, so the prompt
+        # would only duplicate it.
+        [ -n "${TMUX:-}" ] && exit 1
+        if resolve; then
+            emit_starship
+        elif [ -n "${SSH_CONNECTION:-}" ]; then
+            # Unmapped but remote: plain short hostname, no color.
+            printf '%s' "$(hostname -s 2>/dev/null || hostname 2>/dev/null)"
+        else
+            exit 1
+        fi
+        ;;
+    tmux)
+        resolve || exit 0
+        emit_tmux
+        ;;
+    *)
+        echo "usage: remote-badge <starship|tmux|env|id>" >&2
+        exit 2
+        ;;
+esac

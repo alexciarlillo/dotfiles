@@ -29,7 +29,7 @@ raw dumps.
 
 Save to `$AGENT_WORK_DIR/research/<slug>.md` (fall back to `~/agents/research/`; `mkdir -p` first).
 Descriptive `kebab-case` filename, no ticket prefix. Lead with the metadata block (`Type: research`,
-`Status: exploring`, `Last verified:`), then:
+`Status: exploring`, `Last verified:`, `Verified against:`), then:
 
 - **Question / Scope** — what we're answering and the boundaries.
 - **Method & sources** — how you looked; link sources by URL/path.

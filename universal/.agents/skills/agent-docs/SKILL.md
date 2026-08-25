@@ -1,6 +1,6 @@
 ---
 name: agent-docs
-description: Shared conventions for the work-management workspace under ~/agents/ (research → plan → handoff → pickup, plus reviews and artifacts) — where each kind lives, the metadata block, status vocabulary, filenames, linking, and the archive lifecycle. Read before creating or updating any research, plan, handoff, or review doc, or saving a one-off script/diagram, including adhoc ones written without invoking those skills. Defer to a project-specific doc skill (e.g. voice-server-docs) when one scopes the area you're working in.
+description: Shared conventions for the work-management workspace under ~/agents/ (research → plan → handoff → pickup, plus reviews and artifacts) — where each kind lives, the metadata block, the YAML frontmatter schema review docs use instead, status vocabulary, filenames, linking, and the archive lifecycle. Read before creating or updating any research, plan, handoff, or review doc, or saving a one-off script/diagram, including adhoc ones written without invoking those skills. Defer to a project-specific doc skill (e.g. voice-server-docs) when one scopes the area you're working in.
 ---
 
 # Agent work-management docs — shared conventions
@@ -53,12 +53,91 @@ The review *procedure* is a separate skill — `/review` for a GitHub PR, `/code
 diff, `/security-review` for a security pass. `reviews/` is only where the **output** is persisted.
 
 - Filename: `<KEY-or-PR>-<topic>-review.md` — e.g. `CLI-212684-teardown-review.md`, `pr-4821-review.md`.
-- Metadata: `**Type:** review`, `**Status:** in-progress` / `delivered` / `abandoned`, plus
-  `**Ticket:**`, `**Branch:**` / `**PR:**` (whose work you're reviewing — *not* your own), and
-  `**Last verified:**` (the ref/SHA you reviewed, since the author keeps pushing).
+- Metadata: **YAML frontmatter**, not the bold block — see below. Review docs are currently the only
+  kind that uses frontmatter.
 - Body: track findings across passes with each one's state (open / addressed / withdrawn) so a second
-  pass doesn't re-raise resolved points. Record which findings you actually posted.
+  pass doesn't re-raise resolved points. Record which findings you actually posted. Keep them under
+  the `High-signal issues` / `Low-signal issues` headings the review skills emit — those sections are
+  what the `findings_high` / `findings_low` counts below are derived from.
 - `delivered` once the feedback is posted → `archives/reviews/`.
+
+#### Review-doc frontmatter
+
+`~/agents` is an Obsidian vault, and the bold metadata block is invisible to its Properties UI and to
+Bases queries. Review docs therefore lead with frontmatter, so the review queue is queryable:
+
+```yaml
+---
+type: review
+status: in-progress          # in-progress | delivered | abandoned
+review_state: unreviewed     # unreviewed | reviewed | stale
+findings_high: 1             # issue counts — always written, `0` included
+findings_low: 3
+approvals: 2                 # approvals from others, refreshed each run
+draft: false                 # PR draft state, refreshed each run
+ticket: CLI-219445           # omit both ticket fields when there is no ticket
+ticket_url: https://roblox.atlassian.net/browse/CLI-219445
+pr: https://github.rbx.com/GameEngine/game-engine/pull/170573
+repo: GameEngine/game-engine
+author: jiayuanli
+branch: "jiayuanli/webrtc-m142-enable-ios"
+last_verified: 2026-08-12
+verified_against: "2384f65f372150f5bf2324b7f6871423ee02eda8"
+---
+```
+
+- Lowercase `snake_case` keys; **unquoted** ISO dates, so Obsidian reads them as dates and sorts them.
+- **Quote SHAs and branch names.** An all-digit SHA would otherwise parse as a number, and a branch
+  containing `:` would break the YAML.
+- `verified_against` is the full 40-char head SHA you reviewed — the review skills' dedup key. Keep it
+  accurate or the PR gets re-reviewed.
+- `findings_high` / `findings_low` are integer counts of the issues in the body's `High-signal issues`
+  and `Low-signal issues` sections, so the queue shows at a glance which PRs actually have something
+  to answer for. They are the **one exception to the omit rule below**: write `0` rather than dropping
+  the key, because an empty property is indistinguishable from an unreviewed PR in a Base query — a
+  clean review has to read as visibly clean. Omit them only before any review pass has finished.
+- Keep the counts consistent with the body: a later pass that finds new issues raises them, a
+  withdrawn finding lowers them, and marking one *addressed* does not (it was still discovered).
+- `approvals` is how many *other* reviewers currently stand as approving — triage signal, so a PR that
+  already has several can wait. Unlike everything else here it is a **snapshot of live state, not of
+  our review**: it ages on its own, so the review skills refresh it on every run rather than only when
+  writing a review — `automated-reviewer` across the whole queue. Hand-written review docs may omit it.
+- `draft` is the PR's draft state as a boolean — a triage signal, since a draft PR is not ready for a
+  full pass. Like `approvals` it is a **snapshot of live state**, refreshed by `pr-review-doc` for the
+  document it touches and by `automated-reviewer` across the queue. Hand-written review docs may omit it.
+- Omit fields that don't apply rather than writing `—`; an absent property reads as empty in a query.
+- Structured fields only. Prose (e.g. a `**Review basis:**` note recording the base branch or a
+  previous head) stays in the body, under the H1.
+
+Other doc kinds still use the bold metadata block above — `pickup` discovers handoffs by grepping
+`**Branch:**` / `**Worktree:**`, so converting them is a separate change, not a drive-by.
+
+#### Machine-maintained review docs
+
+Docs generated by the review skills — `pr-review-doc` for a single PR, or `automated-reviewer` driving
+it across the direct-review queue — are machine-maintained, and override two of the rules above. Both
+skills write the same document, so the two paths are interchangeable: a doc started by hand from a PR
+URL is picked up and kept current by a later queue sweep, and vice versa.
+
+- **`review_state`.** Tracks whether *the human* has reviewed the PR at its **current head**:
+
+  | value | meaning |
+  |-------|---------|
+  | `unreviewed` | no submitted GitHub review from us on this PR |
+  | `reviewed` | our latest submitted review is at the current head and still counts |
+  | `stale` | we reviewed, but it no longer counts — the head moved, the review was dismissed, or we were directly re-requested |
+
+  It is safe to edit by hand, but **GitHub is authoritative**: each run reconciles the value against
+  the submitted reviews, overwriting one that GitHub contradicts. It is a *current-head* axis,
+  independent of `status` — a doc can be `status: delivered` and `review_state: stale` at once.
+- **Lifecycle: stay active while the PR is open.** Unlike a hand-written review, the doc stays
+  `status: in-progress` for as long as the PR is open even after the feedback is delivered and
+  `review_state` is `reviewed` — it must survive so a later head move can flip the state back to
+  `stale` and surface another required pass. When the PR merges or closes, `automated-reviewer`'s sweep
+  assigns the terminal status (`delivered` if we submitted any GitHub review on it, otherwise
+  `abandoned`) and moves the doc to `archives/reviews/` without a separate move confirmation. Archival
+  only — hard-deletion is still the user's call. `pr-review-doc` never archives: reviewing one PR is not
+  the event that retires its document.
 
 ### `artifacts/` — everything that isn't a doc
 
@@ -80,7 +159,9 @@ skill, which layers issue-key filenames and an `origin/master` verification bann
 
 ## Metadata block
 
-Every doc leads with an H1 title, then a metadata block directly under it:
+Research, plans, and handoffs lead with an H1 title, then a metadata block directly under it.
+(**Review docs are the exception** — they use YAML frontmatter instead; see "Review-doc frontmatter"
+above.)
 
 ```markdown
 # <Title>
@@ -94,11 +175,16 @@ Every doc leads with an H1 title, then a metadata block directly under it:
 **Author:** <who wrote it>      ← review only
 **Plan:** <path>                ← handoff → its plan, if any
 **Research:** <path>            ← plan → its research, if any
-**Last verified:** <date> against <ref, e.g. origin/master (abc1234) / Sourcegraph / JIRA>
+**Last verified:** <date>
+**Verified against:** <ref, e.g. origin/master (abc1234) / Sourcegraph / JIRA / a bare SHA>
 ```
 
 Include only the fields that apply. `Branch`/`Worktree`/`Ticket` on a handoff are what `pickup` binds
 on, so keep them accurate. `artifacts/` files get no metadata block — they aren't docs.
+
+Verification is **two fields, not one prose line**: `Last verified` is the date alone, `Verified
+against` is the ref alone. Keeping them separate makes the ref machine-parseable — in review docs it
+is the full 40-char PR head SHA, and the review skills' shared resolver deduplicates on it.
 
 ## Status vocabulary
 
@@ -109,6 +195,9 @@ on, so keep them accurate. `artifacts/` files get no metadata block — they are
 | handoff | `in-progress` / `blocked` / `in-review` / `merged` / `abandoned` |
 | review | `in-progress` → `delivered` (feedback posted) / `abandoned` |
 | artifact | none — not a doc |
+
+Review docs carry a second, orthogonal axis in `review_state` (`unreviewed` / `reviewed` / `stale`) —
+whether *we* have reviewed the current head, which moves independently of `status`.
 
 ## Filenames
 
@@ -140,7 +229,8 @@ Mark the terminal `**Status:**` first, then move:
   closed (`atlassian`) — then move to `archives/handoffs/`. Never archive on a guess; if either is
   unmet or unverifiable, leave it and report what's blocking.
 - **review** `delivered` (feedback posted) or `abandoned` → move to `archives/reviews/`. The other
-  person's PR merging is *not* the trigger — our part ends when the feedback is out.
+  person's PR merging is *not* the trigger — our part ends when the feedback is out. Exception:
+  machine-maintained docs archive on the PR closing instead (see above).
 - **artifact** → move to `archives/artifacts/` when the work that produced it archives. An artifact
   with no doc referencing it anymore is a candidate to archive; flag it, don't delete it.
 

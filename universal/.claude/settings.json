@@ -15,6 +15,7 @@
       "mcp__mcp-gateway-gmail"
     ]
   },
+  "model": "claude-opus-4-8[1m]",
   "hooks": {
     "WorktreeCreate": [
       {
@@ -80,8 +81,7 @@
     }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
-  "tui": "fullscreen",
+  "effortLevel": "medium",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark"
 }

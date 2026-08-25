@@ -179,6 +179,71 @@ agents_dots() {
   stow --restow --ignore ".DS_Store" --target="$HOME/.claude/skills" --dir="$agents_src" skills
 }
 
+# ~/vault's hidden .claude/ (slash commands) isn't carried by Obsidian Sync, so
+# stow it from git for durability. Guarded on ~/vault so non-vault machines skip.
+vault_dots() {
+  [[ -d "$HOME/vault" ]] || return 0
+  stow --restow --no-folding --ignore ".DS_Store" --target="$HOME/vault" --dir="$DOTFILES" vault
+}
+
+# Link ~/agents doc-kinds into the Obsidian vault so they are indexed and
+# phone-portable, while ~/agents stays the real $AGENT_WORK_DIR root. Context
+# picks the vault subtree; vault-absent machines skip and keep real dirs.
+agents_workspace_links() {
+  [[ -d "$HOME/vault" ]] || return 0
+
+  # Context override wins; otherwise derive from this clone's origin host.
+  local context="${AGENT_CONTEXT:-}"
+  if [[ -z "$context" ]]; then
+    local origin
+    origin="$(git -C "$DOTFILES" remote get-url origin 2>/dev/null || true)"
+    case "$origin" in
+    *github.rbx.com*) context="Work" ;;
+    *github.com*) context="Personal" ;;
+    *)
+      echo "agents_workspace_links: cannot derive context from '$origin';" \
+        "set AGENT_CONTEXT=Work|Personal. Skipping." >&2
+      return 0
+      ;;
+    esac
+  fi
+
+  case "$context" in
+  [Ww]ork) context="Work" ;;
+  [Pp]ersonal) context="Personal" ;;
+  *)
+    echo "agents_workspace_links: invalid AGENT_CONTEXT '$context'." >&2
+    return 0
+    ;;
+  esac
+
+  local base="$HOME/vault/10 - Agents/$context"
+  mkdir -p "$HOME/agents"
+
+  local kind src link
+  for kind in Research Plans Handoffs Reviews Archives Prompts; do
+    src="$base/$kind"
+    link="$HOME/agents/$(echo "$kind" | tr '[:upper:]' '[:lower:]')"
+
+    # Skip loudly if the vault lacks the target dir.
+    if [[ ! -d "$src" ]]; then
+      echo "agents_workspace_links: missing vault dir '$src'; skipping." >&2
+      continue
+    fi
+
+    # A real path here means bytes still live outside the vault; do not
+    # clobber them. Only (re)link when absent or already a symlink.
+    if [[ -L "$link" ]]; then
+      ln -sfn "$src" "$link"
+    elif [[ ! -e "$link" ]]; then
+      ln -s "$src" "$link"
+    else
+      echo "agents_workspace_links: '$link' is a real path; not linking." \
+        "Move its contents into '$src' first." >&2
+    fi
+  done
+}
+
 osx_dots() {
   stow --restow --no-folding --ignore ".DS_Store" --target="$HOME" --dir="$DOTFILES" osx
 }
@@ -224,6 +289,8 @@ main() {
     [[ "${1:-}" != "dots" ]] && rblx_init
     [[ "${1:-}" != "dots" ]] && hammerspoon_spoons
     universal_dots
+    vault_dots
+    agents_workspace_links
     agents_dots
     [[ "${1:-}" != "dots" ]] && tpm_init
     osx_dots
@@ -236,6 +303,8 @@ main() {
     [[ "${1:-}" != "dots" ]] && rblx_init
     setup_zsh_from_bash
     universal_dots
+    vault_dots
+    agents_workspace_links
     agents_dots
     [[ "${1:-}" != "dots" ]] && tpm_init
     linux_dots
@@ -250,4 +319,7 @@ main() {
   echo "Bootstrap complete for $uname_s"
 }
 
-main "$@"
+# Allow sourcing for tests without executing; run only when invoked directly.
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  main "$@"
+fi

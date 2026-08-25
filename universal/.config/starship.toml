@@ -3,10 +3,18 @@ command_timeout = 1000
 [aws]
 disabled = true
 
-# Inside an LXC container systemd writes /run/systemd/container, which starship
-# reports as "Systemd" on every prompt. Always-true, so no signal.
-[container]
+# The colored host chip is driven by ~/.config/remotes.conf via remote-badge,
+# which handles ssh-only display itself, so the built-in module is redundant.
+[hostname]
 disabled = true
+
+[custom.remote]
+description = "Per-host colored chip from ~/.config/remotes.conf"
+command = "~/.local/bin/remote-badge starship"
+when = "~/.local/bin/remote-badge starship"
+shell = ["sh"]
+format = "[$output]($style) "
+style = ""
 
 [directory]
 truncation_length = 3

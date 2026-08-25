@@ -2,6 +2,8 @@
   ca = commit --amend --reuse-message=HEAD
 	clone-wt = "!bash $HOME/.local/bin/clone-for-wt"
 	clean-wt = "!bash $HOME/.local/bin/clean-merged-wt"
+  ds = !git diff | delta --side-by-side
+  du = !git diff | delta
 
 [filter "lfs"]
 	process = git-lfs filter-process
@@ -53,17 +55,15 @@
         updateRefs = true
 
 [include]
-  path = ~/.config/delta/themes/catppuccin.gitconfig
   path = ~/.gitconfig.local
 
 [interactive]
   diffFilter = delta --color-only
 
 [delta]
-  features = catppuccin-mocha
+  syntax-theme = "base16"
+  line-numbers = true
   navigate = true
-  line-numbers-left-format = ""
-  line-numbers-right-format = "│ "
 
 [merge]
   conflictstyle = zdiff3
@@ -91,3 +91,5 @@
 [user]
 	email = aciarlillo@roblox.com
 	name = Alexander Ciarlillo
+[credential "https://github.rbx.com"]
+	helper = !/usr/bin/gh auth git-credential

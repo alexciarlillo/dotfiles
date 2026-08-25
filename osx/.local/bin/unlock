@@ -30,23 +30,21 @@ fi
 for i in $(seq 1 $num_monitors); do
   aerospace focus-monitor $i
 
+  # decide layout by monitor identity, not index parity: the built-in
+  # display keeps a horizontal accordion, external monitors tile
+  # horizontally. Single-monitor (undocked) is always accordion.
+  monitor_name=$(aerospace list-monitors --focused --format '%{monitor-name}')
+
   workspace_ids=$(aerospace list-workspaces --monitor focused)
 
   # iterate over each workspace
-  # for any workspace from a large monitor we want to switch to accordion
-  # when going to a small (single) monitor, and switch back to tiled when going to a large monitor
   for id in $workspace_ids; do
-    # skip if the workspace is the secondary monitor workspace (x,c,v)
-    if [[ $id == "x" || $id == "c" || $id == "v" ]]; then
-      continue
-    fi
-
     aerospace workspace $id
 
     if [[ $num_monitors -eq 1 ]]; then
       aerospace layout h_accordion
-    elif [[ $((i % 2)) -eq 1 ]]; then
-      aerospace layout v_tiles
+    elif [[ "$monitor_name" == *"Built-in"* ]]; then
+      aerospace layout h_accordion
     else
       aerospace layout h_tiles
     fi
@@ -62,16 +60,16 @@ if [[ $num_monitors -eq 1 ]]; then
   aerospace workspace w
 else
   aerospace focus-monitor 1
-  aerospace workspace w
+  aerospace workspace q
 
   #  aerospace move --window-id $signal_id down
 
-  # aerospace focus-monitor 3
-  # aerospace workspace t
+  aerospace focus-monitor 3
+  aerospace workspace t
 
   # fixup workspace T
   #  aerospace move --window-id $obsidian_id down
 
   aerospace focus-monitor 2
-  aerospace workspace c
+  aerospace workspace w
 fi

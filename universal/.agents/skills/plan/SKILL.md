@@ -33,7 +33,7 @@ user approves, create the tickets and record their keys in the plan's roll-up ta
 
 Save to `$AGENT_WORK_DIR/plans/<slug>.md` (fall back to `~/agents/plans/`; `mkdir -p` first). Descriptive
 `kebab-case` filename. Lead with the metadata block (`Type: plan`, `Status: active`, `Research:`
-back-ref if any, `Last verified:`), then:
+back-ref if any, `Last verified:`, `Verified against:`), then:
 
 - **Goal / Context** — what we're building and why; link the research by path.
 - **Work-item decomposition** — the items, each with a crisp definition of done.

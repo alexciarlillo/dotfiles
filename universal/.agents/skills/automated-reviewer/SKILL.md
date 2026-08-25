@@ -1,93 +1,108 @@
 ---
 name: automated-reviewer
-description: Find open GitHub Enterprise pull requests where an individual user is directly requested as a reviewer, exclude team-only requests, deduplicate them against local review documents by canonical PR URL and head SHA, prepare local git refs, then ground each review in the wider system — Sourcegraph cross-repo patterns, your engineering convention rules, and the linked JIRA ticket — before delegating the line-by-line pass to the code-review skill. Use to audit, review, or document a user's direct review queue across repositories without modifying GitHub.
+description: Find open GitHub Enterprise pull requests where an individual user is directly requested as a reviewer, exclude team-only requests, deduplicate them against local review documents by canonical PR URL and head SHA, then drive the pr-review-doc skill once per PR that still owes a pass. Also maintains those documents against GitHub across the whole queue: refreshes whether the human has reviewed each PR at its current head, how many approvals it has, and whether it is a draft; archives documents once the PR merges or closes. Strictly read-only against GitHub — never comments, approves, or changes PR state. Use to audit, sweep, or work through a user's direct review queue across repositories.
 ---
 
-# Automated Reviewer — Direct Review Request Documenter
+# Automated Reviewer — direct review queue
 
-Discover and prepare reviews deterministically, **ground each one in the system it touches**, then
-apply human review judgment with the `code-review` skill. This skill is the review-queue foundation
-that a paired reviewer (e.g. a BuilderUI cron reviewer) can reference: it owns discovery,
-deduplication, ref-prep, grounding, and the review-document contract — it does **not** re-implement
-the diff-level review, which stays with `code-review`.
+Own the review **queue**: discover what directly requests us, deduplicate it against the documents we
+already keep, keep those documents true to GitHub, and retire them when the PR closes. The per-PR
+review itself belongs to `../pr-review-doc/SKILL.md`, which this skill drives once per PR; the
+diff-level pass belongs to `code-review`, which `pr-review-doc` drives in turn. This skill is the
+foundation a paired reviewer (e.g. a BuilderUI cron reviewer) can reference for queue semantics.
+
+Everything here is **read-only against GitHub** — the contract is spelled out in
+`../pr-review-doc/SKILL.md` ("Read-only contract") and applies unchanged to this skill. No comments, no
+approvals, no pending reviews, no state changes, and no bare `gh` invocations. Document writes and
+archival moves under `~/agents/` are the only writes this skill makes.
 
 ## Workflow
 
 1. Read all applicable user and repository `AGENTS.md` and `CLAUDE.md` files.
-2. Read `../agent-docs/SKILL.md` before creating or updating review documents — it owns the
-   `~/agents/reviews/` bucket, filename (`<KEY-or-PR>-<topic>-review.md`), and metadata format,
-   including the `**Last verified:**` SHA marker the driver deduplicates on. Read any scoped
-   documentation skill required by repository instructions.
-3. Run the bundled driver. Start without `--fetch` to inspect the manifest:
+2. Read `../agent-docs/SKILL.md` — it owns the `~/agents/reviews/` bucket, the filename, and the
+   frontmatter schema, including the `verified_against` SHA this skill deduplicates on, the
+   `review_state` vocabulary, and the open-PR lifecycle for machine-maintained documents.
+3. Run the resolver in queue mode. Start without `--fetch` to inspect the manifest:
 
    ```bash
-   python3 scripts/direct_review_requests.py \
+   python3 ~/.agents/skills/pr-review-doc/scripts/review_targets.py \
      --user pcarr --host github.rbx.com --reviews-dir ~/agents/reviews \
      --output /tmp/direct-review-manifest.json
    ```
 
 4. Inspect the manifest. It verifies that `reviewRequests` contains a `User` whose login exactly
-   matches `--user`; search results caused only by a requested team are excluded (`excluded_team_only`).
-5. For each `needs_review` or `head_changed` entry, map its repository and fetch immutable local refs
-   when useful:
+   matches `--user`; queue results caused only by a requested team, and not already documented, are
+   excluded (`excluded_team_only`). The work set is the **union** of that open queue and the PRs your
+   existing documents track, so expect entries that are merged/closed or no longer requested —
+   submitting a review removes you from the queue. Entries carrying a `resolution_error` (status
+   `unresolved` when even `gh pr view` failed) have unknown, `null` review state: leave their
+   documents untouched and report them.
+5. **Sweep `review_state`, `approvals`, and `draft`** across the frontmatter of every existing document
+   whose entry resolved without a `resolution_error` — including entries no pass is needed for. Apply
+   the reconciliation rules in `../pr-review-doc/SKILL.md` step 8 (the manifest → `review_state` table,
+   and copying `approvals` and `is_draft` into `draft` on every run). This queue-wide sweep is what
+   keeps documents written days ago usable for triage; `pr-review-doc` only reconciles the single
+   document it touches. Add any missing field to a managed document.
+6. **Clean up closed PRs.** For each entry whose `pr_state` is `merged` or `closed` and that has an
+   `existing_document` and no `resolution_error`: set frontmatter `status: delivered` when
+   `has_user_review` is true, otherwise `status: abandoned`; then `mkdir -p ~/agents/archives/reviews/`
+   and `mv` the document there. Leave `review_state` as reconciled — it can legitimately read `stale`
+   on a `delivered` doc. This is archival and needs no separate move confirmation — never hard-delete.
+   Skip these PRs for the rest of the workflow, and report the moved set in step 10.
+7. Determine the work set: entries with status `needs_review` or `head_changed` whose `pr_state` is
+   `open`. Skip `already_reviewed` — a document already recording the current head needs no new pass,
+   only the step 5 sweep. Re-run the resolver with `--fetch` and a repo mapping per repository so the
+   refs are in place before any review starts:
 
    ```bash
-   python3 scripts/direct_review_requests.py ... --fetch \
+   python3 ~/.agents/skills/pr-review-doc/scripts/review_targets.py ... --fetch \
      --repo GameEngine/game-engine=/absolute/path/to/worktree
    ```
 
-   The driver does not check out branches. It fetches the PR head and base into refs under
-   `refs/review-requests/` and records those refs in the manifest.
+   Omitted repositories stay discoverable but are not fetched. The resolver does not check out
+   branches; it fetches the PR head and base into refs under `refs/review-requests/`.
+8. **For each PR in the work set, follow `../pr-review-doc/SKILL.md`, passing its manifest entry.**
+   That skill owns scope selection, the grounding brief (JIRA, Sourcegraph, convention rules), the
+   `code-review` delegation, and the document write. Pass the entry rather than a PR URL — it is
+   already resolved, and re-resolving doubles the GitHub reads for every PR in the queue. Do not
+   duplicate its steps here.
+9. Re-run the resolver immediately before finishing. If a head changed during a review, hand that
+   entry back to `pr-review-doc` to update the same document before reporting completion.
+10. Summarize: documents created or updated with PR URLs and their `findings_high` / `findings_low`
+    counts, documents archived by step 6 with their terminal status, `review_state` values changed by
+    step 5, skipped PRs, and any `resolution_error` entries left untouched. State explicitly when no
+    new reviews were needed, and that nothing was posted to GitHub.
 
-6. Determine scope. Skip `already_reviewed` entries. For `head_changed`, review only the range from
-   `previous_head_sha` to `head_sha` when it is available, and update `existing_document`. For
-   `needs_review`, review the full PR and create one document.
+## Queue contract
 
-7. **Ground the review** (do this before invoking `code-review`, for every non-skipped PR). The
-   `code-review` skill is deliberately git-only and diff-scoped — it reads the code, not the system.
-   This is where principal-engineer judgment comes from: understand what you're touching, then feed
-   that context in. Assemble a short **grounding brief** from:
-   - **JIRA ticket** — derive the key from the PR title, branch name, or body (e.g. `ABC-1234`). Use
-     the `atlassian` skill to pull the ticket's intent and acceptance criteria, then judge whether the
-     PR actually satisfies the ask (not just whether the diff is internally correct).
-   - **Sourcegraph** — search the touched symbols, APIs, and patterns across Roblox repos
-     (`mcp__mcp-gateway-sourcegraph__search` / `get_file`). Answer: is this how we do it elsewhere? Is
-     there a canonical API or helper this duplicates? Is there prior art or an established pattern the
-     change should follow? This is the DRY and consistency lens.
-   - **Convention rules** — load the engineering convention rules that apply to the changed paths from
-     the user/repo `CLAUDE.md` (C# services, testing, validation, error-handling, DRY). Treat clear,
-     quotable rule violations in changed code as high-signal findings.
-
-   Keep the brief tight — a few bullets of system context and the specific rules/patterns in play — and
-   avoid narration. It is review context, not review output.
-
-8. Invoke `code-review` separately for every non-skipped PR, passing the grounding brief from step 7
-   as the review context and rubric. `code-review` handles the diff mechanics; the brief supplies the
-   system-level judgment (ticket intent, cross-repo consistency, convention rules). Keep all GitHub
-   operations read-only unless the user separately authorizes a write.
-9. Record the exact canonical `url` and label the exact SHA as `Reviewed head` (or use the established
-   `**Last verified:** <SHA>` form) in every review document. Preserve the document format and location
-   dictated by `../agent-docs/SKILL.md` and scoped instructions.
-10. Re-run the driver immediately before finishing. If a head changed during review, inspect the new
-    range and update the same document before reporting completion.
-11. Summarize documents created or updated with PR URLs, skipped PRs, and explicitly state when no new
-    reviews were needed.
-
-## Driver contract
-
-- Treat `(canonical PR URL, reviewed head SHA)` as the deduplication key.
-- Use `--repo OWNER/REPO=PATH` repeatedly. Omitted repositories remain discoverable but are not fetched.
+- Treat `(canonical PR URL, reviewed head SHA)` as the deduplication key. The document-parsing and
+  per-entry review-state details are in `../pr-review-doc/SKILL.md` ("Resolver contract") — one
+  resolver serves both skills, so the semantics are identical whether a PR arrives from the queue or
+  by name.
+- The work set is the union of the open `--review-requested` queue and the PRs referenced by documents
+  in `--reviews-dir`, so reviewed, merged, and closed PRs stay resolvable. Explicit `--pr` mode
+  deliberately skips that union — it is `pr-review-doc`'s entry point, not this skill's.
+- Use `--repo OWNER/REPO=PATH` repeatedly, once per repository you want refs fetched into.
 - Treat the JSON manifest as coordination data, not as review output.
-- A failed fetch is reported per PR and does not erase discovery results.
+- The resolver never edits documents — the reconciliation, status, and archival writes are this skill's
+  job.
+- A failed fetch is reported per PR and does not erase discovery results. A per-PR resolution failure
+  yields `resolution_error` with `null` review state and does not abort the manifest; only a failed
+  queue search fails the run, since that leaves the discovery set unknown.
 - Do not pass `--fetch` when only queue discovery or deduplication is requested.
 
 When parallel review is explicitly requested or permitted, assign exclusive PRs or whole repositories
-to workers. Keep discovery, deduplication, final head verification, and document validation centralized
-so two workers never update the same document.
+to workers. Keep discovery, deduplication, the step 5 sweep, final head verification, and document
+validation centralized so two workers never update the same document.
 
 ## Known limitations
 
-- For a force-pushed / rebased PR, `head_changed` derives `previous_head_sha` from the first
-  `**Last verified:**`-style SHA found in the review document, and does not detect base-branch moves.
-  In practice a document carries a single verified SHA, so the range stays correct; if a document ever
-  records multiple, confirm the baseline SHA before reviewing only a range.
+- Documents already moved to `archives/reviews/` leave the union, so a re-opened PR is rediscovered as
+  `needs_review` and gets a fresh document rather than reviving the archived one.
+- `reviewed_by_user` reflects the head at manifest time. A push landing between the run and the
+  reconciliation write can leave a stale value; the step 9 re-run catches it.
+- The step 5 sweep can only reconcile documents whose PRs resolved. A GitHub outage mid-run leaves the
+  rest of the queue carrying yesterday's `approvals`; report which ones, rather than assuming the
+  sweep was complete.
+- Per-PR limitations (force-push ranges, documents missing `verified_against`) are listed in
+  `../pr-review-doc/SKILL.md`.

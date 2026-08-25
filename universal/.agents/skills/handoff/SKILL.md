@@ -42,7 +42,8 @@ accurate, because `pickup` discovers the doc by grepping them + the filename:
 - `**Worktree:**` — the worktree path (`git rev-parse --show-toplevel`)
 - `**Ticket:**` — issue key + URL, or `—`
 - `**Plan:**` — path to the parent plan doc, if one exists
-- `**Last verified:**` — date + ref you checked against
+- `**Last verified:**` — the date you last checked
+- `**Verified against:**` — the ref you checked against
 
 ## Body
 

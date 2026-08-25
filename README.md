@@ -57,6 +57,7 @@ dotfiles/
   rblx/         Work-specific configs — stowed into ~ (lifts out for private repo)
   osx/          macOS-only (AeroSpace, Hammerspoon) — stowed into ~
   linux/        Linux-only (currently just a .stow-local-ignore) — stowed into ~
+  vault/        Obsidian vault .claude/ (slash commands) — stowed into ~/vault (guarded)
   extra/        NOT stowed — used by bootstrap.sh
     homebrew/   Brewfile
     apt/        packages.txt
@@ -112,6 +113,65 @@ The old i3/polybar/compton/dunst desktop configs were retired; `linux/` currentl
 - `rules/`, `skills/` — shared agent rules and skills.
 
 Worktree hooks (`universal/.local/bin/_worktree-hook-{create,remove}`) are wired via `WorktreeCreate`/`WorktreeRemove` so Claude's worktrees follow my bare-hub layout. See [`universal/.claude/README.md`](universal/.claude/README.md).
+
+---
+
+## Agent workspace ↔ Obsidian vault
+
+The `~/agents` work-management workspace (`research`, `plans`, `handoffs`, `reviews`, `archives`, `prompts`) is surfaced **inside** the Obsidian vault so it's indexed, linkable, and portable to the phone — while `~/agents` stays the real `$AGENT_WORK_DIR` that agent tooling resolves. The setup spans several touchpoints:
+
+- **Canonical bytes live in the vault** at `~/vault/10 - Agents/<Context>/<Kind>/`. Each `~/agents/<kind>` is a **symlink** into that subtree, so `$AGENT_WORK_DIR/<kind>` resolves normally.
+- **Obsidian Sync** carries the vault (including `10 - Agents/`) to other Obsidian devices and the phone.
+- **Unison** (`osx/.unison/agents.prf`) syncs `~/agents` to the sandboxed remote (`coder-engine:/home/coder/agents`), which has **no** vault. The profile `follow`s the per-kind symlinks so their contents land as **real dirs** on the remote. It ignores `review-queue.base` (an Obsidian Base view) and `.obsidian` (per-machine config), and runs every 300s via the `com.aciarlillo.agent-sync` LaunchAgent (`extra/launchd/`, wrapper `~/.local/bin/agent-sync`).
+
+```
+VAULT  (Obsidian Sync → phone + every vault-present desktop)
+~/vault/10 - Agents/
+├─ Work/
+│  ├─ Research/   [REAL] ═ canonical bytes
+│  ├─ Plans/      [REAL]
+│  ├─ Handoffs/   [REAL]
+│  ├─ Reviews/    [REAL]
+│  ├─ Archives/   [REAL]
+│  ├─ Prompts/    [REAL]
+│  └─ review-queue.base   [REAL, Obsidian Base]
+└─ Personal/
+   ├─ Research/   [REAL]   (…same six kinds + review-queue.base)
+   └─ …
+
+MAC  (context = Work)                                  REMOTE  (context = Work; NO vault)
+~/agents/                                              ~/agents/  (= /home/coder/agents)
+├─ research  ····► ~/vault/10 - Agents/Work/Research   ├─ research/   [REAL]  ← Unison follow
+├─ plans     ····► …/Work/Plans                        ├─ plans/      [REAL]
+├─ handoffs  ····► …/Work/Handoffs                     ├─ handoffs/   [REAL]
+├─ reviews   ····► …/Work/Reviews                      ├─ reviews/    [REAL]
+├─ archives  ····► …/Work/Archives                     ├─ archives/   [REAL]
+├─ prompts   ····► …/Work/Prompts                      ├─ prompts/    [REAL]
+└─ artifacts/  [REAL, local; never in vault]           └─ artifacts/  [REAL]
+
+  ····► = symlink (pointer, no bytes)      [REAL] = actual bytes on disk
+
+SYNC PATHS
+  research / plans / handoffs / reviews / archives / prompts : phone ◄─Obsidian─► MAC(vault) ◄─Unison follow─► REMOTE
+  artifacts                                                  : (never on phone) ;  MAC ◄─Unison─► REMOTE
+```
+
+### Context (Work vs Personal)
+
+`agents_workspace_links()` in `bootstrap.sh` picks which vault subtree to link into, derived from this clone's `origin` remote: `github.rbx.com` → `Work`, `github.com` → `Personal`. Override with `AGENT_CONTEXT=Work|Personal`. It guards on `~/vault` existing, so vault-less machines (the remote) skip linking and keep real dirs for Unison. It refuses to clobber a `~/agents/<kind>` that's still a real dir — that migration is deliberate (below).
+
+**Why `vault/` is its own stow package (not under `universal/`):** `universal/` is stowed unconditionally to `$HOME`, but `~/vault` only exists on Obsidian machines. Keeping `vault_dots` guarded on `~/vault` avoids creating a stray `~/vault` on servers — which would also defeat the `[[ -d "$HOME/vault" ]]` guard `agents_workspace_links` relies on. (`agents/` *is* under `universal/` because `~/agents` exists on every machine, including the remote.)
+
+### Migrating a machine into the vault layout
+
+On a vault machine whose `~/agents/<kind>` are still real dirs, do a one-time cutover. **Order matters** so the 300s Unison timer never mass-deletes the remote:
+
+1. The profile is already armed (`follow = Path <kind>` per kind) — a no-op while the paths are real dirs, but it makes any sync during/after the move follow the symlinks instead of propagating deletions.
+2. Pause the timer: `launchctl bootout gui/$(id -u)/com.aciarlillo.agent-sync`.
+3. Per kind: move `~/agents/<kind>/*` into `~/vault/10 - Agents/<Context>/<Kind>/`, then remove the now-empty `~/agents/<kind>`. Move `~/agents/review-queue.base` into `~/vault/10 - Agents/<Context>/`.
+4. `./bootstrap.sh dots` — `agents_workspace_links` creates the symlinks.
+5. `unison agents` — confirm it reconciles with **no deletions** (a clean cutover shows "nothing to do").
+6. Resume: `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.aciarlillo.agent-sync.plist`.
 
 ---
 

@@ -43,3 +43,18 @@ ignore = Name {workspace.json,workspace-mobile.json}
 # on either side is backed up to .bak by bootstrap.sh's universal_dots.
 ignore = Path AGENTS.md
 ignore = Path CLAUDE.md
+
+# The doc-kind dirs are symlinks into the Obsidian vault on this Mac; follow
+# them so their contents sync as real dirs on the vault-less remote. Harmless
+# while a path is still a real dir — follow only matters once it is a symlink.
+follow = Path research
+follow = Path plans
+follow = Path handoffs
+follow = Path reviews
+follow = Path archives
+follow = Path prompts
+
+# Obsidian-only artifacts that must not reach the remote: a Base view is
+# meaningless without Obsidian, and .obsidian is per-machine vault config.
+ignore = Path review-queue.base
+ignore = Path .obsidian
