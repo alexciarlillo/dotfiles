@@ -36,3 +36,10 @@ if [[ -d "$HOME/.config/zsh/env.d" ]]; then
         . "$f"
     done
 fi
+<<<<<<< Updated upstream
+||||||| Stash base
+. "$HOME/.cargo/env"
+=======
+. "$HOME/.cargo/env"
+. "$HOME/.rokit/env"
+>>>>>>> Stashed changes
