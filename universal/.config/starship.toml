@@ -8,6 +8,11 @@ disabled = true
 [hostname]
 disabled = true
 
+# Inside an LXC container systemd writes /run/systemd/container, which starship
+# reports as "Systemd" on every prompt. Always-true, so no signal.
+[container]
+disabled = true
+
 [custom.remote]
 description = "Per-host colored chip from ~/.config/remotes.conf"
 command = "~/.local/bin/remote-badge starship"
