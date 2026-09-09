@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# agent-share — snapshot ~/agents to its git remote so teammates can read and
+# link the docs. One-way publish leg; Unison still owns Mac<->devspace sync.
+# Safe unattended (systemd timer): quiet no-op when there is nothing to do.
+set -euo pipefail
+
+export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin"
+
+WORKSPACE="${AGENT_WORK_DIR:-$HOME/agents}"
+LOCK_DIR="/tmp/agent-share.lock"
+LOG="$HOME/.local/state/agent-share.log"
+
+mkdir -p "$(dirname "$LOG")"
+log() { printf '%s agent-share: %s\n' "$(date '+%Y-%m-%dT%H:%M:%S')" "$1" >>"$LOG"; }
+
+command -v git >/dev/null 2>&1 || { log "git not on PATH"; exit 0; }
+
+# Only the machine that owns the publish repo runs this; elsewhere it's a no-op.
+if [[ ! -d "$WORKSPACE/.git" ]]; then log "no repo at $WORKSPACE; skip"; exit 0; fi
+
+# Overlap guard (mkdir is atomic).
+if ! mkdir "$LOCK_DIR" 2>/dev/null; then log "run in progress; skip"; exit 0; fi
+trap 'rmdir "$LOCK_DIR" 2>/dev/null || true' EXIT
+
+git_ws() { git -C "$WORKSPACE" "$@"; }
+
+if ! git_ws add -A 2>>"$LOG"; then log "add failed; skip"; exit 0; fi
+
+# Commit only if staging actually changed something, so an idle workspace does
+# not produce empty commits.
+if git_ws diff --cached --quiet; then log "nothing to publish"; exit 0; fi
+
+files="$(git_ws diff --cached --name-only | wc -l | tr -d ' ')"
+if git_ws commit -q -m "snapshot $(date '+%Y-%m-%dT%H:%M:%S%z')" 2>>"$LOG"; then
+  log "committed $files file(s)"
+else
+  log "commit failed; skip"; exit 0
+fi
+
+# A failed push is not an error: the next run pushes this commit along with the
+# next one. Never exit non-zero, or the timer reports a failed unit.
+if git_ws push --quiet 2>>"$LOG"; then log "pushed"; else log "push failed; will retry next run"; fi
+exit 0

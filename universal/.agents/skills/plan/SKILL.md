@@ -33,7 +33,7 @@ user approves, create the tickets and record their keys in the plan's roll-up ta
 
 Save to `$AGENT_WORK_DIR/plans/<slug>.md` (fall back to `~/agents/plans/`; `mkdir -p` first). Descriptive
 `kebab-case` filename. Lead with the metadata block (`Type: plan`, `Status: active`, `Research:`
-back-ref if any, `Last verified:`, `Verified against:`), then:
+back-ref if any, `Tech spec:` public URL if one exists, `Last verified:`, `Verified against:`), then:
 
 - **Goal / Context** — what we're building and why; link the research by path.
 - **Work-item decomposition** — the items, each with a crisp definition of done.
@@ -45,9 +45,22 @@ back-ref if any, `Last verified:`, `Verified against:`), then:
   |-----------|-------------|--------|--------|----|-------|
   | … | `~/agents/handoffs/…` (once created) | … | KEY | #… | not-started / in-progress / in-review / merged / blocked |
 
+### Public tech-spec bridge
+
+For work that needs a shared design artifact, the preferred progression is
+`research → plan → public Confluence tech spec → handoffs`. The plan is the private bridge: it may
+link backward to personal research and forward to the public spec, while the public spec must never
+link back to or name personal `~/agents` docs or filesystem paths.
+
+Once a tech spec exists, add its URL to `**Tech spec:**` and treat Confluence as authoritative for
+design, requirements, decisions, and open questions. Keep only private execution tracking here
+(work items, handoffs, branches, tickets, PRs, and state). Make substantive updates in the tech spec
+first; reflect only tracking consequences in the plan.
+
 ## Present & hand off
 
-Summarize the plan and the ordered work items. Then offer to **initialize handoffs** for the ready
-items (`/handoff` per item — each becomes a living PR doc that back-references this plan) and, if not
-already done, offer to create JIRA tickets (with permission). Do not start implementation
-automatically.
+Summarize the plan and the ordered work items. If a public design artifact is appropriate and none
+exists, offer `/tech-spec <this plan doc>` before implementation. If one already exists, link it and
+direct design updates there. Then offer to **initialize handoffs** for ready items (`/handoff` per
+item — each becomes a living PR doc that back-references this plan) and, if not already done, offer
+to create JIRA tickets (with permission). Do not start implementation automatically.

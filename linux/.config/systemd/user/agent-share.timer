@@ -1,0 +1,14 @@
+[Unit]
+Description=Snapshot ~/agents to its git remote every 10 minutes
+
+[Timer]
+# Every 10 minutes. Cheap because the script commits only when the tree is
+# dirty, so an idle workspace still produces no commits; the cadence only sets
+# how fine-grained history is while work is actually happening.
+OnCalendar=*:0/10
+# Catch up after the devspace has been asleep or rebooted.
+Persistent=true
+RandomizedDelaySec=1m
+
+[Install]
+WantedBy=timers.target

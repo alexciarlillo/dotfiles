@@ -122,7 +122,7 @@ The `~/agents` work-management workspace (`research`, `plans`, `handoffs`, `revi
 
 - **Canonical bytes live in the vault** at `~/vault/10 - Agents/<Context>/<Kind>/`. Each `~/agents/<kind>` is a **symlink** into that subtree, so `$AGENT_WORK_DIR/<kind>` resolves normally.
 - **Obsidian Sync** carries the vault (including `10 - Agents/`) to other Obsidian devices and the phone.
-- **Unison** (`osx/.unison/agents.prf`) syncs `~/agents` to the sandboxed remote (`coder-engine:/home/coder/agents`), which has **no** vault. The profile `follow`s the per-kind symlinks so their contents land as **real dirs** on the remote. It ignores `review-queue.base` (an Obsidian Base view) and `.obsidian` (per-machine config), and runs every 300s via the `com.aciarlillo.agent-sync` LaunchAgent (`extra/launchd/`, wrapper `~/.local/bin/agent-sync`).
+- **Unison** (`osx/.unison/agents.prf`) syncs `~/agents` to the sandboxed remote (`coder-engine:/home/coder/agents`), which has **no** vault. The profile `follow`s the per-kind symlinks so their contents land as **real dirs** on the remote. It ignores `review-queue.base` (an Obsidian Base view), `.obsidian` (per-machine config), `.review-cache` (GB-scale regenerable bare clones), and `.git` (the remote's own publish repo — see below), and runs every 300s via the `com.aciarlillo.agent-sync` LaunchAgent (`extra/launchd/`, wrapper `~/.local/bin/agent-sync`).
 
 ```
 VAULT  (Obsidian Sync → phone + every vault-present desktop)
@@ -172,6 +172,41 @@ On a vault machine whose `~/agents/<kind>` are still real dirs, do a one-time cu
 4. `./bootstrap.sh dots` — `agents_workspace_links` creates the symlinks.
 5. `unison agents` — confirm it reconciles with **no deletions** (a clean cutover shows "nothing to do").
 6. Resume: `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.aciarlillo.agent-sync.plist`.
+
+---
+
+## Agent workspace → teammate sharing
+
+A **third, one-way leg** publishes the workspace as read-only, directly linkable `.md` files at [`github.rbx.com/aciarlillo/agent-docs`](https://github.rbx.com/aciarlillo/agent-docs) (private). It does not disturb the two legs above: Unison still owns Mac↔remote reconciliation, Obsidian Sync still owns the phone.
+
+```
+   REMOTE  ~/agents/  ← docs born here (real dirs)
+        │                         │
+   git (HTTPS, 10-min timer)   Unison ◄─► MAC(vault) ◄─Obsidian─► phone
+        ▼
+  github.rbx.com/aciarlillo/agent-docs
+```
+
+**It runs on the devspace, not the Mac.** Docs are born there and flow *to* the Mac, so committing there captures the freshest state. HTTPS to `github.rbx.com` works from the devspace (SSH/port 22 times out), and the Mac would additionally depend on VPN. `systemd --user` with `Linger=yes` gives native scheduling.
+
+- **Repo:** an in-place `git init` at `~/agents` on the devspace, branch `main`. No copy/filter step — the working tree *is* the published tree.
+- **Wrapper:** `universal/.local/bin/agent-share` — `add -A`, commit **only if dirty**, push. Mirrors `agent-sync`'s robustness (atomic lockdir, append-only log at `~/.local/state/agent-share.log`, always exits 0 so a timer never reports failure). A no-op on any machine with no `~/agents/.git`, so it is harmless everywhere it is stowed.
+- **Schedule:** `linux/.config/systemd/user/agent-share.{service,timer}`, `OnCalendar=*:0/10` with `Persistent=true`. Enabled by `bootstrap.sh`'s `agent_share_init` (Linux, skipped in `dots` mode — enable by hand after a `dots` run). Because commits happen only when the tree is dirty, an idle workspace produces none regardless of cadence.
+- **`.gitignore` is share-by-default.** Exclusions are structural, not curatorial:
+
+  | Ignored | Why |
+  | --- | --- |
+  | `*.git/`, `.review-cache/` | bare clones the review skills fetch refs into — GB-scale, and a nested `.git` commits as an unclonable gitlink stub |
+  | `AGENTS.md`, `CLAUDE.md` | stow symlinks into this repo; git would commit dangling links |
+  | `.obsidian/`, `review-queue.base` | per-machine / Obsidian-only state |
+  | `reviews/` | candid critique of other people's PRs; unanchored, so it covers `archives/reviews/` too |
+
+  `artifacts/` **is** shared. Artifacts are ephemeral and deleted on cleanup rather than archived, so git history is their only durable record — a deletion commit there is expected, not a fault.
+
+**Two ordering constraints, both load-bearing:**
+
+1. `ignore = Path .git` must be live in the Mac's `~/.unison/agents.prf` **before** the repo is initialized, or Unison drags `.git/` to the Mac and two hosts mutate one object store. (`agents.prf` is stowed, so a `git pull` on the Mac suffices.)
+2. `.gitignore` must exist **before** the first `add -A`, or `.review-cache/` — 6.8 GB, inside the workspace — gets committed. Keep the timer disabled until the repo is seeded and verified.
 
 ---
 

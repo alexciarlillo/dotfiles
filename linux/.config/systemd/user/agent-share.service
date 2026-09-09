@@ -1,0 +1,9 @@
+[Unit]
+Description=Snapshot ~/agents to its git remote for teammate-readable docs
+Documentation=https://github.rbx.com/aciarlillo/agent-docs
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/agent-share
+# The script logs and exits 0 on every failure path; a non-zero exit here would
+# mean the script itself is broken.

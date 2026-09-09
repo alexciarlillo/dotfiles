@@ -18,6 +18,15 @@ yolo() {
     fi
 }
 
+# quick-capture a link/doc into the right project hub via the /capture command.
+# runs from the vault so the command and its globs resolve. opens interactively
+# with the command pre-seeded so you can answer its follow-ups (hub choice,
+# Todoist task); use `capture -p ...` args style by editing to `claude -p` for
+# pure fire-and-forget.
+capture() {
+    ( cd "$HOME/vault" && claude "/capture $*" )
+}
+
 # handle un-graceful exit of ssh sessions that leave the mouse in a weird state
 alias ssh="ssh-clean-mouse"
 ssh-clean-mouse() {

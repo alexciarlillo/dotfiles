@@ -58,3 +58,13 @@ follow = Path prompts
 # meaningless without Obsidian, and .obsidian is per-machine vault config.
 ignore = Path review-queue.base
 ignore = Path .obsidian
+
+# Regenerable per-machine cache: bare clones the review skills fetch refs into,
+# GB-scale and rebuilt on demand. Nothing to gain from syncing it.
+ignore = Path .review-cache
+
+# The remote publishes ~/agents to github.rbx.com from its own in-place repo.
+# That .git is per-machine state: syncing it here would let two hosts mutate one
+# object store and index concurrently, corrupting it. `Path` so only the
+# workspace root's repo is ignored, not any nested one.
+ignore = Path .git

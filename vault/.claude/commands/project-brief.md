@@ -1,7 +1,7 @@
 ---
 description: Aggregate a project's context (Jira, Confluence, Docs, Slack, Todoist) into one brief to reason over.
 argument-hint: [project name]
-allowed-tools: Read, Glob, Write, Bash, WebFetch, Skill, mcp__todoist__*, mcp__mcp-gateway-slack__*
+allowed-tools: Read, Glob, Write, Bash, WebFetch, Skill, mcp__mcp-gateway-slack__*
 ---
 
 # Project Brief
@@ -32,7 +32,8 @@ If a source can't be retrieved, note it explicitly — do not paper over gaps.
 - **Confluence** (`confluence:` + rows) — page content via `atlassian`.
 - **Google Docs** (rows) — content via the `gdrive` skill.
 - **Slack** (`slack:` + Thread rows) — recent messages / thread via Slack MCP.
-- **Todoist** — open tasks under `#Work` with the hub's `todoist_label`.
+- **Todoist** — open tasks under `#Work` with the hub's `todoist_label`, via the
+  `todoist-cli` skill.
 - **PRs / code** — `gh` via Bash, else WebFetch.
 
 ### 3. Synthesize

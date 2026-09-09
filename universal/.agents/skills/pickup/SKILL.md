@@ -1,7 +1,7 @@
 ---
 name: pickup
-description: Resume in-flight work by finding the handoff doc for the current branch/worktree, summarizing its state, and asking how to proceed (or just acting if told to). A review-doc path opens that review read-only for discussion. Use at the start of a session to continue a task, inspect a review, or ask "what's the state of this work". Falls back to initializing a new handoff from a plan or an adhoc description when none exists.
-argument-hint: 'Optional: an instruction, review-doc path, or plan-doc path'
+description: Resume in-flight work by finding the handoff doc for the current branch/worktree, summarizing its state, and determining how to proceed. A review-doc path opens that review read-only for discussion. Use at the start of a session to continue a task, inspect a review, or ask "what's the state of this work". Falls back to initializing a new handoff from a plan or an adhoc description when none exists.
+argument-hint: "Optional: an instruction, review-doc path, or plan-doc path"
 ---
 
 # Pick up in-flight work
@@ -34,7 +34,7 @@ it under the handoff/plan rules below.
 
 ## 2. Discover the handoff
 
-Gather the binding signals for the current context:
+The user may provide the actual handoff document, if so use it directly and skip discovery, otherwise gather the binding signals for the current context:
 
 ```bash
 git branch --show-current      # current branch
@@ -50,10 +50,11 @@ signals:
 
 ## 3. Act on what you find
 
-- **Exactly one match** → Read it, then present an overview: current `Status`, what's done, the next
-  action, blockers, and its suggested skills. Then **ask the user how to proceed** — *unless* the
-  skill was invoked with an argument telling you to do something specific, in which case just do it
-  (still summarize the state briefly first).
+- **Exactly one match OR provided by user** → Read it, then present an overview: current `Status`, what's done, the next
+  action, blockers, and if there is an open PR provide it's current review state and a link. Read any associated plan
+  document for greater context. If there are any open questions or you discovery any discrepancies ask how to proceed. Otherwise,
+  proceed with the user's instructions (if any) or proceed with the next action. If the handoff is newly initialized, use the
+  /workspace-discover and /worktree-setup skills to initialize a new worktree and branch for the handoff, then proceed with the next action.
 - **Multiple matches** → list them (filename + one-line status) and ask which to pick up.
 - **No match** → prompt the user. Two sub-cases:
   - The user points at (or the argument is) a **plan doc** → pick the relevant work item, then

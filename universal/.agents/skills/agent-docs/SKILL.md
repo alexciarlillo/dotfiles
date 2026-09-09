@@ -5,13 +5,17 @@ description: Shared conventions for the work-management workspace under ~/agents
 
 # Agent work-management docs — shared conventions
 
-Shared spec for the work-management skill suite: **`research` → `plan` → `handoff` → `pickup`**.
-Those four skills point here for the cross-cutting rules instead of duplicating them. Read it directly
-when you're writing or updating a work doc *without* going through one of them.
+Shared spec for the private work-management skill suite:
+**`research` → `plan` → `handoff` → `pickup`**. When work needs a public design artifact, the plan
+promotes into a Confluence tech spec before handoffs begin. Those skills point here for the
+cross-cutting rules instead of duplicating them. Read it directly when you're writing or updating a
+work doc *without* going through one of them.
 
-The suite moves a piece of work from *idea* → *shippable PR* while staying flexible: the full path is
-`research → plan → 1+ handoffs → 1+ pickups`, but you can skip research (`plan` straight from a task),
-or go fully adhoc (`handoff`/`pickup` with no backing doc). Nothing forces a doc to exist upstream.
+The suite moves a piece of work from *idea* → *shippable PR* while staying flexible: the full public
+design path is `research → plan → Confluence tech spec → 1+ handoffs → 1+ pickups`, but the tech spec
+is optional when no public design review is needed. You can skip research (`plan` straight from a
+task), or go fully adhoc (`handoff`/`pickup` with no backing doc). Nothing forces a doc to exist
+upstream.
 
 Two buckets sit **outside** that chain because they aren't our own shippable work: `reviews/` (our
 feedback on someone else's branch) and `artifacts/` (things that aren't docs at all). Both are
@@ -175,6 +179,7 @@ above.)
 **Author:** <who wrote it>      ← review only
 **Plan:** <path>                ← handoff → its plan, if any
 **Research:** <path>            ← plan → its research, if any
+**Tech spec:** <Confluence URL> ← plan → its public source of truth, once published
 **Last verified:** <date>
 **Verified against:** <ref, e.g. origin/master (abc1234) / Sourcegraph / JIRA / a bare SHA>
 ```
@@ -215,6 +220,13 @@ whether *we* have reviewed the current head, which moves independently of `statu
 Reference PRDs, plans, research, issues, commits, and diffs **by path or URL** — never inline broad
 context. A handoff points at its plan by path; a plan points at its research by path and lists its
 handoffs; research points forward at any plan it spawned. Redact secrets (API keys, passwords, PII).
+
+A public Confluence tech spec is a one-way promotion boundary. The private plan links outward to
+the spec through `**Tech spec:**`; the public spec must never link to, name, or expose personal
+`~/agents` research, plans, handoffs, or filesystem paths. Once the spec exists, it is authoritative
+for design, requirements, decisions, and open questions. Keep the plan as the private execution
+bridge and status roll-up (handoffs, branches, tickets, PRs, and state), and make substantive
+content changes in Confluence first.
 
 ## Lifecycle — graduate, don't accumulate
 
@@ -258,7 +270,10 @@ on a guess. This is deliberately guidance rather than a separate skill: an agent
 Each skill ends by *suggesting* the natural next step — it does not auto-run it:
 
 - `research` → offer `/plan <this research doc>`
-- `plan` → offer `/handoff` for each ready work item (and, with permission, JIRA tickets)
+- `plan` → offer `/tech-spec <this plan doc>` when the work needs a public design artifact
+- `tech-spec` → record the Confluence URL in the private plan, then offer `/handoff` for each ready
+  work item (and, with permission, JIRA tickets)
+- `plan` → offer `/handoff` directly when no public tech spec is needed
 - any time → `/pickup` to resume in-flight work
 
 An explicit argument lets the user say "just proceed" (e.g. `/pickup <instruction>`).

@@ -1,7 +1,7 @@
 ---
 description: Capture a doc/spec/thread link into the right project hub and optionally create a Todoist task.
 argument-hint: [url or text] [project name]
-allowed-tools: Read, Write, Edit, Glob, Bash, WebFetch, Skill, mcp__todoist__*, mcp__mcp-gateway-slack__*
+allowed-tools: Read, Write, Edit, Glob, Bash, WebFetch, Skill, mcp__mcp-gateway-slack__*
 ---
 
 # Capture
@@ -36,9 +36,10 @@ Infer a Document **Type**: Spec · Proposal · Design · Meeting · PR · Thread
 
 ### 2. Find the target project hub
 
-- If ${2} is given, use `01 - Projects/<project>/_Hub.md`.
-- Otherwise Glob `01 - Projects/*/_Hub.md`, read their titles/overviews, and pick
-  the best match. If it's ambiguous, ask me — list the candidates.
+- If ${2} is given, find `01 - Projects/*/<project>/_Index.md` (project folders
+  live under `Work/` or `Personal/`).
+- Otherwise Glob `01 - Projects/*/*/_Index.md`, read their titles/overviews, and
+  pick the best match. If it's ambiguous, ask me — list the candidates.
 - If no hub fits, ask whether to (a) start a new hub, or (b) park it in
   `00 - Inbox/`. Do not invent a hub silently.
 
@@ -55,9 +56,10 @@ links the same target.
 ### 4. Offer a Todoist task
 
 If this is something I need to act on (review, respond, follow up), ask whether
-to create a Todoist task. If yes, create it in the `#Work` project with the label
-from the hub's `todoist_label`, titled like "Review: <Title>", including the
-link. Never leave it in Inbox — always assign the label. Report the task link.
+to create a Todoist task. If yes, use the `todoist-cli` skill to create it in the
+`#Work` project with the label from the hub's `todoist_label`, titled like
+"Review: <Title>", including the link. Never leave it in Inbox — always assign
+the label. Report the task link.
 
 ## Output
 

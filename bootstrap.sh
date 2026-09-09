@@ -138,14 +138,15 @@ universal_dots() {
   done
 }
 
-# Agent-agnostic skills live under universal/.agents/skills. Codex (and the
-# Roblox skill manager's own entries under ~/.claude/skills) only discover a
-# skill when its directory is itself a symlink — a real dir containing a
+# Agent-agnostic skills live under universal/.agents/skills; Roblox-specific
+# skills under rblx/.agents/skills (guarded on the dir existing). Codex (and
+# the Roblox skill manager's own entries under ~/.claude/skills) only discover
+# a skill when its directory is itself a symlink — a real dir containing a
 # symlinked SKILL.md is ignored. So we fold at the skill-dir level: stowing the
 # `skills` package with folding enabled makes ~/.agents/skills/<skill> and
 # ~/.claude/skills/<skill> each a single directory symlink into the dotfiles
-# tree. `universal` ignores `.agents` (see universal/.stow-local-ignore) so all
-# ~/.agents handling lives here.
+# tree. Both `universal` and `rblx` ignore `.agents` (see their
+# .stow-local-ignore) so all ~/.agents handling lives here.
 #
 # ~/.claude/skills is shared with the Roblox skill manager, so it stays a real
 # dir; folding only our skill entries leaves the manager's symlinks alone.
@@ -153,7 +154,12 @@ universal_dots() {
 # ~/.claude/skills).
 agents_dots() {
   local agents_src="$DOTFILES/universal/.agents"
-  local skill target
+  local rblx_agents_src="$DOTFILES/rblx/.agents"
+  local skill target src
+
+  # Collect skill sources: universal is always present; rblx is conditional.
+  local skill_sources=("$agents_src")
+  [[ -d "$rblx_agents_src/skills" ]] && skill_sources+=("$rblx_agents_src")
 
   # One-time migration off the old --no-folding layout, which left our entries
   # as real dirs (with a symlinked SKILL.md). A pre-existing real dir blocks
@@ -161,11 +167,13 @@ agents_dots() {
   # not already symlinks.
   for target in "$HOME/.agents/skills" "$HOME/.claude/skills"; do
     mkdir -p "$target"
-    for skill in "$agents_src/skills"/*/; do
-      skill="$(basename "$skill")"
-      if [[ -d "$target/$skill" && ! -L "$target/$skill" ]]; then
-        rm -rf "${target:?}/$skill"
-      fi
+    for src in "${skill_sources[@]}"; do
+      for skill in "$src/skills"/*/; do
+        skill="$(basename "$skill")"
+        if [[ -d "$target/$skill" && ! -L "$target/$skill" ]]; then
+          rm -rf "${target:?}/$skill"
+        fi
+      done
     done
   done
 
@@ -175,8 +183,10 @@ agents_dots() {
     --target="$HOME/.agents" --dir="$DOTFILES/universal" .agents
 
   # Fold each skill into a directory symlink in both shared targets.
-  stow --restow --ignore ".DS_Store" --target="$HOME/.agents/skills" --dir="$agents_src" skills
-  stow --restow --ignore ".DS_Store" --target="$HOME/.claude/skills" --dir="$agents_src" skills
+  for src in "${skill_sources[@]}"; do
+    stow --restow --ignore ".DS_Store" --target="$HOME/.agents/skills" --dir="$src" skills
+    stow --restow --ignore ".DS_Store" --target="$HOME/.claude/skills" --dir="$src" skills
+  done
 }
 
 # ~/vault's hidden .claude/ (slash commands) isn't carried by Obsidian Sync, so
@@ -279,6 +289,15 @@ agent_sync_init() {
   launchctl bootstrap "$domain" "$dst"
 }
 
+# Enable the agent-share timer (Linux). Units are stowed, so this only reloads
+# and enables; the script itself no-ops on a machine with no publish repo.
+agent_share_init() {
+  command -v systemctl >/dev/null 2>&1 || return 0
+  [[ -f "$HOME/.config/systemd/user/agent-share.timer" ]] || return 0
+  systemctl --user daemon-reload 2>/dev/null || return 0
+  systemctl --user enable --now agent-share.timer 2>/dev/null || true
+}
+
 main() {
   local uname_s
   uname_s="$(uname -s)"
@@ -308,6 +327,7 @@ main() {
     agents_dots
     [[ "${1:-}" != "dots" ]] && tpm_init
     linux_dots
+    [[ "${1:-}" != "dots" ]] && agent_share_init
     rblx_dots
     ;;
   *)

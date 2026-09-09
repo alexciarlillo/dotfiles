@@ -3,6 +3,7 @@ macos-titlebar-proxy-icon = hidden
 font-family = "FiraCode Nerd Font Mono"
 font-size = 16
 copy-on-select = clipboard
+clipboard-read = allow
 theme = "Catppuccin Mocha"
 window-padding-y = 4
 window-padding-x = 8

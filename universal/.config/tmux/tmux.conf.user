@@ -8,7 +8,7 @@ set-option -sa terminal-overrides ",xterm*:Tc"
 set -g default-terminal "tmux-256color"
 
 # Enable extended key mode for better key distinction (C-i vs Tab, etc.)
-set -s extended-keys always
+set -s extended-keys on
 set -as terminal-features 'xterm*:extkeys'
 
 # Fast command sequences and focus events
