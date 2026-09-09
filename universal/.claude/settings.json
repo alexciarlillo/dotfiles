@@ -15,7 +15,7 @@
       "mcp__mcp-gateway-gmail"
     ]
   },
-  "model": "opus",
+  "model": "opus[1m]",
   "hooks": {
     "WorktreeCreate": [
       {

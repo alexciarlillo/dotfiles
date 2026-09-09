@@ -72,3 +72,5 @@ znap eval starship 'starship init zsh'
 
 # Added by declawd
 export PATH="$HOME/.local/bin:$PATH"
+
+. "$HOME/.local/share/../bin/env"

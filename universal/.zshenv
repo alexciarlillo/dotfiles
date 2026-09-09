@@ -46,3 +46,5 @@ fi
 
 . "$HOME/.cargo/env"
 . "$HOME/.rokit/env"
+
+. "$HOME/.local/share/../bin"
