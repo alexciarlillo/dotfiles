@@ -1,11 +1,4 @@
 
-# LXC/Debian templates default to LANG=C, which leaves tmux out of UTF-8 mode
-# (#{client_utf8} == 0) so it mangles multibyte glyphs. Only fill in a UTF-8
-# locale if the environment (e.g. ssh AcceptEnv from the client) has none.
-if [[ $LANG != *[Uu][Tt][Ff]* ]]; then
-    export LANG=C.UTF-8
-fi
-
 export PATH="$PATH:$HOME/.local/bin"
 
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
@@ -43,8 +36,3 @@ if [[ -d "$HOME/.config/zsh/env.d" ]]; then
         . "$f"
     done
 fi
-
-. "$HOME/.cargo/env"
-. "$HOME/.rokit/env"
-
-. "$HOME/.local/share/../bin"
