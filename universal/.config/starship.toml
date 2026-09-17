@@ -3,6 +3,11 @@ command_timeout = 1000
 [aws]
 disabled = true
 
+# Suppress the ⬢ [Systemd] container indicator inside LXC/systemd containers
+# (e.g. the remote dev box); the per-host chip already identifies the machine.
+[container]
+disabled = true
+
 # The colored host chip is driven by ~/.config/remotes.conf via remote-badge,
 # which handles ssh-only display itself, so the built-in module is redundant.
 [hostname]
