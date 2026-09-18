@@ -1,8 +1,7 @@
-# Sync ~/agents (agent docs) between this Mac and coder-engine.
-# Invoked as: unison agents
-
-root = /Users/aciarlillo/agents
-root = ssh://coder-engine//home/coder/agents
+# Sync ~/agents (agent docs) between this Mac and a per-machine remote.
+# Roots are passed on the command line by the ~/.local/bin/agent-sync wrapper,
+# since Unison expands neither ~ nor $HOME in a profile — they cannot be
+# written portably here.
 
 # Non-interactive (required for launchd)
 batch = true
@@ -25,9 +24,8 @@ backup = Name *
 backuplocation = central
 maxbackups = 5
 
-# Logging.
+# Logging. logfile is passed by the wrapper (no $HOME expansion here).
 log = true
-logfile = /Users/aciarlillo/.local/state/agent-sync.log
 
 # Junk / volatile per-machine state.
 ignore = Name .DS_Store

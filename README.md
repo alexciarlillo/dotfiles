@@ -122,7 +122,7 @@ The `~/agents` work-management workspace (`research`, `plans`, `handoffs`, `revi
 
 - **Canonical bytes live in the vault** at `~/vault/10 - Agents/<Context>/<Kind>/`. Each `~/agents/<kind>` is a **symlink** into that subtree, so `$AGENT_WORK_DIR/<kind>` resolves normally.
 - **Obsidian Sync** carries the vault (including `10 - Agents/`) to other Obsidian devices and the phone.
-- **Unison** (`osx/.unison/agents.prf`) syncs `~/agents` to the sandboxed remote (`coder-engine:/home/coder/agents`), which has **no** vault. The profile `follow`s the per-kind symlinks so their contents land as **real dirs** on the remote. It ignores `review-queue.base` (an Obsidian Base view), `.obsidian` (per-machine config), `.review-cache` (GB-scale regenerable bare clones), and `.git` (the remote's own publish repo — see below), and runs every 300s via the `com.aciarlillo.agent-sync` LaunchAgent (`extra/launchd/`, wrapper `~/.local/bin/agent-sync`).
+- **Unison** (`osx/.unison/agents.prf`) syncs `~/agents` to a **per-machine remote** — the sandboxed work devspace (`coder-engine:/home/coder/agents`) by default, overridden elsewhere via `~/.config/agent-sync.conf` (unstowed: `REMOTE_HOST` / `REMOTE_PATH`). The remote has **no** vault. Because Unison expands neither `~` nor `$HOME` in a profile, the roots and logfile are **not** in `agents.prf`; the `~/.local/bin/agent-sync` wrapper passes them on the command line. The profile `follow`s the per-kind symlinks so their contents land as **real dirs** on the remote. It ignores `review-queue.base` (an Obsidian Base view), `.obsidian` (per-machine config), `.review-cache` (GB-scale regenerable bare clones), and `.git` (the remote's own publish repo — see below), and runs every 300s via the `com.agent-sync` LaunchAgent (templated from `extra/launchd/com.agent-sync.plist.in`, wrapper `~/.local/bin/agent-sync`).
 
 ```
 VAULT  (Obsidian Sync → phone + every vault-present desktop)
@@ -167,11 +167,11 @@ SYNC PATHS
 On a vault machine whose `~/agents/<kind>` are still real dirs, do a one-time cutover. **Order matters** so the 300s Unison timer never mass-deletes the remote:
 
 1. The profile is already armed (`follow = Path <kind>` per kind) — a no-op while the paths are real dirs, but it makes any sync during/after the move follow the symlinks instead of propagating deletions.
-2. Pause the timer: `launchctl bootout gui/$(id -u)/com.aciarlillo.agent-sync`.
+2. Pause the timer: `launchctl bootout gui/$(id -u)/com.agent-sync`.
 3. Per kind: move `~/agents/<kind>/*` into `~/vault/10 - Agents/<Context>/<Kind>/`, then remove the now-empty `~/agents/<kind>`. Move `~/agents/review-queue.base` into `~/vault/10 - Agents/<Context>/`.
 4. `./bootstrap.sh dots` — `agents_workspace_links` creates the symlinks.
 5. `unison agents` — confirm it reconciles with **no deletions** (a clean cutover shows "nothing to do").
-6. Resume: `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.aciarlillo.agent-sync.plist`.
+6. Resume: `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.agent-sync.plist`.
 
 ---
 

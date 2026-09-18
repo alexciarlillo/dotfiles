@@ -10,7 +10,7 @@ This is a personal dotfiles repository using GNU Stow for symlink management. Th
 - `rblx/` - Work-specific configs, stowed only when the directory exists (kept separable for eventual private-repo extraction)
 - `osx/` - macOS-specific configurations (AeroSpace, Hammerspoon, neru)
 - `linux/` - Linux-specific configs; the desktop configs (i3/polybar/compton/dunst) have been retired, so this currently holds only a `.stow-local-ignore`
-- `extra/` - NOT stowed; resources consumed by `bootstrap.sh` (`homebrew/Brewfile`, `apt/packages.txt`, `cargo/packages.txt`, `hammerspoon/` spoon URLs, `launchd/` LaunchAgent plists copied into `~/Library/LaunchAgents`, optional `rblx/setup.sh`)
+- `extra/` - NOT stowed; resources consumed by `bootstrap.sh` (`homebrew/Brewfile`, `apt/packages.txt`, `cargo/packages.txt`, `hammerspoon/` spoon URLs, `launchd/` LaunchAgent plist templates instantiated into `~/Library/LaunchAgents`, optional `rblx/setup.sh`)
 
 ## Setup Commands
 
@@ -105,7 +105,7 @@ Both drive **one resolver**, `pr-review-doc/scripts/review_targets.py` (renamed 
 
 `code-review` (from the Roblox `user-communities-skills` marketplace) references `pr-checkout` and `code-highlight` skills that are **not installed** here. `pr-review-doc` fetching refs up front covers the `pr-checkout` gap; the citation-format gap is called out in its Known limitations.
 
-`~/agents` is kept in sync with the remote devspace (`coder-engine:/home/coder/agents`) by a Unison-based job (macOS only): the `~/.local/bin/agent-sync` wrapper (stowed from `osx/`) drives a bidirectional `unison agents` sync using the profile `osx/.unison/agents.prf`, scheduled every 5 min (`StartInterval 300`) via a LaunchAgent. The plist lives at `extra/launchd/com.aciarlillo.agent-sync.plist` (copied into `~/Library/LaunchAgents`, not stowed, since launchd rejects symlinked plists) and is loaded by `bootstrap.sh`'s `agent_sync_init`. The wrapper is a quiet no-op when off-VPN / the host is unreachable.
+`~/agents` is kept in sync with a **per-machine remote** by a Unison-based job (macOS only): the `~/.local/bin/agent-sync` wrapper (stowed from `osx/`) drives a bidirectional `unison agents` sync using the profile `osx/.unison/agents.prf`, scheduled every 5 min (`StartInterval 300`) via a LaunchAgent. The remote defaults to the work devspace (`coder-engine:/home/coder/agents`) and is overridden elsewhere by an unstowed `~/.config/agent-sync.conf` (`REMOTE_HOST` / `REMOTE_PATH`). The profile **no longer carries roots or a logfile path** — Unison expands neither `~` nor `$HOME` in a profile, so the wrapper passes both roots (building `ssh://$REMOTE_HOST/$REMOTE_PATH`, doubled slash preserving the absolute remote path) and `-logfile` on the command line. The plist is templated from `extra/launchd/com.agent-sync.plist.in` (`__HOME__` substituted by `agent_sync_init`, written into `~/Library/LaunchAgents`, not stowed, since launchd rejects symlinked plists); `agent_sync_init` also boots out the pre-rename `com.aciarlillo.agent-sync` job so a migrated machine runs only one. The wrapper is a quiet no-op when off-VPN / the host is unreachable.
 
 ## Stow Management
 

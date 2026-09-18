@@ -275,17 +275,21 @@ rblx_init() {
   fi
 }
 
-# Install + load the agent-sync LaunchAgent (macOS). The plist is copied (not
-# stowed) because launchd refuses to load symlinked plists and ~/Library is
+# Install + load the agent-sync LaunchAgent (macOS). The plist is a template
+# (__HOME__ substituted at install) written into ~/Library rather than stowed,
+# because launchd refuses to load symlinked plists and ~/Library is
 # TCC-protected. bootout-then-bootstrap makes this idempotent across re-runs.
 agent_sync_init() {
-  local src="$DOTFILES/extra/launchd/com.aciarlillo.agent-sync.plist"
-  local dst="$HOME/Library/LaunchAgents/com.aciarlillo.agent-sync.plist"
+  local src="$DOTFILES/extra/launchd/com.agent-sync.plist.in"
+  local dst="$HOME/Library/LaunchAgents/com.agent-sync.plist"
   [[ -f "$src" ]] || return 0
-  mkdir -p "$HOME/Library/LaunchAgents"
-  cp "$src" "$dst"
+  mkdir -p "$HOME/Library/LaunchAgents" "$HOME/.local/state"
+  sed "s|__HOME__|$HOME|g" "$src" >"$dst"
   local domain="gui/$(id -u)"
+  # Retire the pre-rename job so a migrated machine runs only one.
   launchctl bootout "$domain/com.aciarlillo.agent-sync" 2>/dev/null || true
+  rm -f "$HOME/Library/LaunchAgents/com.aciarlillo.agent-sync.plist"
+  launchctl bootout "$domain/com.agent-sync" 2>/dev/null || true
   launchctl bootstrap "$domain" "$dst"
 }
 

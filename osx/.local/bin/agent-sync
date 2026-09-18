@@ -1,14 +1,20 @@
 #!/usr/bin/env bash
-# agent-sync — bidirectionally sync ~/agents with coder-engine via Unison.
+# agent-sync — bidirectionally sync ~/agents with a remote via Unison.
 # Safe unattended (launchd): quiet no-op when the remote is unreachable.
 set -euo pipefail
 
 export PATH="/opt/homebrew/bin:$HOME/.local/bin:$PATH"
 
-REMOTE_HOST="coder-engine"
 PROFILE="agents"
 LOCK_DIR="/tmp/agent-sync.lock"
 LOG="$HOME/.local/state/agent-sync.log"
+
+# Per-machine remote, unstowed so it survives dotfiles updates. Defaults keep
+# the work devspace working with no conf file present.
+REMOTE_HOST="coder-engine"
+REMOTE_PATH="/home/coder/agents"
+CONF="$HOME/.config/agent-sync.conf"
+[ -r "$CONF" ] && . "$CONF"
 
 mkdir -p "$(dirname "$LOG")"
 log() { printf '%s agent-sync: %s\n' "$(date '+%Y-%m-%dT%H:%M:%S')" "$1" >>"$LOG"; }
@@ -25,5 +31,13 @@ if ! ssh -o BatchMode=yes -o ConnectTimeout=8 "$REMOTE_HOST" true 2>/dev/null; t
 fi
 
 log "sync start"
-if unison "$PROFILE" >>"$LOG" 2>&1; then log "sync ok"; else log "sync failed (exit $?)"; fi
+# Roots passed here (not in the profile): Unison expands neither ~ nor $HOME in
+# a profile. The doubled slash after the host keeps REMOTE_PATH absolute — a
+# single slash would make it relative to the remote home.
+if unison "$PROFILE" "$HOME/agents" "ssh://$REMOTE_HOST/$REMOTE_PATH" \
+    -logfile "$LOG" >>"$LOG" 2>&1; then
+  log "sync ok"
+else
+  log "sync failed (exit $?)"
+fi
 exit 0
