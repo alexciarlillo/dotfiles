@@ -221,6 +221,19 @@ Reference PRDs, plans, research, issues, commits, and diffs **by path or URL** â
 context. A handoff points at its plan by path; a plan points at its research by path and lists its
 handoffs; research points forward at any plan it spawned. Redact secrets (API keys, passwords, PII).
 
+Links between files under `$AGENT_WORK_DIR` must use standard Markdown links whose destinations are
+relative to the file containing the link. This keeps the workspace portable across local Obsidian
+vaults and its GitHub mirror. Never use machine-specific absolute destinations such as
+`/home/coder/agents/...`, home-relative destinations such as `~/agents/...`, vault-root-relative
+destinations, or Obsidian-only wikilinks for workspace cross-references. For example, a file in
+`handoffs/` links to a plan as `[plan](../plans/example.md)`, while two files in `research/` link as
+`[related research](other-topic.md)`. External web URLs remain absolute.
+
+When moving a document during archival, update its relative links and any known backlinks to reflect
+the new directory depth, then verify that every changed local-link destination exists. Metadata fields
+such as `**Plan:**`, `**Research:**`, and `**Artifacts:**` follow the same rule when they are clickable
+links.
+
 A public Confluence tech spec is a one-way promotion boundary. The private plan links outward to
 the spec through `**Tech spec:**`; the public spec must never link to, name, or expose personal
 `~/agents` research, plans, handoffs, or filesystem paths. Once the spec exists, it is authoritative

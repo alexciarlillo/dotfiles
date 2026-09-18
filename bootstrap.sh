@@ -295,9 +295,11 @@ agent_sync_init() {
 
 # Enable the agent-share timer (Linux). Units are stowed, so this only reloads
 # and enables; the script itself no-ops on a machine with no publish repo.
+# Linger keeps the user session (and its timers) alive across reboots.
 agent_share_init() {
   command -v systemctl >/dev/null 2>&1 || return 0
   [[ -f "$HOME/.config/systemd/user/agent-share.timer" ]] || return 0
+  sudo loginctl enable-linger "$(whoami)" 2>/dev/null || true
   systemctl --user daemon-reload 2>/dev/null || return 0
   systemctl --user enable --now agent-share.timer 2>/dev/null || true
 }

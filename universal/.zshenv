@@ -1,4 +1,10 @@
 
+# Ensure a UTF-8 locale so tmux/starship render Nerd Font glyphs correctly.
+# tmux only treats bytes as UTF-8 when its locale is a *.UTF-8 one.
+if [[ "$LANG" != *UTF-8* && "$LC_ALL" != *UTF-8* ]]; then
+    export LANG="en_US.UTF-8"
+fi
+
 export PATH="$PATH:$HOME/.local/bin"
 
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
