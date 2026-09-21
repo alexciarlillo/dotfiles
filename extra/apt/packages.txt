@@ -10,3 +10,4 @@ neovim
 vim
 zsh
 unison
+ncurses-term
