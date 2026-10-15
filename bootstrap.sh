@@ -267,17 +267,26 @@ linux_dots() {
   stow --restow --no-folding --ignore ".DS_Store" --target="$HOME" --dir="$DOTFILES" linux
 }
 
-rblx_dots() {
-  if [[ -d "$DOTFILES/rblx" ]]; then
-    stow --restow --no-folding --ignore ".DS_Store" --target="$HOME" --dir="$DOTFILES" rblx
-  fi
+# Private overlays: work (rblx) and personal-only packages, each present in
+# just one repo. Stowed/set up only where the dir exists; backport-public keeps
+# them out of (rblx) or protects them in (personal) the public mirror.
+OVERLAYS=(rblx personal)
+
+overlay_dots() {
+  local o
+  for o in "${OVERLAYS[@]}"; do
+    [[ -d "$DOTFILES/$o" ]] || continue
+    stow --restow --no-folding --ignore ".DS_Store" --target="$HOME" --dir="$DOTFILES" "$o"
+  done
 }
 
-rblx_init() {
-  if [[ -f "$DOTFILES/extra/rblx/setup.sh" ]]; then
-    # shellcheck disable=SC1091
-    source "$DOTFILES/extra/rblx/setup.sh"
-  fi
+overlay_init() {
+  local o
+  for o in "${OVERLAYS[@]}"; do
+    [[ -f "$DOTFILES/extra/$o/setup.sh" ]] || continue
+    # shellcheck disable=SC1090
+    source "$DOTFILES/extra/$o/setup.sh"
+  done
 }
 
 # agent-sync LaunchAgent (macOS), opt-in via ~/.config/agent-sync.conf; without
@@ -318,7 +327,7 @@ main() {
   Darwin)
     [[ "${1:-}" != "dots" ]] && osx_init
     [[ "${1:-}" != "dots" ]] && cargo_init
-    [[ "${1:-}" != "dots" ]] && rblx_init
+    [[ "${1:-}" != "dots" ]] && overlay_init
     [[ "${1:-}" != "dots" ]] && hammerspoon_spoons
     universal_dots
     vault_dots
@@ -327,12 +336,12 @@ main() {
     [[ "${1:-}" != "dots" ]] && tpm_init
     osx_dots
     [[ "${1:-}" != "dots" ]] && agent_sync_init
-    rblx_dots
+    overlay_dots
     ;;
   Linux)
     [[ "${1:-}" != "dots" ]] && linux_init
     [[ "${1:-}" != "dots" ]] && cargo_init
-    [[ "${1:-}" != "dots" ]] && rblx_init
+    [[ "${1:-}" != "dots" ]] && overlay_init
     setup_zsh_from_bash
     universal_dots
     vault_dots
@@ -341,7 +350,7 @@ main() {
     [[ "${1:-}" != "dots" ]] && tpm_init
     linux_dots
     [[ "${1:-}" != "dots" ]] && agent_share_init
-    rblx_dots
+    overlay_dots
     ;;
   *)
     echo "Unsupported OS: $uname_s" >&2

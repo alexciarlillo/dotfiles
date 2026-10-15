@@ -8,6 +8,7 @@ This is a personal dotfiles repository using GNU Stow for symlink management. Th
 
 - `universal/` - Cross-platform configuration files (shell, git, editors, terminal, Claude Code)
 - `rblx/` - Work-specific configs, stowed only when the directory exists (kept separable for eventual private-repo extraction)
+- `personal/` - Personal-only overlay that exists only in the public repo (never in canonical). `bootstrap.sh`'s `OVERLAYS=(rblx personal)` drives `overlay_dots`/`overlay_init`, each guarded on the dir existing; `backport-public` strips `rblx` from the snapshot and `--exclude`s `personal`/`extra/personal` so its `rsync --delete` leaves them alone. Document personal-only config in `personal/README.md`, since this file is overwritten by backports.
 - `osx/` - macOS-specific configurations (AeroSpace, Hammerspoon, neru)
 - `linux/` - Linux-specific configs; the desktop configs (i3/polybar/compton/dunst) have been retired, so this currently holds only a `.stow-local-ignore`
 - `extra/` - NOT stowed; resources consumed by `bootstrap.sh` (`homebrew/Brewfile`, `apt/packages.txt`, `cargo/packages.txt`, `hammerspoon/` spoon URLs, `launchd/` LaunchAgent plist templates instantiated into `~/Library/LaunchAgents`, optional `rblx/setup.sh`)
@@ -117,6 +118,7 @@ Mac ↔ remote sync of `~/agents` is **per machine and opt-in**; nothing syncs u
 | --- | --- | --- | --- |
 | **Unison agent-sync** | `osx/` (generic; backports as-is) | any ssh-reachable remote, e.g. personal dev servers | creating `~/.config/agent-sync.conf` |
 | **Coder Desktop Mutagen** | `rblx/` (work-only) | the work devspace, since 2026-10-12 | `agent-sync-coder start`, once |
+| **Homebrew Mutagen** | `personal/` (public-only) | the personal dev box | `agent-sync-mutagen start`, once |
 
 Backporting to the personal dotfiles means taking `osx/` + `bootstrap.sh` (Unison) and leaving `rblx/` (Mutagen) behind; nothing outside `rblx/` names a work host.
 

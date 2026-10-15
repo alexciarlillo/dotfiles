@@ -1,0 +1,72 @@
+# Mutagen project syncing ~/agents with the personal dev box (dev.local).
+# Driven by ~/.local/bin/agent-sync-mutagen; Homebrew's mutagen daemon owns it.
+
+# Mutagen never follows symlinks and each ~/agents/<kind> links into the vault,
+# so each kind syncs from its real vault dir and the root session skips them.
+# dev.local has no vault, so it keeps real dirs at every path.
+
+sync:
+  defaults:
+    # Conflicts are reported and left for a human, never silently resolved.
+    mode: "two-way-safe"
+    symlink:
+      mode: "portable"
+    ignore:
+      vcs: true
+      paths:
+        - ".DS_Store"
+        - "*.tmp"
+        - "workspace.json"
+        - "workspace-mobile.json"
+
+  agents-root:
+    alpha: "~/agents"
+    beta: "dev.local:/home/alex/agents"
+    ignore:
+      paths:
+        # Owned by the per-kind sessions below.
+        - "/research"
+        - "/plans"
+        - "/handoffs"
+        - "/reviews"
+        - "/archives"
+        - "/prompts"
+        - "/artifacts"
+        # Stow links into each machine's own dotfiles clone.
+        - "/AGENTS.md"
+        - "/CLAUDE.md"
+        # Obsidian-only and per-machine regenerable state.
+        - "/.obsidian"
+        - "/review-queue.base"
+        - "/.review-cache"
+        - "/.review-repos"
+
+  agents-research:
+    alpha: "~/vault/10 - Agents/Personal/Research"
+    beta: "dev.local:/home/alex/agents/research"
+
+  agents-plans:
+    alpha: "~/vault/10 - Agents/Personal/Plans"
+    beta: "dev.local:/home/alex/agents/plans"
+
+  agents-handoffs:
+    alpha: "~/vault/10 - Agents/Personal/Handoffs"
+    beta: "dev.local:/home/alex/agents/handoffs"
+
+  agents-reviews:
+    alpha: "~/vault/10 - Agents/Personal/Reviews"
+    beta: "dev.local:/home/alex/agents/reviews"
+
+  agents-archives:
+    alpha: "~/vault/10 - Agents/Personal/Archives"
+    beta: "dev.local:/home/alex/agents/archives"
+
+  agents-prompts:
+    alpha: "~/vault/10 - Agents/Personal/Prompts"
+    beta: "dev.local:/home/alex/agents/prompts"
+
+  # A real dir on both sides (not vaulted). Its own session so its bulk
+  # (screenshots, logs) can be paused or reset without touching the docs.
+  agents-artifacts:
+    alpha: "~/agents/artifacts"
+    beta: "dev.local:/home/alex/agents/artifacts"

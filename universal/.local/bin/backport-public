@@ -53,7 +53,15 @@ for p in "${RBLX_PATHS[@]}"; do
     rm -rf "${tmp:?}/$p"
 done
 
-rsync -a --delete --exclude='.git/' "$tmp"/ "$PUBLIC"/
+# personal = public-only overlay that canonical never has. An rsync exclude
+# also shields the receiver's copy, so --delete leaves it in place.
+PUBLIC_ONLY_PATHS=(personal extra/personal)
+excludes=(--exclude='.git/')
+for p in "${PUBLIC_ONLY_PATHS[@]}"; do
+    excludes+=(--exclude="/$p/")
+done
+
+rsync -a --delete "${excludes[@]}" "$tmp"/ "$PUBLIC"/
 
 git -C "$PUBLIC" add -A
 

@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+# agent-sync-mutagen — manage the Mutagen project that syncs ~/agents with
+# dev.local. `start` once; afterwards the registered daemon keeps it running.
+set -euo pipefail
+
+export PATH="/opt/homebrew/bin:$PATH"
+PROJECT="$HOME/.config/mutagen/agents-personal.yml"
+
+usage() {
+  echo "usage: $(basename "$0") start|list|monitor|flush|pause|resume|reset|terminate|conflicts" >&2
+  exit 2
+}
+
+command -v mutagen >/dev/null 2>&1 || {
+  echo "mutagen not on PATH (brew install mutagen-io/mutagen/mutagen)" >&2
+  exit 1
+}
+
+# Unison and Mutagen writing the same tree would fight; refuse to start both.
+if [[ "${1:-}" == "start" && -f "$HOME/.config/agent-sync.conf" ]]; then
+  echo "~/.config/agent-sync.conf exists (Unison agent-sync is enabled);" \
+    "remove it and rerun ./bootstrap.sh before starting Mutagen." >&2
+  exit 1
+fi
+
+CONFLICTS_PY='
+import json, sys
+
+def paths(changes):
+    return sorted({c.get("path") or "(root)" for c in changes or []})
+
+bad = 0
+for s in json.load(sys.stdin):
+    issues = []
+    for c in s.get("conflicts") or []:
+        for p in paths(c.get("alphaChanges")) + paths(c.get("betaChanges")):
+            issues.append("conflict  " + p)
+    for side in ("alpha", "beta"):
+        e = s.get(side) or {}
+        for k in ("scanProblems", "transitionProblems"):
+            for p in e.get(k) or []:
+                issues.append("%s %s  %s: %s" % (side, k, p.get("path"), p.get("error")))
+        if e.get("connected") is False:
+            issues.append(side + " disconnected")
+    if s.get("lastError"):
+        issues.append("error  " + s["lastError"])
+    more = s.get("excludedConflicts", 0)
+    if more:
+        issues.append("...and %d more conflicts" % more)
+    state = "paused" if s.get("paused") else s.get("status", "?")
+    mark = "!!" if issues else "ok"
+    print("%s  %-18s %s" % (mark, s["name"], state))
+    for i in dict.fromkeys(issues):
+        print("      " + i)
+    bad += bool(issues)
+
+print("\n%s" % ("%d session(s) need attention" % bad if bad else "no conflicts or problems"))
+sys.exit(1 if bad else 0)
+'
+
+case "${1:-}" in
+start | list | flush | pause | resume | reset | terminate)
+  mutagen project "$1" -f "$PROJECT"
+  ;;
+monitor)
+  mutagen sync monitor
+  ;;
+conflicts)
+  # Mutagen omits empty conflict/problem fields, so --long shows nothing at
+  # all when clean. Summarize per session instead; exit 1 if anything is off.
+  mutagen sync list --label-selector "io.mutagen.project" \
+    --template '{{ json . }}' | python3 -c "$CONFLICTS_PY"
+  ;;
+*) usage ;;
+esac

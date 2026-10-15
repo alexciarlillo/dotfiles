@@ -145,9 +145,10 @@ URL is picked up and kept current by a later queue sweep, and vice versa.
 
 ### `artifacts/` — everything that isn't a doc
 
-Catch-all for things agents produce that don't fit any doc kind: one-off repro/helper scripts,
-throwaway utilities, diagrams, exported data, tarballs. No metadata block and no status — these
-aren't docs.
+Outputs worth keeping or handing to someone that don't fit any doc kind: reports, diagrams,
+exported data, and scripts or utilities someone would run again (repro scripts, helpers a doc tells
+you to use). No metadata block and no status — these aren't docs. The test is **"would I share or
+rerun this?"** — if not, it doesn't belong here.
 
 - Descriptive `kebab-case` filename with its real extension; keep scripts executable.
 - **Always link an artifact from the doc that motivated it** (usually a handoff) by path, and have
@@ -160,6 +161,12 @@ aren't docs.
   verified. The destination's own history is the record. If you need a number or ID later (page ID,
   revision), write it into the doc, not a receipt file. Build output (`bin/`, `obj/`) never belongs
   here either.
+- **Not for iteration output.** What an agent produces while developing or verifying a change —
+  per-iteration screenshots, before/after captures, throwaway probe or screenshot-harness scripts,
+  test/e2e/lint/build logs — goes in a `mktemp -d` scratch dir (or the repo's own ignored output dir)
+  and is deleted when the change lands. Record the *result* in the handoff ("e2e 42/42 green", "panel
+  no longer clips at 820px"). Promote a capture into `artifacts/` only when a doc needs to show it to
+  someone — one or two final shots, not every pass.
 
 ## Defer to project-specific doc skills
 
@@ -278,6 +285,8 @@ since whether a plan is done depends on its handoffs:
 2. **Plans** — no remaining live handoff references → `complete` → `archives/plans/`.
 3. **Reviews** — feedback posted → `delivered` → `archives/reviews/`.
 4. **Artifacts** — grep the active docs for each artifact's path; unreferenced ones are candidates.
+   Iteration output (see `artifacts/` above) is a deletion candidate even when referenced, since only
+   finished work links to it; list it separately so the user can delete rather than archive it.
 5. **Research** — never auto-move; the user relocates it.
 
 Present the full proposed set of moves and get confirmation before touching anything. Where you
