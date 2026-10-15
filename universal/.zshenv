@@ -17,7 +17,9 @@ case $(uname) in
         export PATH="$PATH:$HOME/.nvm/current/bin"  # node/npm for all shells; nvm itself is handled in ~/.config/zsh/nvm
         ;;
     Linux)
-        export TERM=xterm-256color
+        # tmux sets its own TERM (tmux-256color); clobbering it inside a pane
+        # breaks bracketed paste and other features nvim probes for.
+        [[ -z "$TMUX" ]] && export TERM=xterm-256color
         export EDITOR="vim"
         ;;
 esac

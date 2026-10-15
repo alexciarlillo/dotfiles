@@ -154,6 +154,12 @@ aren't docs.
   the artifact itself say in a header comment what it's for and how to run it. An unreferenced
   artifact is indistinguishable from junk.
 - Archive alongside the work that produced it → `archives/artifacts/`.
+- **Not for publishing intermediates.** Files that only exist to build or check something published
+  elsewhere (Confluence/Google Docs bodies, payload or model JSON, API receipts, readbacks, CLI logs,
+  generated output trees) go in a `mktemp -d` scratch dir and are deleted once the publish is
+  verified. The destination's own history is the record. If you need a number or ID later (page ID,
+  revision), write it into the doc, not a receipt file. Build output (`bin/`, `obj/`) never belongs
+  here either.
 
 ## Defer to project-specific doc skills
 

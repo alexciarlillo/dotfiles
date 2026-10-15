@@ -11,3 +11,4 @@ vim
 zsh
 unison
 ncurses-term
+locales

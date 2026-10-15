@@ -17,6 +17,12 @@ osx_init() {
 linux_init() {
   sudo apt-get update
   xargs -a "$DOTFILES/extra/apt/packages.txt" sudo apt-get install -y
+  # .zshenv exports LANG=en_US.UTF-8; without the generated locale, perl
+  # (stow) and friends warn on every run.
+  if ! locale -a 2>/dev/null | grep -qix 'en_US\.utf-\?8'; then
+    sudo sed -i 's/^# *\(en_US\.UTF-8 UTF-8\)/\1/' /etc/locale.gen
+    sudo /usr/sbin/locale-gen
+  fi
 }
 
 cargo_init() {
@@ -110,10 +116,9 @@ universal_dots() {
 
   # ~/agents/{AGENTS,CLAUDE}.md are versioned here (universal/agents) and stowed
   # into the otherwise-unversioned ~/agents workspace. They were real files
-  # before that, and Unison had already replicated them to the other machine, so
+  # before that, and a sync tool may have replicated them to another machine, so
   # a real file can exist on either side; back it up so stow can link ours.
-  # Unison ignores both paths (osx/.unison/agents.prf) — each machine links its
-  # own clone, so the dotfiles checkout need not sit at the same path on both.
+  # Any ~/agents sync must ignore both paths — each machine links its own clone.
   local agent_doc
   for agent_doc in AGENTS.md CLAUDE.md; do
     if [[ -f "$HOME/agents/$agent_doc" && ! -L "$HOME/agents/$agent_doc" ]]; then
@@ -275,21 +280,23 @@ rblx_init() {
   fi
 }
 
-# Install + load the agent-sync LaunchAgent (macOS). The plist is a template
-# (__HOME__ substituted at install) written into ~/Library rather than stowed,
-# because launchd refuses to load symlinked plists and ~/Library is
-# TCC-protected. bootout-then-bootstrap makes this idempotent across re-runs.
+# agent-sync LaunchAgent (macOS), opt-in via ~/.config/agent-sync.conf; without
+# it any installed job is ejected. Templated into ~/Library, not stowed: launchd
+# rejects symlinked plists. bootout-then-bootstrap keeps re-runs idempotent.
 agent_sync_init() {
   local src="$DOTFILES/extra/launchd/com.agent-sync.plist.in"
   local dst="$HOME/Library/LaunchAgents/com.agent-sync.plist"
-  [[ -f "$src" ]] || return 0
-  mkdir -p "$HOME/Library/LaunchAgents" "$HOME/.local/state"
-  sed "s|__HOME__|$HOME|g" "$src" >"$dst"
   local domain="gui/$(id -u)"
   # Retire the pre-rename job so a migrated machine runs only one.
   launchctl bootout "$domain/com.aciarlillo.agent-sync" 2>/dev/null || true
   rm -f "$HOME/Library/LaunchAgents/com.aciarlillo.agent-sync.plist"
   launchctl bootout "$domain/com.agent-sync" 2>/dev/null || true
+  if [[ ! -f "$HOME/.config/agent-sync.conf" || ! -f "$src" ]]; then
+    rm -f "$dst"
+    return 0
+  fi
+  mkdir -p "$HOME/Library/LaunchAgents" "$HOME/.local/state"
+  sed "s|__HOME__|$HOME|g" "$src" >"$dst"
   launchctl bootstrap "$domain" "$dst"
 }
 

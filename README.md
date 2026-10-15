@@ -122,7 +122,7 @@ The `~/agents` work-management workspace (`research`, `plans`, `handoffs`, `revi
 
 - **Canonical bytes live in the vault** at `~/vault/10 - Agents/<Context>/<Kind>/`. Each `~/agents/<kind>` is a **symlink** into that subtree, so `$AGENT_WORK_DIR/<kind>` resolves normally.
 - **Obsidian Sync** carries the vault (including `10 - Agents/`) to other Obsidian devices and the phone.
-- **Unison** (`osx/.unison/agents.prf`) syncs `~/agents` to a **per-machine remote** — the sandboxed work devspace (`coder-engine:/home/coder/agents`) by default, overridden elsewhere via `~/.config/agent-sync.conf` (unstowed: `REMOTE_HOST` / `REMOTE_PATH`). The remote has **no** vault. Because Unison expands neither `~` nor `$HOME` in a profile, the roots and logfile are **not** in `agents.prf`; the `~/.local/bin/agent-sync` wrapper passes them on the command line. The profile `follow`s the per-kind symlinks so their contents land as **real dirs** on the remote. It ignores `review-queue.base` (an Obsidian Base view), `.obsidian` (per-machine config), `.review-cache` (GB-scale regenerable bare clones), and `.git` (the remote's own publish repo — see below), and runs every 300s via the `com.agent-sync` LaunchAgent (templated from `extra/launchd/com.agent-sync.plist.in`, wrapper `~/.local/bin/agent-sync`).
+- **Mac ↔ remote sync** carries `~/agents` to a vault-less remote. It is per machine and has more than one backend — see [Mac ↔ remote sync](#mac--remote-sync) below.
 
 ```
 VAULT  (Obsidian Sync → phone + every vault-present desktop)
@@ -141,7 +141,7 @@ VAULT  (Obsidian Sync → phone + every vault-present desktop)
 
 MAC  (context = Work)                                  REMOTE  (context = Work; NO vault)
 ~/agents/                                              ~/agents/  (= /home/coder/agents)
-├─ research  ····► ~/vault/10 - Agents/Work/Research   ├─ research/   [REAL]  ← Unison follow
+├─ research  ····► ~/vault/10 - Agents/Work/Research   ├─ research/   [REAL]  ← synced
 ├─ plans     ····► …/Work/Plans                        ├─ plans/      [REAL]
 ├─ handoffs  ····► …/Work/Handoffs                     ├─ handoffs/   [REAL]
 ├─ reviews   ····► …/Work/Reviews                      ├─ reviews/    [REAL]
@@ -152,19 +152,49 @@ MAC  (context = Work)                                  REMOTE  (context = Work; 
   ····► = symlink (pointer, no bytes)      [REAL] = actual bytes on disk
 
 SYNC PATHS
-  research / plans / handoffs / reviews / archives / prompts : phone ◄─Obsidian─► MAC(vault) ◄─Unison follow─► REMOTE
-  artifacts                                                  : (never on phone) ;  MAC ◄─Unison─► REMOTE
+  research / plans / handoffs / reviews / archives / prompts : phone ◄─Obsidian─► MAC(vault) ◄─sync─► REMOTE
+  artifacts                                                  : (never on phone) ;  MAC ◄─sync─► REMOTE
+  sync = whichever backend this machine uses (see Mac ↔ remote sync)
 ```
+
+### Mac ↔ remote sync
+
+Nothing syncs by default: each machine opts into **one** backend per remote (two tools writing the same tree will fight). Every backend has to meet the same contract:
+
+- **The remote gets real dirs.** The per-kind symlinks into the vault must arrive as ordinary directories, so the vault-less remote — and its publish repo ([below](#agent-workspace--teammate-sharing)) — holds the docs themselves, not links.
+- **Ignore set:** root `AGENTS.md`/`CLAUDE.md` (each machine stows its own), `.git` (the remote's publish repo), `.obsidian`, `review-queue.base`, `.review-cache`, `.review-repos`, `.DS_Store`, `*.tmp`, Obsidian `workspace*.json`.
+- **Conflicts are kept**, never silently dropped.
+
+| Backend | Package | Use it for | Turn it on | Turn it off |
+| --- | --- | --- | --- | --- |
+| Unison agent-sync | `osx/` | any ssh-reachable remote (e.g. personal dev servers) | create `~/.config/agent-sync.conf`, run `./bootstrap.sh` | delete the conf, run `./bootstrap.sh` |
+| Coder Desktop Mutagen | `rblx/` (work only) | the work devspace | `agent-sync-coder start` (once) | `agent-sync-coder terminate` |
+
+`osx/` and `bootstrap.sh` carry no work hosts, so they backport to the personal dotfiles as-is; the Mutagen backend stays with `rblx/`.
+
+#### Unison agent-sync (`osx/`)
+
+- **Config:** `~/.config/agent-sync.conf` (unstowed) sets `REMOTE_HOST` / `REMOTE_PATH`. There are no defaults; without the file the `~/.local/bin/agent-sync` wrapper is a logged no-op.
+- **Schedule:** `bootstrap.sh`'s `agent_sync_init` installs the `com.agent-sync` LaunchAgent (every 300s, templated from `extra/launchd/com.agent-sync.plist.in`) when the conf exists, and removes it otherwise. It runs in full bootstrap only, not `dots`.
+- **Profile:** `osx/.unison/agents.prf`. Unison expands neither `~` nor `$HOME` in a profile, so the roots and logfile are passed by the wrapper, not stored in it. `follow = Path <kind>` makes the symlinked kinds land as real dirs; `ignore` lines cover the ignore set; `prefer = newer` with central backups handles conflicts. Permissions are not synced (`perms = 0`).
+
+#### Coder Desktop Mutagen (`rblx/`, work only)
+
+- **Config:** the Mutagen project file `rblx/.config/mutagen/agents.yml` (stowed to `~/.config/mutagen/agents.yml`), managed with `agent-sync-coder start|list|flush|terminate`. The wrapper uses Coder Desktop's bundled Mutagen and data dir, so sessions run in the app's daemon and show in its File Sync UI. After the one-time `start` nothing else is needed: Coder Desktop resumes them on launch while Coder Connect is on.
+- **Seven sessions:** Mutagen cannot follow symlinks, so each kind syncs from its real vault dir (`~/vault/10 - Agents/Work/<Kind>`) to `/home/coder/agents/<kind>`, and the root session (`~/agents`) ignores the kind names.
+- **Remote address:** the Coder Connect hostname, not an `~/.ssh/config` alias — the app's daemon doesn't read ssh config.
+- **First start:** the app only launches its daemon once a session exists, so add a throwaway session in the GUI, run `agent-sync-coder start`, then delete the throwaway.
+- **Conflicts:** `two-way-safe` never picks a winner. `agent-sync-coder list -l` shows them; make both sides match (or delete the losing copy) and `flush`. Mutagen syncs the executable bit, so an exec-bit-only difference counts as a conflict.
 
 ### Context (Work vs Personal)
 
-`agents_workspace_links()` in `bootstrap.sh` picks which vault subtree to link into, derived from this clone's `origin` remote: `github.rbx.com` → `Work`, `github.com` → `Personal`. Override with `AGENT_CONTEXT=Work|Personal`. It guards on `~/vault` existing, so vault-less machines (the remote) skip linking and keep real dirs for Unison. It refuses to clobber a `~/agents/<kind>` that's still a real dir — that migration is deliberate (below).
+`agents_workspace_links()` in `bootstrap.sh` picks which vault subtree to link into, derived from this clone's `origin` remote: `github.rbx.com` → `Work`, `github.com` → `Personal`. Override with `AGENT_CONTEXT=Work|Personal`. It guards on `~/vault` existing, so vault-less machines (the remote) skip linking and keep real dirs for the sync. It refuses to clobber a `~/agents/<kind>` that's still a real dir — that migration is deliberate (below).
 
 **Why `vault/` is its own stow package (not under `universal/`):** `universal/` is stowed unconditionally to `$HOME`, but `~/vault` only exists on Obsidian machines. Keeping `vault_dots` guarded on `~/vault` avoids creating a stray `~/vault` on servers — which would also defeat the `[[ -d "$HOME/vault" ]]` guard `agents_workspace_links` relies on. (`agents/` *is* under `universal/` because `~/agents` exists on every machine, including the remote.)
 
 ### Migrating a machine into the vault layout
 
-On a vault machine whose `~/agents/<kind>` are still real dirs, do a one-time cutover. **Order matters** so the 300s Unison timer never mass-deletes the remote:
+On a vault machine whose `~/agents/<kind>` are still real dirs, do a one-time cutover. **Order matters** so a running sync never mass-deletes the remote. The steps below are for Unison agent-sync; with Mutagen, `agent-sync-coder pause` before step 3 and `resume` after step 4 (its kind sessions already point at the vault dirs).
 
 1. The profile is already armed (`follow = Path <kind>` per kind) — a no-op while the paths are real dirs, but it makes any sync during/after the move follow the symlinks instead of propagating deletions.
 2. Pause the timer: `launchctl bootout gui/$(id -u)/com.agent-sync`.
@@ -177,12 +207,12 @@ On a vault machine whose `~/agents/<kind>` are still real dirs, do a one-time cu
 
 ## Agent workspace → teammate sharing
 
-A **third, one-way leg** publishes the workspace as read-only, directly linkable `.md` files at [`github.rbx.com/aciarlillo/agent-docs`](https://github.rbx.com/aciarlillo/agent-docs) (private). It does not disturb the two legs above: Unison still owns Mac↔remote reconciliation, Obsidian Sync still owns the phone.
+A **third, one-way leg** publishes the workspace as read-only, directly linkable `.md` files at [`github.rbx.com/aciarlillo/agent-docs`](https://github.rbx.com/aciarlillo/agent-docs) (private). It does not disturb the two legs above: the Mac ↔ remote sync backend still owns reconciliation, Obsidian Sync still owns the phone.
 
 ```
    REMOTE  ~/agents/  ← docs born here (real dirs)
         │                         │
-   git (HTTPS, 10-min timer)   Unison ◄─► MAC(vault) ◄─Obsidian─► phone
+   git (HTTPS, 10-min timer)   sync ◄─► MAC(vault) ◄─Obsidian─► phone
         ▼
   github.rbx.com/aciarlillo/agent-docs
 ```
@@ -205,7 +235,7 @@ A **third, one-way leg** publishes the workspace as read-only, directly linkable
 
 **Two ordering constraints, both load-bearing:**
 
-1. `ignore = Path .git` must be live in the Mac's `~/.unison/agents.prf` **before** the repo is initialized, or Unison drags `.git/` to the Mac and two hosts mutate one object store. (`agents.prf` is stowed, so a `git pull` on the Mac suffices.)
+1. Whatever syncs Mac↔remote must ignore `.git` **before** the repo is initialized, or it drags `.git/` to the Mac and two hosts mutate one object store. (Unison: `ignore = Path .git` in the stowed `agents.prf`; Coder Desktop: VCS ignore on the session.)
 2. `.gitignore` must exist **before** the first `add -A`, or `.review-cache/` — 6.8 GB, inside the workspace — gets committed. Keep the timer disabled until the repo is seeded and verified.
 
 ---
