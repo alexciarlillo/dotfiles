@@ -5,7 +5,7 @@ and is never committed. Dirs are shared across every project — filter by ticke
 rather than nesting per-project.
 
 ```
-~/agents/{research,plans,handoffs,reviews,artifacts,prompts,archives}/
+~/agents/{research,plans,handoffs,reviews,artifacts,prompts,reference,archives}/
 ```
 
 ## Conventions live in the `agent-docs` skill
@@ -31,5 +31,4 @@ The skills that write these docs are its siblings:
 - `CLAUDE.md` is a stub that does nothing but `@AGENTS.md`, since Claude Code reads `CLAUDE.md`
   and not `AGENTS.md`. Keep the two files in the same package dir or that import breaks.
 - Everything else here is unversioned and Unison-synced between the Mac and the devspace.
-- `prompts/` (long-form prompts being drafted) is workspace-local and not part of the skill suite.
 - `$AGENT_WORK_DIR` overrides the base dir; it defaults to `~/agents`.

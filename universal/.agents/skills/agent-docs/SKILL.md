@@ -1,6 +1,6 @@
 ---
 name: agent-docs
-description: Shared conventions for the work-management workspace under ~/agents/ (research → plan → handoff → pickup, plus reviews and artifacts) — where each kind lives, the metadata block, the YAML frontmatter schema review docs use instead, status vocabulary, filenames, linking, and the archive lifecycle. Read before creating or updating any research, plan, handoff, or review doc, or saving a one-off script/diagram, including adhoc ones written without invoking those skills. Defer to a project-specific doc skill (e.g. voice-server-docs) when one scopes the area you're working in.
+description: Shared conventions for the work-management workspace under ~/agents/ (research → plan → handoff → pickup, plus reviews, artifacts, prompts, and durable reference material) — where each kind lives, the metadata block, the YAML frontmatter schema review docs use instead, status vocabulary, filenames, linking, and the archive lifecycle. Read before creating or updating any research, plan, handoff, or review doc, saving a one-off script/diagram or reusable prompt, or creating, updating, or looking up reference docs, including adhoc ones written without invoking those skills. Defer to a project-specific doc skill (e.g. voice-server-docs) when one scopes the area you're working in.
 ---
 
 # Agent work-management docs — shared conventions
@@ -17,9 +17,10 @@ is optional when no public design review is needed. You can skip research (`plan
 task), or go fully adhoc (`handoff`/`pickup` with no backing doc). Nothing forces a doc to exist
 upstream.
 
-Two buckets sit **outside** that chain because they aren't our own shippable work: `reviews/` (our
-feedback on someone else's branch) and `artifacts/` (things that aren't docs at all). Both are
-described under "Where docs live".
+Four buckets sit **outside** that chain because they aren't our own shippable work: `reviews/` (our
+feedback on someone else's branch), `artifacts/` (things that aren't docs at all), `prompts/`
+(reusable prompts), and `reference/` (durable material that is kept current, never completed). All
+are described under "Where docs live".
 
 ## Where docs live
 
@@ -33,6 +34,8 @@ $AGENT_WORK_DIR/                 (= ~/agents)
 ├── handoffs/   one shippable unit of work = one PR; a LIVING doc, the crash-recovery artifact
 ├── reviews/    our review of SOMEONE ELSE'S branch — only when it's long or multi-pass
 ├── artifacts/  one-off scripts, helper utilities, diagrams — things that aren't docs
+├── prompts/    reusable prompts and implementer briefs, pasted into other sessions
+├── reference/  durable reference material, kept current rather than completed
 └── archives/   completed/retired work, moved out of the active dirs (see Lifecycle)
 ```
 
@@ -40,11 +43,12 @@ $AGENT_WORK_DIR/                 (= ~/agents)
 - If it's unset, fall back to `~/agents` (or the OS temp dir as a last resort for handoffs, matching
   the legacy behavior).
 - Dirs are **flat and shared across every project** — filter by ticket key or topic slug, don't nest
-  per-project.
+  per-project. `reference/` is the one exception: it nests one directory per topic.
 - `mkdir -p` the target dir before writing — only `handoffs/` is guaranteed to exist today.
-- `archives/` **mirrors the active dirs** (`archives/{research,plans,handoffs,reviews,artifacts}/`).
-  Completed work is *moved* here, not deleted — see Lifecycle. (Some loose non-markdown artifacts
-  predate `artifacts/` and still sit at the `archives/` root; new ones go in the mirror.)
+- `archives/` **mirrors the active dirs**
+  (`archives/{research,plans,handoffs,reviews,artifacts,reference}/`). Completed work is *moved*
+  here, not deleted — see Lifecycle. (Some loose non-markdown artifacts predate `artifacts/` and
+  still sit at the `archives/` root; new ones go in the mirror.)
 
 ### `reviews/` — reviewing someone else's branch
 
@@ -168,6 +172,43 @@ rerun this?"** — if not, it doesn't belong here.
   no longer clips at 820px"). Promote a capture into `artifacts/` only when a doc needs to show it to
   someone — one or two final shots, not every pass.
 
+### `prompts/` — reusable prompts
+
+Prompts and implementer briefs written to be pasted into another agent session, kept because they
+are reused or worth rerunning. No metadata block and no status — like artifacts, they aren't docs.
+
+- Descriptive `kebab-case.md` filename.
+- A prompt meant for another session may open with an HTML comment saying where it is meant to run,
+  so the comment isn't pasted along with the prompt body.
+- Never auto-archived. A prompt is retired only when the user asks.
+
+### `reference/` — durable reference material
+
+For material that is **kept current rather than completed**, and that agents working in unrelated
+repos need to find — e.g. docs describing systems or infrastructure that a skill regenerates from
+live probes. It lives here rather than in a repo when it is private or must be reachable from
+anywhere. Don't park it in `research/`: it never reaches that kind's terminal statuses.
+
+- **Shape:** one subdirectory per topic, `reference/<topic-slug>/`, holding a tree of docs with one
+  clearly named **entry-point** doc. Topics are never flattened into `reference/` itself — this is
+  the one kind that nests, because each topic is a linked set of docs, not a single file.
+- **Discovery:** the index `$AGENT_WORK_DIR/reference/README.md` lists every topic with its
+  entry-point path, a one-line description, and what maintains it (a skill name plus the repo it
+  lives in, or "hand-written"). Look for reference material by reading the index first. Creating or
+  retiring a topic updates the index in the same change.
+- **Metadata:** only the entry-point doc carries a metadata block — `**Type:** reference`,
+  `**Maintained by:**`, `**Last verified:**`, `**Verified against:**` (e.g. the live systems or the
+  export it was probed from). Other files in the tree don't need one.
+- **Generated vs hand-written:** a tree can mix files a tool regenerates with files written by hand.
+  A regeneration must never overwrite the hand-written ones. The owning skill names which is which,
+  and the index entry points at that skill.
+- **Ownership:** when a project-specific skill maintains a topic, its rules for the topic's contents
+  win (see "Defer to project-specific doc skills" below).
+- **No secrets.** Reference docs describe systems and configuration, which makes them the likeliest
+  place for a credential to leak. Never write keys, tokens, or passwords into them — name where the
+  secret lives instead.
+- Never archived by a skill or the cleanup sweep — see Lifecycle.
+
 ## Defer to project-specific doc skills
 
 If a skill scoped to the area you're working in dictates where its docs go and what they contain,
@@ -183,7 +224,7 @@ above.)
 ```markdown
 # <Title>
 
-**Type:** research | plan | handoff | review
+**Type:** research | plan | handoff | review | reference
 **Status:** <see vocab below>
 **Ticket:** KEY (url) — or `—` if none
 **Branch:** <git branch>        ← handoff (ours) / review (theirs)
@@ -193,12 +234,14 @@ above.)
 **Plan:** <path>                ← handoff → its plan, if any
 **Research:** <path>            ← plan → its research, if any
 **Tech spec:** <Confluence URL> ← plan → its public source of truth, once published
+**Maintained by:** <skill + repo, or hand-written> ← reference entry point only
 **Last verified:** <date>
 **Verified against:** <ref, e.g. origin/master (abc1234) / Sourcegraph / JIRA / a bare SHA>
 ```
 
 Include only the fields that apply. `Branch`/`Worktree`/`Ticket` on a handoff are what `pickup` binds
-on, so keep them accurate. `artifacts/` files get no metadata block — they aren't docs.
+on, so keep them accurate. `artifacts/` and `prompts/` files get no metadata block — they aren't
+docs. In a reference topic only the entry-point doc carries one.
 
 Verification is **two fields, not one prose line**: `Last verified` is the date alone, `Verified
 against` is the ref alone. Keeping them separate makes the ref machine-parseable — in review docs it
@@ -213,6 +256,8 @@ is the full 40-char PR head SHA, and the review skills' shared resolver deduplic
 | handoff | `in-progress` / `blocked` / `in-review` / `merged` / `abandoned` |
 | review | `in-progress` → `delivered` (feedback posted) / `abandoned` |
 | artifact | none — not a doc |
+| prompt | none — not a doc |
+| reference | none — kept current, not completed |
 
 Review docs carry a second, orthogonal axis in `review_state` (`unreviewed` / `reviewed` / `stale`) —
 whether *we* have reviewed the current head, which moves independently of `status`.
@@ -227,6 +272,10 @@ whether *we* have reviewed the current head, which moves independently of `statu
   `pr-4821-review.md`.
 - **artifacts:** descriptive `kebab-case` + the real extension (`repro-uaf-asan.sh`,
   `teardown-sequence.excalidraw`) — no `-artifact` suffix.
+- **prompts:** descriptive `kebab-case.md` — no `-prompt` suffix.
+- **reference:** topic directories are always `kebab-case`. Inside a topic, the owning skill sets the
+  naming convention; Title Case with spaces is allowed, since Obsidian uses filenames as link
+  targets — but a rename silently breaks backlinks. With no owning convention, use `kebab-case.md`.
 
 ## Linking, not duplication
 
@@ -241,6 +290,11 @@ vaults and its GitHub mirror. Never use machine-specific absolute destinations s
 destinations, or Obsidian-only wikilinks for workspace cross-references. For example, a file in
 `handoffs/` links to a plan as `[plan](../plans/example.md)`, while two files in `research/` link as
 `[related research](other-topic.md)`. External web URLs remain absolute.
+
+**Exception — within one reference topic.** Links between files *inside the same*
+`reference/<topic>/` tree may use Obsidian `[[wikilinks]]` when the topic is authored for Obsidian.
+Any link that crosses a topic's boundary — to another topic, or to research, plans, handoffs, or
+anything else under `$AGENT_WORK_DIR` — still follows the relative-Markdown-link rule above.
 
 When moving a document during archival, update its relative links and any known backlinks to reflect
 the new directory depth, then verify that every changed local-link destination exists. Metadata fields
@@ -271,6 +325,9 @@ Mark the terminal `**Status:**` first, then move:
   machine-maintained docs archive on the PR closing instead (see above).
 - **artifact** → move to `archives/artifacts/` when the work that produced it archives. An artifact
   with no doc referencing it anymore is a candidate to archive; flag it, don't delete it.
+- **prompt** → never auto-archived; the user retires one when it's no longer useful.
+- **reference** → never archived by the cleanup sweep or by any skill. A topic is retired only when
+  the user asks: move it to `archives/reference/<topic>/` and remove its index entry.
 
 **Deletion is always the user's call** — the skills move to `archives/` and never auto-delete;
 removing anything from `archives/` is up to the user. Confirm the set of moves before executing.
@@ -288,6 +345,7 @@ since whether a plan is done depends on its handoffs:
    Iteration output (see `artifacts/` above) is a deletion candidate even when referenced, since only
    finished work links to it; list it separately so the user can delete rather than archive it.
 5. **Research** — never auto-move; the user relocates it.
+6. **Prompts and reference** — leave alone; neither is ever swept. Only the user retires them.
 
 Present the full proposed set of moves and get confirmation before touching anything. Where you
 can't verify a merge or a ticket state, leave the doc alone and say what's blocking — never archive
