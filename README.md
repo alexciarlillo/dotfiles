@@ -118,7 +118,7 @@ Worktree hooks (`universal/.local/bin/_worktree-hook-{create,remove}`) are wired
 
 ## Agent workspace ↔ Obsidian vault
 
-The `~/agents` work-management workspace (`research`, `plans`, `handoffs`, `reviews`, `archives`, `prompts`) is surfaced **inside** the Obsidian vault so it's indexed, linkable, and portable to the phone — while `~/agents` stays the real `$AGENT_WORK_DIR` that agent tooling resolves. The setup spans several touchpoints:
+The `~/agents` work-management workspace (`research`, `plans`, `handoffs`, `reviews`, `archives`, `prompts`, `reference`) is surfaced **inside** the Obsidian vault so it's indexed, linkable, and portable to the phone — while `~/agents` stays the real `$AGENT_WORK_DIR` that agent tooling resolves. The setup spans several touchpoints:
 
 - **Canonical bytes live in the vault** at `~/vault/10 - Agents/<Context>/<Kind>/`. Each `~/agents/<kind>` is a **symlink** into that subtree, so `$AGENT_WORK_DIR/<kind>` resolves normally.
 - **Obsidian Sync** carries the vault (including `10 - Agents/`) to other Obsidian devices and the phone.
@@ -134,9 +134,10 @@ VAULT  (Obsidian Sync → phone + every vault-present desktop)
 │  ├─ Reviews/    [REAL]
 │  ├─ Archives/   [REAL]
 │  ├─ Prompts/    [REAL]
+│  ├─ Reference/  [REAL]
 │  └─ review-queue.base   [REAL, Obsidian Base]
 └─ Personal/
-   ├─ Research/   [REAL]   (…same six kinds + review-queue.base)
+   ├─ Research/   [REAL]   (…same seven kinds + review-queue.base)
    └─ …
 
 MAC  (context = Work)                                  REMOTE  (context = Work; NO vault)
@@ -147,13 +148,14 @@ MAC  (context = Work)                                  REMOTE  (context = Work; 
 ├─ reviews   ····► …/Work/Reviews                      ├─ reviews/    [REAL]
 ├─ archives  ····► …/Work/Archives                     ├─ archives/   [REAL]
 ├─ prompts   ····► …/Work/Prompts                      ├─ prompts/    [REAL]
+├─ reference ····► …/Work/Reference                    ├─ reference/  [REAL]
 └─ artifacts/  [REAL, local; never in vault]           └─ artifacts/  [REAL]
 
   ····► = symlink (pointer, no bytes)      [REAL] = actual bytes on disk
 
 SYNC PATHS
-  research / plans / handoffs / reviews / archives / prompts : phone ◄─Obsidian─► MAC(vault) ◄─sync─► REMOTE
-  artifacts                                                  : (never on phone) ;  MAC ◄─sync─► REMOTE
+  research / plans / handoffs / reviews / archives / prompts / reference : phone ◄─Obsidian─► MAC(vault) ◄─sync─► REMOTE
+  artifacts                                                              : (never on phone) ;  MAC ◄─sync─► REMOTE
   sync = whichever backend this machine uses (see Mac ↔ remote sync)
 ```
 
@@ -181,7 +183,7 @@ Nothing syncs by default: each machine opts into **one** backend per remote (two
 #### Coder Desktop Mutagen (`rblx/`, work only)
 
 - **Config:** the Mutagen project file `rblx/.config/mutagen/agents.yml` (stowed to `~/.config/mutagen/agents.yml`), managed with `agent-sync-coder start|list|flush|terminate`. The wrapper uses Coder Desktop's bundled Mutagen and data dir, so sessions run in the app's daemon and show in its File Sync UI. After the one-time `start` nothing else is needed: Coder Desktop resumes them on launch while Coder Connect is on.
-- **Seven sessions:** Mutagen cannot follow symlinks, so each kind syncs from its real vault dir (`~/vault/10 - Agents/Work/<Kind>`) to `/home/coder/agents/<kind>`, and the root session (`~/agents`) ignores the kind names.
+- **Eight sessions:** Mutagen cannot follow symlinks, so each kind syncs from its real vault dir (`~/vault/10 - Agents/Work/<Kind>`) to `/home/coder/agents/<kind>`, and the root session (`~/agents`) ignores the kind names.
 - **Remote address:** the Coder Connect hostname, not an `~/.ssh/config` alias — the app's daemon doesn't read ssh config.
 - **First start:** the app only launches its daemon once a session exists, so add a throwaway session in the GUI, run `agent-sync-coder start`, then delete the throwaway.
 - **Conflicts:** `two-way-safe` never picks a winner. `agent-sync-coder list -l` shows them; make both sides match (or delete the losing copy) and `flush`. Mutagen syncs the executable bit, so an exec-bit-only difference counts as a conflict.

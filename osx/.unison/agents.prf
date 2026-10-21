@@ -51,6 +51,7 @@ follow = Path handoffs
 follow = Path reviews
 follow = Path archives
 follow = Path prompts
+follow = Path reference
 
 # Obsidian-only artifacts that must not reach the remote: a Base view is
 # meaningless without Obsidian, and .obsidian is per-machine vault config.

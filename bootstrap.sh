@@ -236,7 +236,7 @@ agents_workspace_links() {
   mkdir -p "$HOME/agents"
 
   local kind src link
-  for kind in Research Plans Handoffs Reviews Archives Prompts; do
+  for kind in Research Plans Handoffs Reviews Archives Prompts Reference; do
     src="$base/$kind"
     link="$HOME/agents/$(echo "$kind" | tr '[:upper:]' '[:lower:]')"
 

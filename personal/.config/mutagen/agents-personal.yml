@@ -31,6 +31,7 @@ sync:
         - "/reviews"
         - "/archives"
         - "/prompts"
+        - "/reference"
         - "/artifacts"
         # Stow links into each machine's own dotfiles clone.
         - "/AGENTS.md"
@@ -64,6 +65,10 @@ sync:
   agents-prompts:
     alpha: "~/vault/10 - Agents/Personal/Prompts"
     beta: "dev.local:/home/alex/agents/prompts"
+
+  agents-reference:
+    alpha: "~/vault/10 - Agents/Personal/Reference"
+    beta: "dev.local:/home/alex/agents/reference"
 
   # A real dir on both sides (not vaulted). Its own session so its bulk
   # (screenshots, logs) can be paused or reset without touching the docs.

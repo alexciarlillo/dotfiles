@@ -20,7 +20,7 @@ replaces Unison agent-sync on this Mac; never run both (`agent-sync-mutagen
 start` refuses while `~/.config/agent-sync.conf` exists).
 
 - **Project:** `.config/mutagen/agents-personal.yml` → `~/.config/mutagen/`.
-  Eight sessions: one per vaulted kind (Mutagen never follows the
+  Nine sessions: one per vaulted kind (Mutagen never follows the
   `~/agents/<kind>` → vault symlinks, so each syncs from the real vault dir),
   `agents-artifacts`, and `agents-root` for whatever else sits at the top.
 - **Wrapper:** `agent-sync-mutagen start|list|monitor|flush|pause|resume|reset|terminate|conflicts`.

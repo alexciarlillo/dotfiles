@@ -91,7 +91,7 @@ Shared conventions (metadata block, status vocab, filenames, lifecycle, cleanup 
 
 A `SKILL.md` alone only makes it discoverable, not applied — breadth needs an always-loaded pointer, and there is exactly **one**: the "Work-management docs" section of `universal/.agents/AGENTS.md`, which reaches Codex natively and Claude Code through the `~/.claude/CLAUDE.md` import. Keep that section to a pointer; anything longer belongs in `agent-docs`.
 
-`~/agents/AGENTS.md` is deliberately **only a pointer** to the `agent-docs` skill plus the facts that are local to that directory (which files are stow-versioned, `prompts/` being workspace-local). It was originally a ~120-line restatement of the conventions; that was cut on 2026-08-04 because two copies drift. Its one unique section, the on-request "clean up the workspace" sweep, moved into `agent-docs`' Lifecycle. Resist re-growing it.
+`~/agents/AGENTS.md` is deliberately **only a pointer** to the `agent-docs` skill plus the facts that are local to that directory (which files are stow-versioned). It was originally a ~120-line restatement of the conventions; that was cut on 2026-08-04 because two copies drift. Its one unique section, the on-request "clean up the workspace" sweep, moved into `agent-docs`' Lifecycle. Resist re-growing it.
 
 #### Review skills — `pr-review-doc` + `automated-reviewer`
 
@@ -126,7 +126,7 @@ Backporting to the personal dotfiles means taking `osx/` + `bootstrap.sh` (Uniso
 
 **Coder Desktop Mutagen** (`rblx/`, work Mac only). Sessions are declared in the Mutagen project file `rblx/.config/mutagen/agents.yml` (stowed to `~/.config/mutagen/agents.yml`) and driven by `rblx/.local/bin/agent-sync-coder [start|list|flush|pause|resume|reset|terminate]`. After the one-time `start` the app's daemon owns them; nothing runs from bootstrap.
 
-- **Seven sessions, not one.** Mutagen never follows symlinks, so it can't use Unison's `follow` trick. Each kind has its own session from the real vault dir (`~/vault/10 - Agents/Work/<Kind>`) to `/home/coder/agents/<kind>`, and `agents-root` (`~/agents` ↔ `/home/coder/agents`) ignores the six kind names.
+- **Eight sessions, not one.** Mutagen never follows symlinks, so it can't use Unison's `follow` trick. Each kind has its own session from the real vault dir (`~/vault/10 - Agents/Work/<Kind>`) to `/home/coder/agents/<kind>`, and `agents-root` (`~/agents` ↔ `/home/coder/agents`) ignores the seven kind names.
 - **Betas use the Coder Connect hostname** (`dev.aciarlillo-engine.aciarlillo.coder`), not the `coder-engine` ssh alias: Coder Desktop launches its daemon with `MUTAGEN_SSH_CONFIG_PATH` set, so `~/.ssh/config` is not read.
 - **The wrapper uses the app's bundled Mutagen binary and data dir** (`~/Library/Application Support/Coder Desktop/Mutagen`) so sessions live in the app's daemon and show in its UI. It sets `MUTAGEN_DISABLE_AUTOSTART=1` and fails if that daemon isn't running: a CLI-started daemon would lack the app's ssh environment and hold the lock the app needs. The app starts its daemon only when sessions already exist (Coder Connect on and the File Sync window open are not enough), so the very first `start` needs a throwaway GUI session to wake it; afterwards the project sessions keep it starting on launch.
 - `mutagen project` writes `agents.yml.lock` beside the stowed link (in `~/.config/mutagen`, not the repo); `terminate`/`list` need it, so don't delete it while sessions exist.
